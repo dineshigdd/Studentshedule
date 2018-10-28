@@ -275,10 +275,17 @@ public class AssessmentActivity extends AppCompatActivity{
                     int mentorId = getMentorId(termId, courseId);
                     Log.d("mENTOR id:" , String.valueOf(mentorId));
                     int assessmentId = dbManager.getAssessmentId(termId,courseId,mentorId);
-
+                    Log.d("Assessment id:" , String.valueOf(mentorId));
                     //get the record for corresponding assessment in the assessment table
                     boolean isInsertOp = false;
-//                    Assessment assessmentRecord = dbManager.getAssessment(assessmentId);
+                    Assessment assessmentRecord = dbManager.getAssessment(assessmentId);
+
+                    if (assessmentRecord.equals(null)) {
+                        isInsertOp = true;
+                        Toast.makeText(AssessmentActivity.this, "NULL",Toast.LENGTH_LONG);
+                    }else {
+                        isInsertOp = false;
+                    }
 //                    if( assessmentRecord.getTitle().equalsIgnoreCase(null) &&
 //                        assessmentRecord.getDueDate().equalsIgnoreCase(null) &&
 //                        assessmentRecord.getType().equalsIgnoreCase(null))   {
@@ -298,7 +305,7 @@ public class AssessmentActivity extends AppCompatActivity{
                     if( assessmentCounter == 0 ) {
                         String condition = DbHelper.ASSESSMENT_ID + "=?";
                         dbManager.update(DbHelper.TABLE_ASSESSMENT, values, condition, assessmentId);
-                    }else {
+                    }else if( isInsertOp ){
                         dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
                     }
 
@@ -320,8 +327,7 @@ public class AssessmentActivity extends AppCompatActivity{
                     if( assessmentCounter == 0 ) {
                         String condition = DbHelper.ASSIGN_ID + "=?";
                         dbManager.update(DbHelper.TABLE_ASSIGN, values, condition, assignId);
-                    }else{
-//                        if(isInsertOp)
+                    }else if(isInsertOp){
                         dbManager.insertData(DbHelper.TABLE_ASSIGN,values);
                     }
 

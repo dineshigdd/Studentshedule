@@ -114,7 +114,7 @@ public class ListCourseActivity extends AppCompatActivity {
                                 " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=" + DbHelper.TABLE_TERM + "." + DbHelper.TERM_ID +
                                 " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=?" ;
 
-               Cursor cursor = dbManager.query(false,
+               Cursor cursor = dbManager.query(true,
                         table,
                         projection,
                         selection,

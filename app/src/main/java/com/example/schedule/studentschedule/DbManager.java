@@ -381,9 +381,9 @@ public class DbManager {
     }
 
     public Assessment getAssessment(int id){
-        Assessment assessment = null;
-        Cursor cursor = query(true,DbHelper.TABLE_ASSESSMENT,DbHelper.All_COLUMNS_ASSESSMENT,
-                DbHelper.ASSESSMENT_ID + "=?", new String[] {String.valueOf(id)},null,null,null,null);
+        Assessment assessment = new Assessment();
+        Cursor cursor = query(false,DbHelper.TABLE_ASSESSMENT,DbHelper.All_COLUMNS_ASSESSMENT,
+                DbHelper.ASSESSMENT_ID + "=?", new String[] {String.valueOf(id)},null,null, null,null);
 
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
@@ -445,7 +445,7 @@ public class DbManager {
                 DbHelper.TABLE_TERM + "." + "_id" + "=" + DbHelper.ASSIGN_TERM_ID + " AND " +
                 DbHelper.TABLE_COURSE + "." + "_id" + "=" + DbHelper.ASSIGN_COURSE_ID + " AND " +
                 DbHelper.ASSIGN_COURSE_ID + "=?" + " AND "+
-                DbHelper.ASSIGN_TERM_ID + "=?";
+                DbHelper.ASSIGN_TERM_ID + "=?" + " AND "+ DbHelper.ASSESSMENT_TITLE + "IS NOT NULll";
 
         Cursor cursor = query(false,
                 tablename,new String []{ DbHelper.TABLE_ASSESSMENT+ "."+ DbHelper.ASSESSMENT_ID},

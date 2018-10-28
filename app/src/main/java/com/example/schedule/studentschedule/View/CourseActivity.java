@@ -684,13 +684,12 @@ public class CourseActivity extends AppCompatActivity {
                         null,
                         null
                 );
-//
-//
+
+
                 values = dbManager.setData(assessment,"assessment");
                 dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
                 values.clear();
-//
-//
+
                 if( dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) != 0 ) {
                     ArrayList<Assessment> assessmentList = dbManager.getAllAssesment();
                     assessmentId = assessmentList.get(assessmentList.size() - 1).getAssessmentId();
