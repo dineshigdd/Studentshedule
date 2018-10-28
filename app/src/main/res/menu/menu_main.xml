@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.schedule.studentshedule.MainActivity">
+
+    <!--<item-->
+        <!--android:title ="Delete"-->
+        <!--android:id = "@+id/toolbarDelete"-->
+        <!--android:orderInCategory="0"-->
+        <!--app:showAsAction="never"-->
+        <!--app:actionViewClass="android.support.design.button.MaterialButton"/>-->
+
+    <item
+        android:title ="Home"
+        android:id = "@+id/menu_home"
+        android:orderInCategory="100"/>
+
+    <item
+        android:title="Add Term"
+        android:id = "@+id/menu_term"
+        android:orderInCategory="101"/>
+
+    <item
+        android:title="Add Course"
+        android:id = "@+id/menu_course"
+        android:orderInCategory="102"/>
+
+
+    <item
+        android:title="Add Assessment"
+        android:id = "@+id/menu_assessment"
+        android:orderInCategory="103"/>
+
+
+</menu>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="italic" />
+
+
+        <Button
+            android:id="@+id/btnDisplayCourse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dp"
+            android:focusable="false"
+            android:onClick="btnDisplayCourseHandler"/>
+
+
+    </RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/startDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#332f2f"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btnEditTerm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp"
+        android:focusable="false"
+        android:onClick="BtnEditClickHandler"/>
+</RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/endDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#332f2f"
+        android:textSize="12sp" />
+
+
+    <!--android:layout_marginTop="-100dp"-->
+
+    <!--android:visibility="gone"-->
+    <!--android:layout_marginTop="-90dp"-->
+    <Button
+        android:id="@+id/btnDeleteTerm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp"
+
+        android:focusable="false"
+        android:onClick="buttonClickHandler"/>
+    <!--android:layout_marginTop="-50dp"-->
+    <!--android:visibility="gone"-->
+
+
+</RelativeLayout>
+
+</LinearLayout>

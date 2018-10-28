@@ -1,0 +1,25 @@
+<resources>
+    <string name="action_settings">Settings</string>
+    <string name="app_name">Studentshedule</string>
+    <string name="term">Term :</string>
+    <string name="start_date">Start Date :</string>
+    <string name="select_date">Select Date</string>
+    <string name="end_date">End Date</string>
+    <string name="add_course">Add Course</string>
+    <string name="status">Status</string>
+    <string name="notes">Notes:</string>
+    <string name="title">Title:</string>
+    <string name="add_assessment">Add Assessment</string>
+    <string name="assesment_type">Assessment Type:</string>
+    <string name="due_date">Due Date:</string>
+    <string name="mentor_name">Mentor Name:</string>
+    <string name="phone">Phone:</string>
+    <string name="email">E-mail:</string>
+    <string name="course">Course:</string>
+    <string name="title_activity_term">All Terms Added</string>
+    <string name="btn_term">Term</string>
+    <string name="add_term">Add Term</string>
+    <string name="select_term">Select Term:</string>
+    <string name="title_activity_list_course">ListCourseActivity</string>
+
+</resources>
