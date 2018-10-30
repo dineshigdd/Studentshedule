@@ -21,5 +21,6 @@
     <string name="add_term">Add Term</string>
     <string name="select_term">Select Term:</string>
     <string name="title_activity_list_course">ListCourseActivity</string>
+    <string name="title_activity_list_assessment">ListAssessmentActivity</string>
 
 </resources>

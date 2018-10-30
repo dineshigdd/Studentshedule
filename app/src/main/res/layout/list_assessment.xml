@@ -4,22 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+
     <TextView
-        android:id="@+id/courseTitle"
+        android:id="@+id/assessmentTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="italic" />
 
-
-    <Button
-        android:id="@+id/btnAddAssessment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:focusable="false"
-        android:onClick="btnAddAssesmentHandler"/>
 
 
 

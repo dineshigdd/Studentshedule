@@ -58,6 +58,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.schedule.studentschedule.View.TermActivity" />
         </activity>
+        <activity
+            android:name="com.example.schedule.studentschedule.View.ListAssessmentActivity"
+            android:label="@string/title_activity_list_assessment"
+            android:parentActivityName="com.example.schedule.studentschedule.View.AssessmentActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.schedule.studentschedule.View.AssessmentActivity" />
+        </activity>
     </application>
 
 </manifest>
