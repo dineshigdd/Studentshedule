@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.schedule.studentshedule.R;
@@ -34,8 +35,9 @@ public class CourseListAdapter extends ArrayAdapter <Course>{
 
         Course course = courseList.get(position);
         TextView courseTitle = convertView.findViewById(R.id.courseTitle);
-                courseTitle.setText(course.getItem() + " course "+ "\n" +
+        courseTitle.setText(course.getItem() + " course "+ "\n" +
                             " from " + course.getStartDate() + " to " + course.getEndDate());
+
 
         Button btnAddAssessment = convertView.findViewById(R.id.btnAddAssessment);
         btnAddAssessment.setText("Add Assessment");

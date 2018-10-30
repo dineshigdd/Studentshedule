@@ -273,7 +273,7 @@ public class DbManager {
                         " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=" + DbHelper.TABLE_TERM + "." + DbHelper.TERM_ID +
                         " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=?" ;
 
-        Cursor cursor = query(false,
+        Cursor cursor = query(true,
                 table,
                 projection,
                 selection,
@@ -445,10 +445,10 @@ public class DbManager {
                 DbHelper.TABLE_TERM + "." + "_id" + "=" + DbHelper.ASSIGN_TERM_ID + " AND " +
                 DbHelper.TABLE_COURSE + "." + "_id" + "=" + DbHelper.ASSIGN_COURSE_ID + " AND " +
                 DbHelper.ASSIGN_COURSE_ID + "=?" + " AND "+
-                DbHelper.ASSIGN_TERM_ID + "=?" + " AND "+ DbHelper.ASSESSMENT_TITLE + "IS NOT NULll";
+                DbHelper.ASSIGN_TERM_ID + "=?" + " AND "+ DbHelper.ASSESSMENT_TITLE + " IS NOT NULL";
 
         Cursor cursor = query(false,
-                tablename,new String []{ DbHelper.TABLE_ASSESSMENT+ "."+ DbHelper.ASSESSMENT_ID},
+                tablename,new String []{ DbHelper.TABLE_ASSESSMENT + "."+ DbHelper.ASSESSMENT_ID},
                 selection,  new String[]{String.valueOf(courseId), String.valueOf(termId)},
                 null,
                 null,

@@ -67,6 +67,7 @@ public class AssessmentActivity extends AppCompatActivity{
     private ArrayList<Course> course;
     private int courseId;
     private ArrayList<String> courseTitle;
+
     private  int assessmentCounter;
     @SuppressLint("ResourceType")
     @Override
@@ -84,6 +85,7 @@ public class AssessmentActivity extends AppCompatActivity{
         mainLayout.addView(spTerm);
         list = dbManager.getAllTerms();
         ArrayList<String> term = new ArrayList<>();
+        courseTitle = new ArrayList<>();
         mapId = new HashMap<>();
         assessmentCounter = 0;
 
@@ -265,7 +267,7 @@ public class AssessmentActivity extends AppCompatActivity{
             public void onClick(View view) {
 
 
-                if (assessmentCounter < 6) {
+                if ( assessmentCounter < 5 ) {
                     if (radioGroup.getCheckedRadioButtonId() == 400) {
                         radValue = "objective";
                     } else {
@@ -281,10 +283,11 @@ public class AssessmentActivity extends AppCompatActivity{
                     Assessment assessmentRecord = dbManager.getAssessment(assessmentId);
 
                     if (assessmentRecord.equals(null)) {
-                        isInsertOp = true;
-                        Toast.makeText(AssessmentActivity.this, "NULL",Toast.LENGTH_LONG);
-                    }else {
                         isInsertOp = false;
+                       Log.d("IsInsert top",  String.valueOf(isInsertOp ));
+                    }else {
+                        isInsertOp = true;
+                        Log.d("IsInsert top",  String.valueOf(isInsertOp ));
                     }
 //                    if( assessmentRecord.getTitle().equalsIgnoreCase(null) &&
 //                        assessmentRecord.getDueDate().equalsIgnoreCase(null) &&
@@ -331,16 +334,22 @@ public class AssessmentActivity extends AppCompatActivity{
                         dbManager.insertData(DbHelper.TABLE_ASSIGN,values);
                     }
 
-                    //getting the number of assessment for a course in a particular term
-                    String table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT + "," + DbHelper.TABLE_ASSIGN;
-                    assessmentCounter  = dbManager.getQueryCount(termId,courseId,table);
-                    Log.d("counter assessmentCounter :", String.valueOf(assessmentCounter));
 
                 } else {
                     Toast.makeText(AssessmentActivity.this, "You have reached the max amount", Toast.LENGTH_SHORT).show();
                 }
+
+                //getting the number of assessment for a course in a particular term
+                String table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT + "," +
+                        DbHelper.TABLE_ASSIGN;
+                assessmentCounter  = dbManager.getQueryCount(termId,courseId,table);
+                Log.d("counter assessmentCounter :", String.valueOf(assessmentCounter));
             }
+
+
         });
+
+
     }
 
 
@@ -361,10 +370,16 @@ public class AssessmentActivity extends AppCompatActivity{
 
 
                 termId = list.get(position).getItemId();
-                 Toast.makeText(AssessmentActivity.this,Integer.toString(termId),Toast.LENGTH_LONG).show();
-                courseTitle = dbManager.getCoursesTitleOfTerm(termId);
+                Toast.makeText(AssessmentActivity.this,Integer.toString(termId),Toast.LENGTH_LONG).show();
+              //  courseTitle = dbManager.getCoursesTitleOfTerm(termId);
+                course = dbManager.getCoursesOfTerm(termId);
 
-                populateSppiner(courseTitle, spCourse);
+                for(int i = 0;i < course.size();i++) {
+                    courseTitle.add(course.get(i).getItem() + " => "
+                    + course.get(i).getStartDate() + " to "
+                    + course.get(i).getEndDate());
+                }
+                     populateSppiner(courseTitle, spCourse);
 
 
 
@@ -382,6 +397,7 @@ public class AssessmentActivity extends AppCompatActivity{
             public void onItemSelected(AdapterView<?> parent, View view, int position , long id) {
 
                 courseId = dbManager.getCoursesOfTerm(termId).get(position).getItemId();
+
                  Toast.makeText(AssessmentActivity.this,"Course Id:" + courseId, Toast.LENGTH_LONG).show();
 
             }
