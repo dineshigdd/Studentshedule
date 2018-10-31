@@ -1,6 +1,8 @@
 package com.example.schedule.studentschedule.Model;
 
-public class Assessment {
+import java.io.Serializable;
+
+public class Assessment implements Serializable {
     private int assessmentId;
     private String title;
     private String type;

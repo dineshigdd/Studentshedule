@@ -2,27 +2,18 @@ package com.example.schedule.studentschedule.View;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.icu.util.TaiwanCalendar;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import java.util.Arrays;
+
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.CourseListAdapter;
-import com.example.schedule.studentschedule.Model.DataItem;
-import com.example.schedule.studentschedule.Model.Mentor;
 import com.example.schedule.studentshedule.R;
 
 import java.util.ArrayList;

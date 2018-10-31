@@ -1,15 +1,14 @@
 package com.example.schedule.studentschedule.View;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
@@ -20,23 +19,30 @@ import java.util.ArrayList;
 
 
 
+
+
 public class ListAssessmentActivity extends AppCompatActivity {
 
       private DbManager dbManager;
+      private ArrayList<String> assessmentList;
+      private int termId;
+      private int courseId;
+      private ListView listAssessment;
+      private ArrayList<Assessment> list ;
 
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_assessment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        AssessmentActivity.editing = false;
         dbManager = new DbManager(this);
         dbManager.open();
 
 
-        int termId = (int)getIntent().getSerializableExtra("TERM_ID");
-        int courseId = (int)getIntent().getSerializableExtra("COURSE_ID");
+        termId = (int)getIntent().getSerializableExtra("TERM_ID");
+        courseId = (int)getIntent().getSerializableExtra("COURSE_ID");
         //int mentorId = (int)getIntent().getSerializableExtra("MENTOR_ID");
 
 
@@ -44,36 +50,31 @@ public class ListAssessmentActivity extends AppCompatActivity {
         Log.d("Course ID :", Integer.toString(courseId));
     //    Log.d("mentor ID :", Integer.toString(mentorId));
 
-        ArrayList<Assessment> assessmentsForCourse ;
+
 
         String table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT + "," +
                 DbHelper.TABLE_ASSIGN;
 
-        int numberOfAssessments   = dbManager.getQueryCount(termId,courseId,table);
-        Log.d("numberOfAssessments :", Integer.toString(numberOfAssessments));
+//        int numberOfAssessments   = dbManager.getQueryCount(termId,courseId,table);
+//        Log.d("numberOfAssessments :", Integer.toString(numberOfAssessments));
 
-//        for(int i = 0 ; i < numberOfAssessments ; i++ ){
-//            Log.d("Assessemnt ID: ", Integer.toString(dbManager.getAssessmentId(termId,courseId)));
-//            assessmentsForCourse.add(
-//                    dbManager.getAssessment(dbManager.getAssessmentId(termId,courseId))
-//            );
-//        }
 
-        assessmentsForCourse = dbManager.getAssessmentOfCourse(termId,courseId,table);
+        list = dbManager.getAssessmentOfCourse(termId,courseId,table);
+        assessmentList = new ArrayList<>();
 
-        ArrayList<String> assessmentInfo = new ArrayList<>();
-//        for( Assessment data : assessmentsForCourse ) {
-//            assessmentInfo.add( data.getTitle() + "\n" + data.getType() + "\n" + data.getDueDate());
-//        }
-        for(int i = 0 ; i < assessmentsForCourse.size() ; i++ ){
-            assessmentInfo.add(assessmentsForCourse.get(i).getTitle());
+        for(int i = 0 ; i < list.size() ; i++ ){
+            assessmentList.add(
+                    list.get(i).getTitle() + "\n" +
+                    list.get(i).getType() + "\n" +
+                    list.get(i).getDueDate());
         }
 
 
-        ListView lv = findViewById(R.id.listAssessment);
+        listAssessment = findViewById(R.id.listAssessment);
         ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_1, assessmentInfo);
-        lv.setAdapter(listViewAdapter);
+                this, android.R.layout.simple_list_item_1, assessmentList);
+        listAssessment.setAdapter(listViewAdapter);
+
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -85,5 +86,28 @@ public class ListAssessmentActivity extends AppCompatActivity {
 //        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+
+    private void editAssessment() {
+        listAssessment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), AssessmentActivity.class);
+                intent.putExtra("serializeData", list.get(position));
+                AssessmentActivity.editing = true;
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        editAssessment();
+    }
+
+
+
 
 }

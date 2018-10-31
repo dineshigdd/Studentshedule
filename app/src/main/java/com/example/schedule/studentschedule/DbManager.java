@@ -342,7 +342,7 @@ public class DbManager {
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
             do {
-              //  assessment.setAssessmentId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSESSMENT_ID)));
+                assessment.setAssessmentId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSESSMENT_ID)));
                 assessment.setTitle(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_TITLE)));
                 assessment.setType(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_TYPE)));
                 assessment.setDueDate(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_DUE_DATE)));
@@ -392,7 +392,7 @@ public class DbManager {
 //        return cursor;
 //    }
 
-   
+
 
 
         public int getQueryCount(int termId, int courseId, String tablename){
@@ -425,7 +425,7 @@ public class DbManager {
                         DbHelper.ASSIGN_TERM_ID + "=?" + " AND "+ DbHelper.ASSESSMENT_TITLE + " IS NOT NULL";
 
         Cursor cursor = query(false,
-                tablename,new String []{ DbHelper.TABLE_ASSESSMENT + "."+ DbHelper.ASSESSMENT_ID , DbHelper.ASSESSMENT_TITLE },
+                tablename,new String []{ DbHelper.TABLE_ASSESSMENT + "."+ DbHelper.ASSESSMENT_ID },
                 selection,  new String[]{String.valueOf(courseId), String.valueOf(termId)},
                 null,
                 null,

@@ -63,7 +63,7 @@ public class AssessmentActivity extends AppCompatActivity{
     private Spinner spTerm;
     private Map<String,Integer> mapId;
     private int spTermPosition;
-    private ArrayList<DataItem> list;
+    private ArrayList<DataItem> termList;
     private Spinner spCourse;
     private ArrayList<Course> course;
     private int courseId;
@@ -74,6 +74,10 @@ public class AssessmentActivity extends AppCompatActivity{
     private int assessmentId;
     private int mentorId;
     private String table;
+    public static boolean editing;
+    private static int termID;
+    private static int courseID;
+    private int spCoursePosition;
 
     @SuppressLint("ResourceType")
     @Override
@@ -89,20 +93,19 @@ public class AssessmentActivity extends AppCompatActivity{
 
         //Term spinner-------------------------------------
         spTerm = new Spinner(this);
-        spTerm.setPrompt("select term");
         mainLayout.addView(spTerm);
-        list = dbManager.getAllTerms();
+        termList = dbManager.getAllTerms();
         ArrayList<String> term = new ArrayList<>();
         courseTitle = new ArrayList<>();
         mapId = new HashMap<>();
         assessmentCounter = 0;
 
 
-        for (int i = 0; i < list.size(); i++) {
-            term.add(list.get(i).getItem()+
+        for (int i = 0; i < termList.size(); i++) {
+            term.add(termList.get(i).getItem()+
                     " => " +
-                    list.get(i).getStartDate() +
-                    " to " + list.get(i).getEndDate());
+                    termList.get(i).getStartDate() +
+                    " to " + termList.get(i).getEndDate());
         }
 
         //Inserting keys and Values
@@ -222,7 +225,11 @@ public class AssessmentActivity extends AppCompatActivity{
 
         //submit -----------------------------------
         submit = new Button(this);
-        submit.setText("Add");
+        if( !editing ) {
+            submit.setText("Add");
+        }else{
+            submit.setText("Save");
+        }
         LinearLayout btnLayout = new LinearLayout(this);
 //
         LinearLayout.LayoutParams btnLayoutDimensions = new LinearLayout.LayoutParams(
@@ -248,14 +255,19 @@ public class AssessmentActivity extends AppCompatActivity{
         mainLayout.addView(btnDisplayLayout);
 
 
-
-
-
-
         setContentView(mainLayout);
 
-        submitbtnActionHandler();
+        if( !editing) {
+            submitbtnActionHandler();
+        }else{
+            spTerm.setEnabled(false);
+            spCourse.setEnabled(false);
+            setEditData();
+            updatebtnHandler();
+        }
+
         displayBtnHandler();
+
 //        submit.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -279,6 +291,7 @@ public class AssessmentActivity extends AppCompatActivity{
 
     }
 
+
     private void populateSppiner(ArrayList list,Spinner sp){
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
@@ -291,15 +304,96 @@ public class AssessmentActivity extends AppCompatActivity{
         btnDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                termID = termId;  //to use later in the updatebtnActionHandler
+                courseID = courseId; //to use later in the updatebtnActionHandler
 
                 Intent intent = new Intent(getApplicationContext(),ListAssessmentActivity.class);
                 intent.putExtra("TERM_ID",termId);
                 intent.putExtra("COURSE_ID",courseId);
-//                mentorId = getMentorId(termId, courseId);
-//                intent.putExtra("MENTOR_ID",mentorId);
-
                 startActivity(intent);
+
+            }
+        });
+
+    }
+
+    @SuppressLint("ResourceType")
+    private void setEditData() {
+        //Load spTerm
+        assessment = (Assessment)getIntent().getSerializableExtra("serializeData");
+        int spTermPosition = 0;
+        while( spTermPosition < termList.size() && termList.get(spTermPosition).getItemId()!= termID ){
+            spTermPosition = spTermPosition + 1;
+        }
+//        Log.d("Asseesment ID:",String.valueOf(assessment.getAssessmentId()));
+//        Log.d("spPosition: " , String.valueOf(spTermPosition));
+//        Log.d("Term ID: " , String.valueOf(termID));
+//        Log.d("Course ID: " , String.valueOf(courseID));
+        //setting data
+        spTerm.setSelection( spTermPosition );
+
+        edText.setText(assessment.getTitle());
+
+        if( assessment.getType().equals("objective")){
+            radioGroup.check(400);
+        }else{
+            radioGroup.check(500);
+        }
+
+        tv.setText(assessment.getDueDate());
+
+    }
+
+    @SuppressLint("ResourceType")
+    private void updatebtnHandler(){
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (radioGroup.getCheckedRadioButtonId() == 400) {
+                    radValue = "objective";
+                } else {
+                    radValue = "performance";
+                }
+
+                //Edit assessment table
+                assessment.setTitle(edText.getText().toString());
+                assessment.setType(radValue);
+                assessment.setDueDate(tv.getText().toString());
+
+                Log.d("Update ID:", String.valueOf(assessment.getAssessmentId()));
+                Log.d("Update AssTitle: ",assessment.getTitle());
+                Log.d("Update setType: ",assessment.getType());
+                Log.d("Update Due date: ",assessment.getDueDate());
+
+                ContentValues values;
+                values = dbManager.setData(assessment, DbHelper.TABLE_ASSESSMENT);
+                String condition = DbHelper.ASSESSMENT_ID + "=?";
+                dbManager.update(DbHelper.TABLE_ASSESSMENT, values, condition, assessment.getAssessmentId());
+                AssessmentActivity.editing = false;
+
+                        /*
+                Edit assignment table
+                int editAssignId =   dbManager.getAssignId(
+                termID,
+                courseID,
+                getMentorId(termID,courseID)
+                );
+
+
+                Assign editAssign = new Assign(
+                termID,
+                courseID,
+                getMentorId(termID,courseID)
+                );
+
+                // editAssign.setAssignId(editAssignId);
+
+
+                values = dbManager.setData(editAssign,DbHelper.TABLE_ASSIGN);
+                condition =  DbHelper.ASSIGN_ID + "=?";
+                dbManager.update(DbHelper.TABLE_ASSIGN,values,condition,editAssignId);
+                */
 
             }
         });
@@ -403,7 +497,17 @@ public class AssessmentActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        setupAssessment();
+            setupAssessment();
+
+
+
+//    btnDisplay.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            displayBtnHandler();
+//        }
+//    });
+
 
 
     }
@@ -413,19 +517,28 @@ public class AssessmentActivity extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position , long id) {
 
-
-                termId = list.get(position).getItemId();
+                termId = termList.get(position).getItemId();
                 Toast.makeText(AssessmentActivity.this,Integer.toString(termId),Toast.LENGTH_LONG).show();
 //                courseTitle = dbManager.getCoursesTitleOfTerm(termId);
                 course = dbManager.getCoursesOfTerm(termId);
                 courseTitle = new ArrayList<>();
-                for(int i = 0;i < course.size();i++) {
+                for( int i = 0 ;i < course.size(); i++ ) {
                       courseTitle.add(
                       course.get(i).getItem() + " => "
                     + course.get(i).getStartDate() + " to "
                     + course.get(i).getEndDate());
                 }
                      populateSppiner(courseTitle, spCourse);
+
+                if( editing ){
+                    spCoursePosition = 0;
+                    while( spCoursePosition < courseTitle.size() && course.get(spCoursePosition).getItemId() != courseID ){
+                        spCoursePosition++;
+                    }
+                    Log.d("spCoursePosition: " , String.valueOf(spCoursePosition));
+                    spCourse.setSelection(spCoursePosition);
+
+                }
             }
 
             @Override
@@ -450,8 +563,6 @@ public class AssessmentActivity extends AppCompatActivity{
 
 
             } });
-
-
 
     }
 
