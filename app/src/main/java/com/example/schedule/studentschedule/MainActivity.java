@@ -18,6 +18,8 @@ import com.example.schedule.studentschedule.View.AssessmentActivity;
 import com.example.schedule.studentschedule.View.CourseActivity;
 import com.example.schedule.studentschedule.View.DetailedTermActivity;
 
+import com.example.schedule.studentschedule.View.ListAssessmentActivity;
+import com.example.schedule.studentschedule.View.ListCourseActivity;
 import com.example.schedule.studentschedule.View.TermActivity;
 import com.example.schedule.studentshedule.R;
 
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         Button btnAddCourse = findViewById(R.id.btnAddCourse);
         btnAddCourse.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                ListCourseActivity.isCourseEditing = false;
                 Intent intent = new Intent(getApplicationContext(),CourseActivity.class);
                 startActivity(intent);
 
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         Button btnAddAssessment = findViewById(R.id.btnAddAssessment);
         btnAddAssessment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                AssessmentActivity.isEditing = false;
                 Intent intent = new Intent(getApplicationContext(),AssessmentActivity.class);
                 startActivity(intent);
 

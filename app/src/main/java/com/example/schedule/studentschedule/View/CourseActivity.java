@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -18,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +32,7 @@ import com.example.schedule.studentschedule.DbManager;
 import com.example.schedule.studentschedule.Model.Assessment;
 import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
+import com.example.schedule.studentschedule.Model.CourseListAdapter;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentschedule.Model.Mentor;
 import com.example.schedule.studentshedule.R;
@@ -86,12 +91,13 @@ public class CourseActivity extends AppCompatActivity {
     private RelativeLayout edCustomCourseLayout;
     private String courseTitle;
     private int assessmentId;
+    private CourseListAdapter dataAdapter;
 
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbManager = new DbManager(this);
         tv = new TextView(this);
@@ -104,6 +110,7 @@ public class CourseActivity extends AppCompatActivity {
         CourseLayout = new RelativeLayout(this);
         edCustomCourseLayout = new RelativeLayout(this);
         customCourseEditText = new EditText(this);
+
         //Select term ---------------------------------------
 
         // int[] to = {android.R.id.text1};
@@ -279,7 +286,7 @@ public class CourseActivity extends AppCompatActivity {
 
                 populateSppiner(courseTitle, spCourse);
 
-                editCourse = (Course) getIntent().getSerializableExtra("serializeData");
+                editCourse = (Course) getIntent().getSerializableExtra("serializeCourseData");
                 int spCoursePosition = 0;
                 for( int i = 0 ; i < courseTitle.size() && !(editCourse.getItem().equalsIgnoreCase(courseTitle.get(i))); i++){
                     spCoursePosition = i;
@@ -502,14 +509,10 @@ public class CourseActivity extends AppCompatActivity {
         btnLayout.addView(submit);
         mainLayout.addView(btnLayout);
 
-
         submitbtnActionHandler();
 
-
-
-
-       if( ListCourseActivity.isCourseEditing )
-        { //if editing
+        if( ListCourseActivity.isCourseEditing )
+            { //if editing
             startDateTv.setText(editCourse.getStartDate());
             endDateTv.setText(editCourse.getEndDate());
             edTextNotes.setText(editCourse.getNotes());
@@ -539,6 +542,8 @@ public class CourseActivity extends AppCompatActivity {
         }
 
         setContentView(mainLayout);
+
+
     }
 
 
@@ -670,7 +675,7 @@ public class CourseActivity extends AppCompatActivity {
 
 
 
-                values = dbManager.setData(mentor, "mentor");
+                values = dbManager.setData(mentor, DbHelper.TABLE_MENTOR);
                 dbManager.insertData(DbHelper.TABLE_MENTOR, values);
                 values.clear();
 
@@ -724,12 +729,13 @@ public class CourseActivity extends AppCompatActivity {
     private Mentor getMentorData(){
         dbManager.open();
         String table = DbHelper.TABLE_ASSIGN + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_TERM + "," + DbHelper.TABLE_MENTOR;
-        String selection = DbHelper.TABLE_COURSE + "." + DbHelper.COURSE_ID + "=" + DbHelper.TABLE_ASSIGN + "." +  DbHelper.ASSIGN_COURSE_ID +
-                " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=" + DbHelper.TABLE_TERM + "." + DbHelper.TERM_ID +
-                " AND " + DbHelper.TABLE_MENTOR + "." + DbHelper.MENTOR_ID + "=" + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_MENTOR_ID +
-                " AND "  + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=?";
+        String selection = DbHelper.TABLE_COURSE + "." + DbHelper.COURSE_ID + "=" +  DbHelper.ASSIGN_COURSE_ID +
+                " AND " +  DbHelper.ASSIGN_TERM_ID + "=" + DbHelper.TABLE_TERM + "." + DbHelper.TERM_ID +
+                " AND " +  DbHelper.TABLE_MENTOR + "." + DbHelper.MENTOR_ID + "=" +  DbHelper.ASSIGN_MENTOR_ID +
+                " AND "  + DbHelper.ASSIGN_TERM_ID + "=?" +
+                " AND " +  DbHelper.ASSIGN_COURSE_ID + "=?" ;
 
-        String [] selectionArgs = { editCourseTermId };
+        String [] selectionArgs = { editCourseTermId , String.valueOf(editCourse.getItemId())};
         Cursor cursor = dbManager.query(true,table,DbHelper.All_COLUMNS_MENTOR,
                 selection,selectionArgs,null,null,null,null);
 
@@ -858,6 +864,76 @@ public class CourseActivity extends AppCompatActivity {
         });
     }
 
+    public void removeCourse(){
+
+        //+ "." + DbHelper.TERM_ID + "<>" +
+        //  DbHelper.TABLE_ASSIGN + "." + DbHelper.TERM_ID;
+
+        //String [] selectionArg = { Integer.toString(termId) };
+
+
+
+        int assignId = dbManager.getAssignId(
+                Integer.parseInt(editCourseTermId)
+                ,editCourse.getItemId(),
+                editMentor.getMentorId());
+
+       int assessmentId = dbManager.getAssessmentId(Integer.parseInt(editCourseTermId),editCourse.getItemId());
+
+
+        String selection  ;
+        selection = DbHelper.ASSIGN_ID + "=?";
+        dbManager.delete(DbHelper.TABLE_ASSIGN,selection,assignId);
+
+        selection = DbHelper.COURSE_ID + "=?";
+        dbManager.delete(DbHelper.TABLE_COURSE, selection,editCourse.getItemId());
+
+
+        selection = DbHelper.ASSESSMENT_ID + "=?";
+        dbManager.delete(DbHelper.TABLE_ASSESSMENT, selection,assessmentId);
+
+        //ListCourseActivity.isCourseEditing = false;
+        Intent intent = new Intent(getApplicationContext(),ListCourseActivity.class);
+        startActivity(intent);
+
+        finish();
+
+
+
+
+    }
+
+
+    private AlertDialog deleateConfirmation()
+    {
+        AlertDialog alertDialog =new AlertDialog.Builder(this)
+                //set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Do you want to Delete")
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        removeCourse();
+
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return alertDialog;
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -872,23 +948,42 @@ public class CourseActivity extends AppCompatActivity {
 
            }
        });
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main,menu);
-        menu.add(0,0,0,"Delete").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+        if( ListCourseActivity.isCourseEditing) {
+            menu.add(0, 0, 0, "Delete").
+                    setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        return super.onOptionsItemSelected(item);
+
+       if( item.getItemId() == 0 ) {
+           AlertDialog diaBox = deleateConfirmation();
+           diaBox.show();
+       }
+          return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
+
+   
+}
+
 
 
 

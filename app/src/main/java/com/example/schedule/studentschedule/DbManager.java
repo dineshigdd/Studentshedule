@@ -241,7 +241,7 @@ public class DbManager {
     public ArrayList<Assessment> getAllAssesment() {
         ArrayList<Assessment> list = new ArrayList();
 
-        Cursor cursor = query(true, DbHelper.TABLE_ASSESSMENT, DbHelper.All_COLUMNS_ASSESSMENT, null, null, null,
+        Cursor cursor = query(false, DbHelper.TABLE_ASSESSMENT, DbHelper.All_COLUMNS_ASSESSMENT, null, null, null,
                 null, null, null);
 
         boolean isAssessment =  cursor.moveToFirst();

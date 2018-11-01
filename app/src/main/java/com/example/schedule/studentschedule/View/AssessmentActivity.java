@@ -74,7 +74,7 @@ public class AssessmentActivity extends AppCompatActivity{
     private int assessmentId;
     private int mentorId;
     private String table;
-    public static boolean editing;
+    public static boolean isEditing;
     private static int termID;
     private static int courseID;
     private int spCoursePosition;
@@ -225,7 +225,7 @@ public class AssessmentActivity extends AppCompatActivity{
 
         //submit -----------------------------------
         submit = new Button(this);
-        if( !editing ) {
+        if( !isEditing ) {
             submit.setText("Add");
         }else{
             submit.setText("Save");
@@ -257,7 +257,7 @@ public class AssessmentActivity extends AppCompatActivity{
 
         setContentView(mainLayout);
 
-        if( !editing) {
+        if( !isEditing) {
             submitbtnActionHandler();
         }else{
             spTerm.setEnabled(false);
@@ -370,7 +370,7 @@ public class AssessmentActivity extends AppCompatActivity{
                 values = dbManager.setData(assessment, DbHelper.TABLE_ASSESSMENT);
                 String condition = DbHelper.ASSESSMENT_ID + "=?";
                 dbManager.update(DbHelper.TABLE_ASSESSMENT, values, condition, assessment.getAssessmentId());
-                AssessmentActivity.editing = false;
+                AssessmentActivity.isEditing = false;
 
                         /*
                 Edit assignment table
@@ -530,7 +530,7 @@ public class AssessmentActivity extends AppCompatActivity{
                 }
                      populateSppiner(courseTitle, spCourse);
 
-                if( editing ){
+                if( isEditing ){
                     spCoursePosition = 0;
                     while( spCoursePosition < courseTitle.size() && course.get(spCoursePosition).getItemId() != courseID ){
                         spCoursePosition++;

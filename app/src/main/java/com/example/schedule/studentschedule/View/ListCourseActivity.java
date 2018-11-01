@@ -26,18 +26,22 @@ public class ListCourseActivity extends AppCompatActivity {
     private CourseListAdapter dataAdapter;
     private DbManager dbManager;
     private ListView listCourse;
-    private String termId;
+    private static String termId;
     public static boolean isCourseEditing = false;
+    private static int listPositon;
+    private boolean isDeleted;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_course);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         list = new ArrayList<>();
         //Mentorlist = new ArrayList<>();
         //my code.............................
-        setCourse();
+         setCourse();
+
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -54,22 +58,25 @@ public class ListCourseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        editCourse();
+       editCourse();
+
 
     }
 
+
+
     private void editCourse(){
+
         listCourse.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 isCourseEditing = true;
-//
                 Intent intent = new Intent(ListCourseActivity.this, CourseActivity.class );
-                intent.putExtra("serializeData",list.get(position));
+                intent.putExtra("serializeCourseData",list.get(position));
                // Toast.makeText(ListCourseActivity.this, termId,Toast.LENGTH_LONG).show();
                 intent.putExtra("termID",termId);
-
                 startActivity(intent);
+
             }
         });
     }
@@ -88,9 +95,9 @@ public class ListCourseActivity extends AppCompatActivity {
         dbManager = new DbManager(this);
         dbManager.open();
 
-
-
-        termId = getIntent().getSerializableExtra("serializeData").toString();
+        if( !isCourseEditing) {
+            termId = getIntent().getSerializableExtra("serializeData").toString();
+        }
         listCourse = findViewById(R.id.listCourse);
 
         try {
@@ -164,10 +171,6 @@ public class ListCourseActivity extends AppCompatActivity {
         }
 
     }
-
-
-
-
 
 
 }

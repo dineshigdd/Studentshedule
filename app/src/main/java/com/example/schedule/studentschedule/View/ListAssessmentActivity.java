@@ -36,7 +36,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_assessment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        AssessmentActivity.editing = false;
+        AssessmentActivity.isEditing = false;
         dbManager = new DbManager(this);
         dbManager.open();
 
@@ -94,7 +94,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 intent.putExtra("serializeData", list.get(position));
-                AssessmentActivity.editing = true;
+                AssessmentActivity.isEditing = true;
                 startActivity(intent);
             }
         });
@@ -105,6 +105,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         editAssessment();
+
     }
 
 
