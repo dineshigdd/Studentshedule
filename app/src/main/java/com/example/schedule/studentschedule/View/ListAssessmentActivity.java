@@ -1,5 +1,6 @@
 package com.example.schedule.studentschedule.View;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,10 +26,11 @@ public class ListAssessmentActivity extends AppCompatActivity {
 
       private DbManager dbManager;
       private ArrayList<String> assessmentList;
-      private int termId;
-      private int courseId;
+      private static int termId;
+      private static int courseId;
       private ListView listAssessment;
-      private ArrayList<Assessment> list ;
+      protected ArrayList<Assessment> list ;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +38,14 @@ public class ListAssessmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_assessment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        AssessmentActivity.isEditing = false;
+
         dbManager = new DbManager(this);
         dbManager.open();
 
-
-        termId = (int)getIntent().getSerializableExtra("TERM_ID");
-        courseId = (int)getIntent().getSerializableExtra("COURSE_ID");
+        if( AssessmentActivity.isEditing ) {
+            termId = (int) getIntent().getSerializableExtra("TERM_ID");
+            courseId = (int) getIntent().getSerializableExtra("COURSE_ID");
+        }
         //int mentorId = (int)getIntent().getSerializableExtra("MENTOR_ID");
 
 
@@ -60,20 +63,22 @@ public class ListAssessmentActivity extends AppCompatActivity {
 
 
         list = dbManager.getAssessmentOfCourse(termId,courseId,table);
-        assessmentList = new ArrayList<>();
 
-        for(int i = 0 ; i < list.size() ; i++ ){
-            assessmentList.add(
-                    list.get(i).getTitle() + "\n" +
-                    list.get(i).getType() + "\n" +
-                    list.get(i).getDueDate());
-        }
+            assessmentList = new ArrayList<>();
+
+            for (int i = 0; i < list.size(); i++) {
+                assessmentList.add(
+                        list.get(i).getTitle() + "\n" +
+                                list.get(i).getType() + "\n" +
+                                list.get(i).getDueDate());
+            }
 
 
-        listAssessment = findViewById(R.id.listAssessment);
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_1, assessmentList);
-        listAssessment.setAdapter(listViewAdapter);
+            listAssessment = findViewById(R.id.listAssessment);
+            ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_list_item_1, assessmentList);
+            listAssessment.setAdapter(listViewAdapter);
+
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -94,6 +99,8 @@ public class ListAssessmentActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 intent.putExtra("serializeData", list.get(position));
+                intent.putExtra("assessment-Id", list.get(position).getAssessmentId());
+//                intent.putExtra( "list-size",list.size());
                 AssessmentActivity.isEditing = true;
                 startActivity(intent);
             }
@@ -109,6 +116,9 @@ public class ListAssessmentActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
 
-
+        super.onBackPressed();
+    }
 }

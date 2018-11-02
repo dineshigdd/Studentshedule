@@ -95,15 +95,9 @@ public class DbManager {
         return  values;
     }
 
-
-
-
-
     public long getRowCount(String tableName){
         return DatabaseUtils.queryNumEntries(mDatabase,tableName);
     }
-
-
 
 
     public void insertData(String tableName,ContentValues  values){
@@ -271,7 +265,7 @@ public class DbManager {
         String selection =
                 DbHelper.TABLE_COURSE + "." + DbHelper.COURSE_ID + "=" + DbHelper.TABLE_ASSIGN + "." +  DbHelper.ASSIGN_COURSE_ID +
                         " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=" + DbHelper.TABLE_TERM + "." + DbHelper.TERM_ID +
-                        " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=?" ;
+                        " AND " + DbHelper.TABLE_TERM + "." + DbHelper.TERM_ID + "=?" ;
 
         Cursor cursor = query(true,
                 table,
@@ -354,10 +348,14 @@ public class DbManager {
     }
 
 
-    public int getAssignId( int termId, int courseId, int mentorId  ){
+    public int getAssignId( int termId, int courseId, int altID , String tablename ){
         int assignId = 0;
-        String selection = DbHelper.ASSIGN_TERM_ID + "=?" + " AND " + DbHelper.ASSIGN_COURSE_ID + "=?" + " AND " + DbHelper.ASSIGN_MENTOR_ID + "=?";
-        String [] selectionArgs = { String.valueOf(termId) , String.valueOf(courseId) , String.valueOf(mentorId)};
+        String altColumn = ( tablename == DbHelper.TABLE_MENTOR ?   DbHelper.ASSIGN_MENTOR_ID :  DbHelper.ASSIGN_ASSESSMENT_ID );
+
+
+
+        String selection = DbHelper.ASSIGN_TERM_ID + "=?" + " AND " + DbHelper.ASSIGN_COURSE_ID + "=?" + " AND " + altColumn + "=?";
+        String [] selectionArgs = { String.valueOf(termId) , String.valueOf(courseId) , String.valueOf(altID)};
 
         Cursor cursor = query(
                 true,

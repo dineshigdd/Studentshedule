@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.DropBoxManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -602,7 +603,8 @@ public class CourseActivity extends AppCompatActivity {
                 int editAssignId =   dbManager.getAssignId(
                         Integer.parseInt(editCourseTermId),
                         editCourse.getItemId(),
-                        editMentor.getMentorId()
+                        editMentor.getMentorId(),
+                        DbHelper.TABLE_MENTOR
                 );
 
 
@@ -876,7 +878,8 @@ public class CourseActivity extends AppCompatActivity {
         int assignId = dbManager.getAssignId(
                 Integer.parseInt(editCourseTermId)
                 ,editCourse.getItemId(),
-                editMentor.getMentorId());
+                editMentor.getMentorId(),
+                DbHelper.TABLE_MENTOR);
 
        int assessmentId = dbManager.getAssessmentId(Integer.parseInt(editCourseTermId),editCourse.getItemId());
 
@@ -974,14 +977,9 @@ public class CourseActivity extends AppCompatActivity {
           return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
 
-    }
 
-   
 }
 
 

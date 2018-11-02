@@ -26,7 +26,7 @@ public class TermActivity extends AppCompatActivity {
     DbManager dbManager;
     private ArrayList<DataItem> list;
     private ArrayList<Button> btn;
-    private  int listPosition;
+    private int listPosition;
     private ListView listTerm;
     private int termId;
     Button deleteBtn;
@@ -113,13 +113,18 @@ public class TermActivity extends AppCompatActivity {
     public  void buttonClickHandler(View view) {
         //Button btn = findViewById(R.id.btnAddTerm);
 //        btn.setText(Integer.toString(listPosition));
-//        Toast.makeText(this,Integer.toString(listPosition),Toast.LENGTH_LONG);
-        try {
-            removeTerm();
-        }catch (Exception e){
-                  Toast.makeText(this,"One or more course are assigned to this term. " +
-                                  "You must first remove all courses to delete the term",
-                    Toast.LENGTH_LONG ).show();
+        Toast.makeText(this,Integer.toString(listPosition),Toast.LENGTH_LONG).show();
+        if(listPosition > 0 ) {
+            try {
+                removeTerm();
+            } catch (Exception e) {
+                Toast.makeText(this, "One or more course are assigned to this term. " +
+                                "You must first remove all courses to delete the term",
+                        Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),
+                    "Please, first Click on the record to select it", Toast.LENGTH_LONG).show();
         }
 
     }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.support.v13.view.DragStartHelper;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -117,7 +120,6 @@ public class AssessmentActivity extends AppCompatActivity{
         populateSppiner(term, spTerm);
 
         spCourse = new Spinner(this);
-        spCourse.setPrompt("select course");
         mainLayout.addView(spCourse);
 //
 
@@ -259,11 +261,13 @@ public class AssessmentActivity extends AppCompatActivity{
 
         if( !isEditing) {
             submitbtnActionHandler();
-        }else{
-            spTerm.setEnabled(false);
-            spCourse.setEnabled(false);
-            setEditData();
-            updatebtnHandler();
+        }else if(isEditing){
+                spTerm.setEnabled(false);
+                spCourse.setEnabled(false);
+                    if( dbManager.getRowCount( DbHelper.TABLE_ASSESSMENT) > 0 ) {
+                        setEditData();
+                        updatebtnHandler();
+                    }
         }
 
         displayBtnHandler();
@@ -306,10 +310,10 @@ public class AssessmentActivity extends AppCompatActivity{
             public void onClick(View v) {
                 termID = termId;  //to use later in the updatebtnActionHandler
                 courseID = courseId; //to use later in the updatebtnActionHandler
-
+                isEditing = true;
                 Intent intent = new Intent(getApplicationContext(),ListAssessmentActivity.class);
-                intent.putExtra("TERM_ID",termId);
-                intent.putExtra("COURSE_ID",courseId);
+                intent.putExtra("TERM_ID",termID);
+                intent.putExtra("COURSE_ID",courseID);
                 startActivity(intent);
 
             }
@@ -460,7 +464,7 @@ public class AssessmentActivity extends AppCompatActivity{
                     );
 
 
-                    int assignId = dbManager.getAssignId(termId,courseId,mentorId);
+                    int assignId = dbManager.getAssignId(termId,courseId,mentorId, DbHelper.TABLE_MENTOR);
                     Log.d("ASSIGN id:" , String.valueOf(assignId));
                     assign.setAssessmentId(assessmentId);
                     values = dbManager.setData(assign, "assign");
@@ -528,7 +532,7 @@ public class AssessmentActivity extends AppCompatActivity{
                     + course.get(i).getStartDate() + " to "
                     + course.get(i).getEndDate());
                 }
-                     populateSppiner(courseTitle, spCourse);
+                     populateSppiner( courseTitle, spCourse );
 
                 if( isEditing ){
                     spCoursePosition = 0;
@@ -536,6 +540,7 @@ public class AssessmentActivity extends AppCompatActivity{
                         spCoursePosition++;
                     }
                     Log.d("spCoursePosition: " , String.valueOf(spCoursePosition));
+
                     spCourse.setSelection(spCoursePosition);
 
                 }
@@ -593,7 +598,6 @@ public class AssessmentActivity extends AppCompatActivity{
         tv.setLayoutParams(DateLayoutDimensions);
 
 
-
     }
 
 
@@ -626,5 +630,76 @@ public class AssessmentActivity extends AppCompatActivity{
         }else return -1;
         cursor.close();
         return mentorId;
+    }
+
+    private void removeAssessment(){
+
+        int assessmentId = (int) getIntent().getSerializableExtra("assessment-Id");
+
+        int assignId = dbManager.getAssignId(termId,courseId,assessmentId,DbHelper.TABLE_ASSESSMENT );
+
+        String selection  ;
+        selection = DbHelper.ASSIGN_ID + "=?";
+        dbManager.delete(DbHelper.TABLE_ASSIGN,selection,assignId);
+
+        Log.d("assessmentId :", String.valueOf(assessmentId));
+        selection = DbHelper.ASSESSMENT_ID + "=?";
+        dbManager.delete(DbHelper.TABLE_ASSESSMENT, selection,assessmentId);
+
+            Intent intent = new Intent(getApplicationContext(), ListAssessmentActivity.class);
+            startActivity(intent);
+            AssessmentActivity.isEditing = false;
+            // displayBtnHandler();
+            finish();
+    }
+
+    private AlertDialog deleateConfirmation()
+    {
+        AlertDialog alertDialog =new AlertDialog.Builder(this)
+                //set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Do you want to Delete")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        removeAssessment();
+
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return alertDialog;
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        if( isEditing ) {
+            menu.add(0, 0, 0, "Delete").
+                    setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        if( item.getItemId() == 0 ) {
+            AlertDialog diaBox = deleateConfirmation();
+            diaBox.show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
