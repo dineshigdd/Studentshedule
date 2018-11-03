@@ -55,8 +55,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
 
 
 
-        String table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT + "," +
-                DbHelper.TABLE_ASSIGN;
+        String table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT ;
 
 //        int numberOfAssessments   = dbManager.getQueryCount(termId,courseId,table);
 //        Log.d("numberOfAssessments :", Integer.toString(numberOfAssessments));
@@ -118,7 +117,14 @@ public class ListAssessmentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+            AssessmentActivity.isEditing = false;
 
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        AssessmentActivity.isEditing = false;
+        return super.onSupportNavigateUp();
     }
 }

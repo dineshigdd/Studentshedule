@@ -7,17 +7,36 @@ public class Assessment implements Serializable {
     private String title;
     private String type;
     private String dueDate;
-
+    private int termID;
+    private int courseID;
 
     public Assessment() {
     }
 
-    public Assessment(String title, String type, String dueDate) {
-
+    public Assessment(String title, String type, String dueDate, int termID, int courseID) {
         this.title = title;
         this.type = type;
         this.dueDate = dueDate;
+        this.termID = termID;
+        this.courseID = courseID;
     }
+
+    public int getTermID() {
+        return termID;
+    }
+
+    public void setTermID(int termID) {
+        this.termID = termID;
+    }
+
+    public int getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(int courseID) {
+        this.courseID = courseID;
+    }
+
 
 
     public int getAssessmentId() {

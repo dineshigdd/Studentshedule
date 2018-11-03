@@ -686,21 +686,21 @@ public class CourseActivity extends AppCompatActivity {
                     mentorId = mentorList.get(mentorList.size() - 1).getMentorId();
                 }
 
-                Assessment assessment = new Assessment(
-                        null,
-                        null,
-                        null
-                );
-
-
-                values = dbManager.setData(assessment,"assessment");
-                dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
-                values.clear();
-
-                if( dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) != 0 ) {
-                    ArrayList<Assessment> assessmentList = dbManager.getAllAssesment();
-                    assessmentId = assessmentList.get(assessmentList.size() - 1).getAssessmentId();
-                }
+//                Assessment assessment = new Assessment(
+//                        null,
+//                        null,
+//                        null
+//                );
+//
+//
+//                values = dbManager.setData(assessment,"assessment");
+//                dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
+//                values.clear();
+//
+//                if( dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) != 0 ) {
+//                    ArrayList<Assessment> assessmentList = dbManager.getAllAssesment();
+//                    assessmentId = assessmentList.get(assessmentList.size() - 1).getAssessmentId();
+//                }
 
 
                 assign = new Assign();
@@ -709,7 +709,7 @@ public class CourseActivity extends AppCompatActivity {
                     assign.setTermId(termId.intValue());
                     assign.setCourseId(courseId);
                     assign.setMentorId(mentorId);
-                    assign.setAssessmentId(assessmentId);
+//                    assign.setAssessmentId(assessmentId);
                 }catch (Exception e){
 
                 }
@@ -892,8 +892,8 @@ public class CourseActivity extends AppCompatActivity {
         dbManager.delete(DbHelper.TABLE_COURSE, selection,editCourse.getItemId());
 
 
-        selection = DbHelper.ASSESSMENT_ID + "=?";
-        dbManager.delete(DbHelper.TABLE_ASSESSMENT, selection,assessmentId);
+//        selection = DbHelper.ASSESSMENT_ID + "=?";
+//        dbManager.delete(DbHelper.TABLE_ASSESSMENT, selection,assessmentId);
 
         //ListCourseActivity.isCourseEditing = false;
         Intent intent = new Intent(getApplicationContext(),ListCourseActivity.class);

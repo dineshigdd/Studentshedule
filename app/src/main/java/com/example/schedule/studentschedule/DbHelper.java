@@ -28,6 +28,8 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String ASSESSMENT_TITLE ="assessmentTitle";
     public static final String ASSESSMENT_TYPE = "assessmentType";
     public static final String ASSESSMENT_DUE_DATE = "assessmentDueDate";
+    public static final String ASSESSMENT_TERM_ID = "termID";
+    public static final String ASSESSMENT_COURSE_ID = "courseID";
 
     public static final String TABLE_MENTOR = "mentor";
     public static final String MENTOR_ID = "_id";
@@ -75,7 +77,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     ASSESSMENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ASSESSMENT_TITLE + " TEXT, " +
                     ASSESSMENT_TYPE + " TEXT, " +
-                    ASSESSMENT_DUE_DATE + " TEXT" + ")";
+                    ASSESSMENT_DUE_DATE + " TEXT," +
+                    ASSESSMENT_TERM_ID + " INTEGER, " +
+                    ASSESSMENT_COURSE_ID + " INTEGER, " +
+                    "FOREIGN KEY (" + ASSESSMENT_TERM_ID + ") REFERENCES " + TABLE_TERM + "(" + TERM_ID + "), " +
+                    "FOREIGN KEY (" + ASSESSMENT_COURSE_ID + ") REFERENCES " + TABLE_COURSE + "(" + COURSE_ID + ")" +
+                    " ON DELETE CASCADE " +
+                    " ON UPDATE CASCADE " + ")";
 
     //creating Mentor table
     private static final String MENTOR_TABLE_CREATE =
@@ -91,11 +99,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     ASSIGN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ASSIGN_TERM_ID + " INTEGER, " +
                     ASSIGN_COURSE_ID + " INTEGER, " +
-                    ASSIGN_ASSESSMENT_ID + " INTEGER DEFAULT NULL, " +
                     ASSIGN_MENTOR_ID + " INTEGER, " +
                     "FOREIGN KEY (" + ASSIGN_TERM_ID + ") REFERENCES " + TABLE_TERM + "(" + TERM_ID + "), " +
                     "FOREIGN KEY (" + ASSIGN_COURSE_ID + ") REFERENCES " + TABLE_COURSE + "(" + COURSE_ID + "), " +
-                    "FOREIGN KEY (" + ASSIGN_ASSESSMENT_ID + ") REFERENCES " + TABLE_ASSESSMENT + "(" + ASSESSMENT_ID + "), " +
                     "FOREIGN KEY (" + ASSIGN_MENTOR_ID + ") REFERENCES " + TABLE_MENTOR+ "(" + MENTOR_ID + ") " +
                         " ON DELETE CASCADE " +
                         " ON UPDATE CASCADE " + ")";

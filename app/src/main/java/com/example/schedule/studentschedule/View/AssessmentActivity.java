@@ -91,8 +91,7 @@ public class AssessmentActivity extends AppCompatActivity{
         mainLayout.setOrientation(LinearLayout.VERTICAL);
         dbManager = new DbManager(this);
         dbManager.open();
-        table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT + "," +
-                DbHelper.TABLE_ASSIGN;
+        table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT ;
 
         //Term spinner-------------------------------------
         spTerm = new Spinner(this);
@@ -364,6 +363,8 @@ public class AssessmentActivity extends AppCompatActivity{
                 assessment.setTitle(edText.getText().toString());
                 assessment.setType(radValue);
                 assessment.setDueDate(tv.getText().toString());
+                assessment.setTermID(termID);
+                assessment.setCourseID(courseID);
 
                 Log.d("Update ID:", String.valueOf(assessment.getAssessmentId()));
                 Log.d("Update AssTitle: ",assessment.getTitle());
@@ -375,29 +376,6 @@ public class AssessmentActivity extends AppCompatActivity{
                 String condition = DbHelper.ASSESSMENT_ID + "=?";
                 dbManager.update(DbHelper.TABLE_ASSESSMENT, values, condition, assessment.getAssessmentId());
                 AssessmentActivity.isEditing = false;
-
-                        /*
-                Edit assignment table
-                int editAssignId =   dbManager.getAssignId(
-                termID,
-                courseID,
-                getMentorId(termID,courseID)
-                );
-
-
-                Assign editAssign = new Assign(
-                termID,
-                courseID,
-                getMentorId(termID,courseID)
-                );
-
-                // editAssign.setAssignId(editAssignId);
-
-
-                values = dbManager.setData(editAssign,DbHelper.TABLE_ASSIGN);
-                condition =  DbHelper.ASSIGN_ID + "=?";
-                dbManager.update(DbHelper.TABLE_ASSIGN,values,condition,editAssignId);
-                */
 
             }
         });
@@ -423,58 +401,61 @@ public class AssessmentActivity extends AppCompatActivity{
                     assessmentId = dbManager.getAssessmentId(termId,courseId);
                     Log.d("Assessment in Assessment Activtivity id:" , String.valueOf(assessmentId));
                     //get the record for corresponding assessment in the assessment table
-                    boolean isInsertOp = false;
-                    Assessment assessmentRecord = dbManager.getAssessment(assessmentId);
+//                    boolean isInsertOp = false;
+//                    Assessment assessmentRecord = dbManager.getAssessment(assessmentId);
+//
+//                    if (assessmentRecord.getTitle()== null ) {
+//                        isInsertOp = false; //do not do insert operation
+//                       Log.d("IsInsert top",  String.valueOf(isInsertOp ));
+//                    }else {
+//                        isInsertOp = true;  // do insert
+//                        Log.d("IsInsert top",  String.valueOf(isInsertOp ));
+//                    }
+//
 
-                    if (assessmentRecord.getTitle()== null ) {
-                        isInsertOp = false; //do not do insert operation
-                       Log.d("IsInsert top",  String.valueOf(isInsertOp ));
-                    }else {
-                        isInsertOp = true;  // do insert
-                        Log.d("IsInsert top",  String.valueOf(isInsertOp ));
-                    }
-
-
-                    assessment = new Assessment(
+                     assessment = new Assessment(
                             edText.getText().toString(),
                             radValue,
-                            tv.getText().toString()
+                            tv.getText().toString(),
+                            termId,
+                            courseId
                     );
 
 
                     ContentValues values;
-                    values = dbManager.setData(assessment, "assessment");
-                    if( isInsertOp == false ) {
-                        String condition = DbHelper.ASSESSMENT_ID + "=?";
-                        dbManager.update(DbHelper.TABLE_ASSESSMENT, values, condition, assessmentId);
-                    }else if( isInsertOp ){
-                        dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
-                        assessmentId = dbManager.getAllAssesment().get(dbManager.getAllAssesment().size() - 1).getAssessmentId();
-                    }
+                    values = dbManager.setData(assessment, DbHelper.TABLE_ASSESSMENT);
+                    dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
+//                    if( isInsertOp == false ) {
+//                        String condition = DbHelper.ASSESSMENT_ID + "=?";
+//                        dbManager.update(DbHelper.TABLE_ASSESSMENT, values, condition, assessmentId);
+//                    }else if( isInsertOp ){
+//                        dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
+//                        assessmentId = dbManager.getAllAssesment().get(dbManager.getAllAssesment().size() - 1).getAssessmentId();
+//                    }
 
-                    values.clear();
+//                    values.clear();
+//
+////                    ArrayList<Assessment> assessmentList = dbManager.getAllAssesment();
+////                    int assessmentId = assessmentList.get(assessmentList.size() - 1).getAssessmentId();
+//
+//                    Assign assign = new Assign(
+//                            termId,
+//                            courseId,
+//                            mentorId
+//                    );
 
-//                    ArrayList<Assessment> assessmentList = dbManager.getAllAssesment();
-//                    int assessmentId = assessmentList.get(assessmentList.size() - 1).getAssessmentId();
 
-                    Assign assign = new Assign(
-                            termId,
-                            courseId,
-                            mentorId
-                    );
-
-
-                    int assignId = dbManager.getAssignId(termId,courseId,mentorId, DbHelper.TABLE_MENTOR);
-                    Log.d("ASSIGN id:" , String.valueOf(assignId));
-                    assign.setAssessmentId(assessmentId);
-                    values = dbManager.setData(assign, "assign");
-                    Log.d("assessmentCounter BEFORE IF: ", String.valueOf(assessmentCounter));
-                    if( isInsertOp == false ) {
-                        String condition = DbHelper.ASSIGN_ID + "=?";
-                        dbManager.update(DbHelper.TABLE_ASSIGN, values, condition, assignId);
-                    }else if(isInsertOp){
-                        dbManager.insertData(DbHelper.TABLE_ASSIGN,values);
-                    }
+//                    int assignId = dbManager.getAssignId(termId,courseId,mentorId, DbHelper.TABLE_MENTOR);
+//                    Log.d("ASSIGN id:" , String.valueOf(assignId));
+//                    assign.setAssessmentId(assessmentId);
+//                    values = dbManager.setData(assign, "assign");
+//                    Log.d("assessmentCounter BEFORE IF: ", String.valueOf(assessmentCounter));
+//                    if( isInsertOp == false ) {
+//                        String condition = DbHelper.ASSIGN_ID + "=?";
+//                        dbManager.update(DbHelper.TABLE_ASSIGN, values, condition, assignId);
+//                    }else if(isInsertOp){
+//                        dbManager.insertData(DbHelper.TABLE_ASSIGN,values);
+//                    }
 
 
                 } else {
@@ -636,11 +617,9 @@ public class AssessmentActivity extends AppCompatActivity{
 
         int assessmentId = (int) getIntent().getSerializableExtra("assessment-Id");
 
-        int assignId = dbManager.getAssignId(termId,courseId,assessmentId,DbHelper.TABLE_ASSESSMENT );
+//        int assessmentId = dbManager.getAssessmentId(termId,courseId);
 
         String selection  ;
-        selection = DbHelper.ASSIGN_ID + "=?";
-        dbManager.delete(DbHelper.TABLE_ASSIGN,selection,assignId);
 
         Log.d("assessmentId :", String.valueOf(assessmentId));
         selection = DbHelper.ASSESSMENT_ID + "=?";

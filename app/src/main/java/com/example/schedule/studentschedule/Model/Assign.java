@@ -4,7 +4,7 @@ public class Assign {
     private int assignId;
     private int termId;
     private int courseId;
-    private int assessmentId;
+//    private int assessmentId;
     private int mentorId;
 
 
@@ -40,13 +40,13 @@ public class Assign {
         this.assignId = assignId;
     }
 
-    public int getAssessmentId() {
-        return assessmentId;
-    }
-
-    public void setAssessmentId(int assessmentId) {
-        this.assessmentId = assessmentId;
-    }
+//    public int getAssessmentId() {
+//        return assessmentId;
+//    }
+//
+//    public void setAssessmentId(int assessmentId) {
+//        this.assessmentId = assessmentId;
+//    }
 
     public int getMentorId() {
         return mentorId;

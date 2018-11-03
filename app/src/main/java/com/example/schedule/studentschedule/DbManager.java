@@ -66,6 +66,8 @@ public class DbManager {
                 values.put(DbHelper.ASSESSMENT_TITLE, assessmentObj.getTitle());
                 values.put(DbHelper.ASSESSMENT_TYPE, assessmentObj.getType());
                 values.put(DbHelper.ASSESSMENT_DUE_DATE, assessmentObj.getDueDate());
+                values.put(DbHelper.ASSESSMENT_TERM_ID, assessmentObj.getTermID());
+                values.put(DbHelper.ASSESSMENT_COURSE_ID, assessmentObj.getCourseID());
                 // id = mDatabase.insert(tableName, null, values);
                 break;
 
@@ -82,7 +84,6 @@ public class DbManager {
 
                 values.put(DbHelper.ASSIGN_TERM_ID, assignObj.getTermId());
                 values.put(DbHelper.ASSIGN_COURSE_ID,assignObj.getCourseId());
-                values.put(DbHelper.ASSIGN_ASSESSMENT_ID, assignObj.getAssessmentId());
                 values.put(DbHelper.ASSIGN_MENTOR_ID, assignObj.getMentorId());
 
 //
@@ -300,13 +301,13 @@ public class DbManager {
 
     public int getAssessmentId( int termId, int courseId ){
         int assessmentId = 0;
-        String selection = DbHelper.ASSIGN_TERM_ID + "=?" + " AND " + DbHelper.ASSIGN_COURSE_ID + "=?";
+        String selection = DbHelper.ASSESSMENT_TERM_ID + "=?" + " AND " + DbHelper.ASSESSMENT_COURSE_ID + "=?";
         String [] selectionArgs = { String.valueOf(termId) , String.valueOf(courseId) };
 
         Cursor cursor = query(
                 true,
-                DbHelper.TABLE_ASSIGN,
-                new String[]{ DbHelper.ASSIGN_ASSESSMENT_ID },
+                DbHelper.TABLE_ASSESSMENT,
+                new String[]{ DbHelper.ASSESSMENT_ID },
                 selection,
                 selectionArgs,null,null,null,null);
 
@@ -315,7 +316,7 @@ public class DbManager {
         if( isAssessment ) {
             if (!cursor.isAfterLast()) {
                 do {
-                    assessmentId = cursor.getInt(cursor.getColumnIndex(DbHelper.ASSIGN_ASSESSMENT_ID));
+                    assessmentId = cursor.getInt(cursor.getColumnIndex(DbHelper.ASSESSMENT_ID));
 //                    assign.setTermId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSIGN_TERM_ID)));
 //                    assign.setCourseId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSIGN_COURSE_ID)));
 //                    assign.setMentorId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSIGN_MENTOR_ID)));
@@ -395,14 +396,15 @@ public class DbManager {
 
         public int getQueryCount(int termId, int courseId, String tablename){
         String selection =
-                DbHelper.TABLE_ASSESSMENT + "." + "_id" + "=" + DbHelper.ASSIGN_ASSESSMENT_ID + " AND " +
-                DbHelper.TABLE_TERM + "." + "_id" + "=" + DbHelper.ASSIGN_TERM_ID + " AND " +
-                DbHelper.TABLE_COURSE + "." + "_id" + "=" + DbHelper.ASSIGN_COURSE_ID + " AND " +
-                DbHelper.ASSIGN_COURSE_ID + "=?" + " AND "+
-                DbHelper.ASSIGN_TERM_ID + "=?" + " AND "+ DbHelper.ASSESSMENT_TITLE + " IS NOT NULL";
+
+                DbHelper.TABLE_TERM + "." + "_id" + "=" + DbHelper.ASSESSMENT_TERM_ID + " AND " +
+                DbHelper.TABLE_COURSE + "." + "_id" + "=" + DbHelper.ASSESSMENT_COURSE_ID + " AND " +
+                DbHelper.ASSESSMENT_COURSE_ID + "=?" + " AND "+
+                DbHelper.ASSESSMENT_TERM_ID + "=?" ;
+//                        DbHelper.ASSESSMENT_TITLE + " IS NOT NULL";
 
         Cursor cursor = query(false,
-                tablename,new String []{ DbHelper.TABLE_ASSESSMENT + "."+ DbHelper.ASSESSMENT_ID},
+                tablename,new String []{  DbHelper.TABLE_ASSESSMENT + "." + DbHelper.ASSESSMENT_ID },
                 selection,  new String[]{String.valueOf(courseId), String.valueOf(termId)},
                 null,
                 null,
@@ -416,11 +418,10 @@ public class DbManager {
     public ArrayList<Assessment> getAssessmentOfCourse(int termId, int courseId, String tablename){
         ArrayList<Assessment> list = new ArrayList<>();
         String selection =
-                DbHelper.TABLE_ASSESSMENT + "." + "_id" + "=" + DbHelper.ASSIGN_ASSESSMENT_ID + " AND " +
-                        DbHelper.TABLE_TERM + "." + "_id" + "=" + DbHelper.ASSIGN_TERM_ID + " AND " +
-                        DbHelper.TABLE_COURSE + "." + "_id" + "=" + DbHelper.ASSIGN_COURSE_ID + " AND " +
-                        DbHelper.ASSIGN_COURSE_ID + "=?" + " AND "+
-                        DbHelper.ASSIGN_TERM_ID + "=?" + " AND "+ DbHelper.ASSESSMENT_TITLE + " IS NOT NULL";
+                        DbHelper.TABLE_TERM + "." + "_id" + "=" + DbHelper.ASSESSMENT_TERM_ID + " AND " +
+                        DbHelper.TABLE_COURSE + "." + "_id" + "=" + DbHelper.ASSESSMENT_COURSE_ID + " AND " +
+                        DbHelper.ASSESSMENT_COURSE_ID + "=?" + " AND "+
+                        DbHelper.ASSESSMENT_TERM_ID + "=?" ;
 
         Cursor cursor = query(false,
                 tablename,new String []{ DbHelper.TABLE_ASSESSMENT + "."+ DbHelper.ASSESSMENT_ID },
