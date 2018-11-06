@@ -22,5 +22,7 @@
     <string name="select_term">Select Term:</string>
     <string name="title_activity_list_course">ListCourseActivity</string>
     <string name="title_activity_list_assessment">ListAssessmentActivity</string>
+    <string name="channel_name" />
+    <string name="channel_description" />
 
 </resources>

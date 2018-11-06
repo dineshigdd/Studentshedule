@@ -1,8 +1,10 @@
 package com.example.schedule.studentschedule.View;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,18 +30,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
+import com.example.schedule.studentschedule.MainActivity;
 import com.example.schedule.studentschedule.Model.Assessment;
 import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.CourseListAdapter;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentschedule.Model.Mentor;
+import com.example.schedule.studentschedule.MyReceiver;
 import com.example.schedule.studentshedule.R;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -51,6 +57,7 @@ import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 import static java.sql.Types.NULL;
 
 public class CourseActivity extends AppCompatActivity {
+
     private Button submit;
     private Course course;
     private Mentor mentor;
@@ -93,6 +100,7 @@ public class CourseActivity extends AppCompatActivity {
     private String courseTitle;
     private int assessmentId;
     private CourseListAdapter dataAdapter;
+    private Calendar calendar;
 
     @SuppressLint("ResourceType")
     @Override
@@ -317,7 +325,7 @@ public class CourseActivity extends AppCompatActivity {
         mainLayout.addView(CourseLayout);
 
         //StartDate and EndDate UI Elements----------------------------------------
-
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         tv = new TextView(this); // to hold the date from Datepicker dialog
 
         TextView startDateTvLabel = addTextView(getString(R.string.start_date));
@@ -325,9 +333,11 @@ public class CourseActivity extends AppCompatActivity {
         startDateTv.setHint(getString(R.string.select_date));
         setDate(startDateTvLabel, startDateTv, 202);
         startDateTv.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
+                calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
                 month = calendar.get(Calendar.MONTH) + 1;
                 date = calendar.get(Calendar.DAY_OF_MONTH);
@@ -346,6 +356,8 @@ public class CourseActivity extends AppCompatActivity {
         });
 
 
+        
+        
         TextView endDateTvLabel = addTextView(getString(R.string.end_date));
         endDateTv = addTextView("");
         endDateTv.setHint(getString(R.string.end_date));
@@ -686,21 +698,6 @@ public class CourseActivity extends AppCompatActivity {
                     mentorId = mentorList.get(mentorList.size() - 1).getMentorId();
                 }
 
-//                Assessment assessment = new Assessment(
-//                        null,
-//                        null,
-//                        null
-//                );
-//
-//
-//                values = dbManager.setData(assessment,"assessment");
-//                dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
-//                values.clear();
-//
-//                if( dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) != 0 ) {
-//                    ArrayList<Assessment> assessmentList = dbManager.getAllAssesment();
-//                    assessmentId = assessmentList.get(assessmentList.size() - 1).getAssessmentId();
-//                }
 
 
                 assign = new Assign();
@@ -719,6 +716,8 @@ public class CourseActivity extends AppCompatActivity {
                     //Toast.makeText(CourseActivity.this,Long.toString(numItems) ,Toast.LENGTH_SHORT);
                  values = dbManager.setData(assign, "assign");
                  dbManager.insertData(DbHelper.TABLE_ASSIGN,values);
+
+
 //                }
 //                else{
 //                    Toast.makeText(CourseActivity.this,"record is already there",Toast.LENGTH_SHORT);
@@ -954,6 +953,8 @@ public class CourseActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
     @Override

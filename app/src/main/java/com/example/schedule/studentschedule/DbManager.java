@@ -135,29 +135,28 @@ public class DbManager {
         return cursor;
     }
 
-//    public int getTermId(String termTitle, String startDate, String endDate ){
-//        int termId = 0;
-//        final String[] columns = {DbHelper.TERM_ID };
-//        //        cursor = dbManager.query("Select "+ DbHelper.TERM_TITLE + " FROM "+ DbHelper.TABLE_TERM);
-//        String selection = DbHelper.TERM_TITLE + "=?" + " AND " + DbHelper.TERM_START_DATE + "=?" + " AND " + DbHelper.TERM_END_DATE + "=?";
-//        String [] selectionArg = { termTitle, startDate , endDate };
-//        Cursor cursor = query(true, DbHelper.TABLE_TERM, columns, selection, selectionArg, null,
-//                null, null, null);
-//
-//
-//        boolean isTerm =  cursor.moveToFirst();
-//        if( isTerm ) {
-//            if (!cursor.isAfterLast()) {
-//                do {
-//
-//                    termId = cursor.getInt(cursor.getColumnIndex(DbHelper.TERM_ID);
-//
-//                } while (cursor.moveToNext());
-//            }
-//        }else   return -1;
-//        cursor.close();
-//        return termId;
-//    }
+    public  ArrayList<String> getDate(String tablename, String date){
+        ArrayList<String> list = new ArrayList<>();
+
+        String [] column = new String[]{ date } ;
+
+
+        Cursor cursor = query(false,tablename,column,null ,
+             null,
+                null,null,null,null);
+
+        boolean isDate =  cursor.moveToFirst();
+        if( isDate ) {
+            if (!cursor.isAfterLast()) {
+                do {
+                    list.add(cursor.getString(cursor.getColumnIndex(date)));
+
+                } while (cursor.moveToNext());
+            }
+        }else  return null;
+        cursor.close();
+        return list;
+    }
 
     public ArrayList<DataItem>getAllTerms() {
         ArrayList<DataItem> list = new ArrayList();

@@ -4,6 +4,7 @@ package com.example.schedule.studentschedule.View;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +39,8 @@ import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentschedule.Model.Mentor;
+import com.example.schedule.studentschedule.MyReceiver;
+import com.example.schedule.studentschedule.startNotification;
 import com.example.schedule.studentshedule.R;
 
 import java.util.ArrayList;
@@ -82,6 +85,7 @@ public class AssessmentActivity extends AppCompatActivity{
     private static int courseID;
     private int spCoursePosition;
 
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +95,11 @@ public class AssessmentActivity extends AppCompatActivity{
         mainLayout.setOrientation(LinearLayout.VERTICAL);
         dbManager = new DbManager(this);
         dbManager.open();
+
+
+        //notification = new startNotification();
+
+
         table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT ;
 
         //Term spinner-------------------------------------
@@ -483,7 +492,7 @@ public class AssessmentActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
             setupAssessment();
-
+            //ArrayList<String> list = dbManager.getDate(DbHelper.COURSE_START_DATE);
 
 
 //    btnDisplay.setOnClickListener(new View.OnClickListener() {
