@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     public static boolean isStartAlert;
     public static boolean isEndAlert;
     public static boolean isDueDateAlert;
-    private Intent intent;
+    private static Intent intent;
     private PendingIntent sender;
 
 
@@ -47,47 +47,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         isEndAlert = false;
         isDueDateAlert = false;
 
-        intent = new Intent(this, MyReceiver.class);
 
 
-//        DbManager scheduleDbManager = new DbManager(this);
-//
-//        //inserting  term Data
-//        ContentValues values= new ContentValues();
-//        DataItem sTerm = new DataItem("Spring","2018-10-20","2019-10-20");
-//
-//
-//        scheduleDbManager.insertData( sTerm,"term");
-//        values.clear();
-//
-//        Course sCourse = new Course("Math","2018-11-20", "2019-11-20","complted","Test Note");
-//        scheduleDbManager.insertData(sCourse,"course");
-//        values.clear();
-//
-//        Assessment sAssessment = new Assessment("Cs Test","performance","2019-11-20");
-//        scheduleDbManager.insertData(sAssessment,"assessment");
-//        values.clear();
-//
-//        Mentor sMentor = new Mentor("Dinesh","818984","d@yahoo.com");
-//        scheduleDbManager.insertData(sMentor,"mentor");
-//
-//        values.clear();
 
-//        Assign sAssign = new Assign(
-//        values.put( DbHelper.ASSIGN_TERM_ID,DbHelper.TERM_ID);
-//        values.put( DbHelper.ASSIGN_COURSE_ID,DbHelper.COURSE_ID);
-//        values.put( DbHelper.ASSIGN_MENTOR_ID,DbHelper.MENTOR_ID);
-//        scheduleDbManager.insertData("assign",values);
-        int delay = 0;
-        showNotification();
-        showAssessmentNotification();
-        if( isStartAlert || isEndAlert || isStartAlert ) {
-            delay = 10000;
-        }
-            sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-            PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis() + delay , sender);
+
+
+
+
 
 
 
@@ -272,17 +238,57 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
     }
-/*
+
     @Override
-    protected void onPause() {
-        super.onPause();
-        scheduleDbManager.close();
+    protected void onDestroy() {
+        intent = new Intent(this, MyReceiver.class);
+        showNotification();
+        showAssessmentNotification();
+        startNotification();
+        Log.d("I am","destroy");
+        super.onDestroy();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        scheduleDbManager.open();
+    protected void onStop() {
+        intent = new Intent(this, MyReceiver.class);
+        showNotification();
+        showAssessmentNotification();
+        startNotification();
+        Log.d("I am","stop");
+        super.onStop();
     }
-    */
+
+    @Override
+    protected void onPause() {
+        Log.d("I am","pause");
+        intent = new Intent(this, MyReceiver.class);
+        showNotification();
+        showAssessmentNotification();
+        startNotification();
+        super.onPause();
+
+    }
+
+//    @Override
+//    protected void onResume() {
+//        Log.d("I am","resume");
+//        showNotification();
+//        showAssessmentNotification();
+//        startNotification();
+//        super.onResume();
+//
+//    }
+
+    private void startNotification() {
+
+        int delay = 0;
+        if (isStartAlert || isEndAlert || isStartAlert) {
+            delay = 10000;
+        }
+        sender = PendingIntent.getBroadcast(this, 0, intent, 0);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis() + delay, sender);
+    }
 }

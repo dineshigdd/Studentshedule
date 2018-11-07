@@ -86,7 +86,8 @@ public class AssessmentActivity extends AppCompatActivity{
     private static int courseID;
     private int spCoursePosition;
     private CheckBox checkBox;
-
+    private TextView tvCourseNote;
+    private Button btnShareNotes;
 
     @SuppressLint("ResourceType")
     @Override
@@ -274,6 +275,26 @@ public class AssessmentActivity extends AppCompatActivity{
         DateLayout.addView(tv);
         mainLayout.addView(DateLayout);
 
+        TextView courseTvLabel = addTextView("Course Notes:");
+        mainLayout.addView(courseTvLabel);
+        tvCourseNote = addTextView("");
+        mainLayout.addView(tvCourseNote);
+
+        btnShareNotes = new Button(this);
+      //  btnShareNotes.setBackgroundColor(R.color.colorWhite);
+        btnShareNotes.setText("Share Notes");
+        btnShareNotes.setTextColor(R.color.colorBlue);
+        btnShareNotes.setTextSize(11);
+        LinearLayout btnShareNotesLayout = new LinearLayout(this);//
+        LinearLayout.LayoutParams btnShareNotesDimensions = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        btnShareNotesDimensions.setMargins(10,15,0,0);
+        btnShareNotesLayout.setLayoutParams(btnShareNotesDimensions);
+        btnShareNotesLayout.addView(btnShareNotes);
+        mainLayout.addView(btnShareNotesLayout);
+
         //submit -----------------------------------
         submit = new Button(this);
         if( !isEditing ) {
@@ -282,24 +303,24 @@ public class AssessmentActivity extends AppCompatActivity{
             submit.setText("Save");
         }
         LinearLayout btnLayout = new LinearLayout(this);
-//
+
         LinearLayout.LayoutParams btnLayoutDimensions = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-//
+
         btnLayoutDimensions.setMargins(275,25,100,0);
         btnLayout.setLayoutParams(btnLayoutDimensions);
         btnLayout.addView(submit);
         mainLayout.addView(btnLayout);
 
-
+        //------------------------------------------
         btnDisplay = new Button(this);
-        btnDisplay.setText("Show assessment");
+        btnDisplay.setText(getString(R.string.view_assessment));
         LinearLayout btnDisplayLayout = new LinearLayout(this);//
         LinearLayout.LayoutParams btnDisplayLayoutDimensions = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-//
+
         btnDisplayLayoutDimensions.setMargins(200,40,100,0);
         btnDisplayLayout.setLayoutParams(btnDisplayLayoutDimensions);
         btnDisplayLayout.addView(btnDisplay);
@@ -543,6 +564,7 @@ public class AssessmentActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
             setupAssessment();
+            shareCourseNote();
             //ArrayList<String> list = dbManager.getDate(DbHelper.COURSE_START_DATE);
 
 
@@ -574,6 +596,9 @@ public class AssessmentActivity extends AppCompatActivity{
                     + course.get(i).getEndDate());
                 }
                      populateSppiner( courseTitle, spCourse );
+
+
+
 
                 if( isEditing ){
                     spCoursePosition = 0;
@@ -612,10 +637,12 @@ public class AssessmentActivity extends AppCompatActivity{
         spCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position , long id) {
-
-                courseId = dbManager.getCoursesOfTerm(termId).get(position).getItemId();
+                Course course = dbManager.getCoursesOfTerm(termId).get(position);
+                courseId = course.getItemId();
                 assessmentCounter = dbManager.getQueryCount(termId, courseId, table);
-                 Toast.makeText(AssessmentActivity.this,"Course Id:" + courseId, Toast.LENGTH_LONG).show();
+
+                tvCourseNote.setText(course.getNotes());
+                Toast.makeText(AssessmentActivity.this,"Course Id:" + courseId, Toast.LENGTH_LONG).show();
 
             }
 
@@ -627,7 +654,19 @@ public class AssessmentActivity extends AppCompatActivity{
 
     }
 
+    private void  shareCourseNote(){
+        btnShareNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.setType("text/plain");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, tvCourseNote.getText());
 
+                startActivity(sendIntent);
+            }
+        });
+    }
 
     private TextView addTextView(String label) {
         TextView tv = new TextView(this);
