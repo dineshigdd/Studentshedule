@@ -174,8 +174,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
                 if (list.get(i).getDueDateAlert().equalsIgnoreCase("true") && difference == 0) {
 
-
-
                     assessmentList = assessmentList + "\n" + list.get(i).getTitle();
                     Log.d("list item:",assessmentList);
                     dueDate = list.get(i).getDueDate();
@@ -193,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
             }
             }catch(Exception e){
-            e.printStackTrace();
+                   isDueDateAlert = false;
 
         }
     }
@@ -268,7 +266,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            isStartAlert = false;
+            isEndAlert = false;
+
         }
 
     }

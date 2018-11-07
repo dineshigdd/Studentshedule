@@ -25,5 +25,6 @@
     <string name="channel_name" />
     <string name="channel_description" />
     <string name="alert">Alert Me</string>
+    <string name="view_assessment">View Assessments</string>
 
 </resources>

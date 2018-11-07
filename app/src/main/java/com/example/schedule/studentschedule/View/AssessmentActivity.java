@@ -82,7 +82,7 @@ public class AssessmentActivity extends AppCompatActivity{
     private int mentorId;
     private String table;
     public static boolean isEditing;
-    private static int termID;
+    private static int  termID;
     private static int courseID;
     private int spCoursePosition;
     private CheckBox checkBox;
@@ -121,6 +121,7 @@ public class AssessmentActivity extends AppCompatActivity{
                     " to " + termList.get(i).getEndDate());
         }
 
+
         //Inserting keys and Values
 //        for (int i = 0; i < list.size(); i++) {
 //            mapId.put(term.get(i + 1), list.get(i).getItemId());
@@ -128,6 +129,27 @@ public class AssessmentActivity extends AppCompatActivity{
 //        }
 
         populateSppiner(term, spTerm);
+
+        //IF THE USER ACCESS THIS ACTIVITY FROM COURSE ACTIVITY
+        int termIDfromCourse;
+        try {
+            termIDfromCourse = (int) getIntent().getSerializableExtra("TERM-ID-FROM-COURSE");
+            Log.d("termIDfromCourse", String.valueOf(termIDfromCourse));
+
+            int spTermPosition = 0;
+            if (termIDfromCourse > 0) {
+                while (spTermPosition < termList.size() && termList.get(spTermPosition).getItemId() != termIDfromCourse) {
+                    spTermPosition++;
+                }
+                spTerm.setSelection(spTermPosition);
+                spTerm.setEnabled(false);
+            }
+        }catch (Exception e){
+            termIDfromCourse = 0;
+        }
+
+
+
 
         spCourse = new Spinner(this);
         mainLayout.addView(spCourse);
@@ -291,7 +313,7 @@ public class AssessmentActivity extends AppCompatActivity{
         }else if(isEditing){
                 spTerm.setEnabled(false);
                 spCourse.setEnabled(false);
-                    if( dbManager.getRowCount( DbHelper.TABLE_ASSESSMENT) > 0 ) {
+                    if( dbManager.getRowCount( DbHelper.TABLE_ASSESSMENT ) > 0 ) {
                         setEditData();
                         updatebtnHandler();
                     }
@@ -335,6 +357,7 @@ public class AssessmentActivity extends AppCompatActivity{
         btnDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 termID = termId;  //to use later in the updatebtnActionHandler
                 courseID = courseId; //to use later in the updatebtnActionHandler
                 isEditing = true;
@@ -352,6 +375,8 @@ public class AssessmentActivity extends AppCompatActivity{
     private void setEditData() {
         //Load spTerm
         assessment = (Assessment)getIntent().getSerializableExtra("serializeData");
+        termID = (int)getIntent().getSerializableExtra("term-id");
+        courseID = (int)getIntent().getSerializableExtra("course-id");
         int spTermPosition = 0;
         while( spTermPosition < termList.size() && termList.get(spTermPosition).getItemId()!= termID ){
             spTermPosition = spTermPosition + 1;
@@ -560,6 +585,21 @@ public class AssessmentActivity extends AppCompatActivity{
                     spCourse.setSelection(spCoursePosition);
 
                 }
+
+                int courseIDfromCourse;
+                try {
+                    courseIDfromCourse = (int) getIntent().getSerializableExtra("COURSE-ID-FROM-COURSE");
+                    int spCoursePosition = 0;
+                    if (courseIDfromCourse > 0) {
+                        while (spCoursePosition < course.size() && course.get(spCoursePosition).getItemId() != courseIDfromCourse) {
+                            spCoursePosition++;
+                        }
+                        spCourse.setSelection(spCoursePosition);
+                        spCourse.setEnabled(false);
+                    }
+                }catch(Exception e){
+                    courseIDfromCourse = 0;
+                }
             }
 
             @Override
@@ -663,6 +703,7 @@ public class AssessmentActivity extends AppCompatActivity{
             Intent intent = new Intent(getApplicationContext(), ListAssessmentActivity.class);
             startActivity(intent);
             AssessmentActivity.isEditing = false;
+            ListCourseActivity.isCourseEditing = false;
             // displayBtnHandler();
             finish();
     }

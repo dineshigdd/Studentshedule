@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
@@ -42,7 +43,13 @@ public class ListAssessmentActivity extends AppCompatActivity {
         dbManager = new DbManager(this);
         dbManager.open();
 
-        if( AssessmentActivity.isEditing ) {
+
+        if( ListCourseActivity.isCourseEditing &&  !AssessmentActivity.isEditing  ){
+            termId = (int)getIntent().getSerializableExtra("TERM-ID-FROM-COURSE");
+            courseId=(int)getIntent().getSerializableExtra("COURSE-ID-FROM-COURSE");
+        }
+
+        if( !ListCourseActivity.isCourseEditing && AssessmentActivity.isEditing ) {
             termId = (int) getIntent().getSerializableExtra("TERM_ID");
             courseId = (int) getIntent().getSerializableExtra("COURSE_ID");
         }
@@ -72,7 +79,6 @@ public class ListAssessmentActivity extends AppCompatActivity {
                                 list.get(i).getDueDate());
             }
 
-
             listAssessment = findViewById(R.id.listAssessment);
             ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(
                     this, android.R.layout.simple_list_item_1, assessmentList);
@@ -96,9 +102,12 @@ public class ListAssessmentActivity extends AppCompatActivity {
         listAssessment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Intent intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 intent.putExtra("serializeData", list.get(position));
                 intent.putExtra("assessment-Id", list.get(position).getAssessmentId());
+                intent.putExtra("term-id", termId);
+                intent.putExtra("course-id",courseId);
 //                intent.putExtra( "list-size",list.size());
                 AssessmentActivity.isEditing = true;
                 startActivity(intent);
@@ -117,7 +126,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-            AssessmentActivity.isEditing = false;
+          AssessmentActivity.isEditing = false;
 
         super.onBackPressed();
     }
@@ -125,6 +134,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         AssessmentActivity.isEditing = false;
+        Toast.makeText(this,"goin back",Toast.LENGTH_SHORT).show();
         return super.onSupportNavigateUp();
     }
 }

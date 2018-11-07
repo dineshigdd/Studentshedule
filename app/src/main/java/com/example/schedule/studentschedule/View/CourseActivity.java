@@ -43,7 +43,6 @@ public class CourseActivity extends AppCompatActivity {
     private Button submit;
     private Course course;
     private Mentor mentor;
-
     private EditText edTextNotes;
     private DbManager dbManager;
     protected LinearLayout mainLayout;
@@ -86,7 +85,7 @@ public class CourseActivity extends AppCompatActivity {
     private RelativeLayout DateLayout;
     private CheckBox checkBox;
     private CheckBox endCheckBox;
-
+    private  Intent intent;
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +104,11 @@ public class CourseActivity extends AppCompatActivity {
         edCustomCourseLayout = new RelativeLayout(this);
         customCourseEditText = new EditText(this);
 
+        if( !ListCourseActivity.isCourseEditing) {
+            intent = new Intent(CourseActivity.this, AssessmentActivity.class);
+        }else{
+            intent = new Intent(CourseActivity.this, ListAssessmentActivity.class);
+        }
         //Select term ---------------------------------------
 
         // int[] to = {android.R.id.text1};
@@ -210,6 +214,7 @@ public class CourseActivity extends AppCompatActivity {
               //  submit.setText(spTerm.getSelectedItem().toString());
                 String key = spTerm.getSelectedItem().toString();
                 termId = mapId.get(key);
+
                // Log.d("Term Id in CourseActivity:" , termId );
             //    String termId = ;
 
@@ -528,21 +533,63 @@ public class CourseActivity extends AppCompatActivity {
         NotesLayout.addView(edTextNotes);
         mainLayout.addView(NotesLayout);
 
+
+
         ///  submit button------------------------------
         submit = new Button(this);
         submit.setText("Add Course");
         LinearLayout btnLayout = new LinearLayout(this);
 //
         LinearLayout.LayoutParams btnLayoutDimensions = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
 //
-        btnLayoutDimensions.setMargins(175,10,100,0);
+        btnLayoutDimensions.setMargins(205,10,100,0);
         btnLayout.setLayoutParams(btnLayoutDimensions);
         btnLayout.addView(submit);
         mainLayout.addView(btnLayout);
 
         submitbtnActionHandler();
+
+
+        Button btnAddAssessment = new Button(this);
+        if( ! ListCourseActivity.isCourseEditing) {
+            btnAddAssessment.setText(getString(R.string.add_assessment));
+        }else{
+            btnAddAssessment.setText(getString(R.string.view_assessment));
+        }
+
+
+        LinearLayout btnAssessmentLayout = new LinearLayout(this);
+//
+        LinearLayout.LayoutParams btnAssessmentLayoutDimension = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+        btnAssessmentLayoutDimension.setMargins(180,55,100,0);
+        btnAssessmentLayout.setLayoutParams(btnAssessmentLayoutDimension);
+        btnAssessmentLayout.addView(btnAddAssessment);
+        mainLayout.addView(btnAssessmentLayout);
+
+        btnAddAssessment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if( !ListCourseActivity.isCourseEditing ) {
+                    intent.putExtra("TERM-ID-FROM-COURSE", termId);
+                    intent.putExtra("COURSE-ID-FROM-COURSE", courseId);
+                }else{
+                    intent.putExtra("TERM-ID-FROM-COURSE", Integer.parseInt(editCourseTermId));
+                    intent.putExtra("COURSE-ID-FROM-COURSE", editCourse.getItemId());
+                }
+                startActivity(intent);
+            }
+
+        });
+
+
+
+
 
         if( ListCourseActivity.isCourseEditing )
             { //if editing

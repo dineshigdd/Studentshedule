@@ -98,7 +98,7 @@ public class MyReceiver extends BroadcastReceiver {
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(notificationID, endNotification);
-            MainActivity.isEndAlert = false;
+            MainActivity.isDueDateAlert = false;
         }
 
         notificationID++;
