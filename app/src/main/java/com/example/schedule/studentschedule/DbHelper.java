@@ -19,7 +19,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COURSE_ID = "_id";
     public static final String COURSE_TITLE="courseTitle";
     public static final String COURSE_START_DATE = "courseStartDate";
+    public static final String COURSE_START_ALERT = "startDateAlert";
     public static final String COURSE_END_DATE = "courseEndDate";
+    public static final String COURSE_END_ALERT = "endDateAlert";
     public static final String COURSE_STATUS = "courseStatus";
     public static final String COURSE_NOTES = "courseNotes";
 
@@ -28,6 +30,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String ASSESSMENT_TITLE ="assessmentTitle";
     public static final String ASSESSMENT_TYPE = "assessmentType";
     public static final String ASSESSMENT_DUE_DATE = "assessmentDueDate";
+    public static final String ASSESSMENT_DUE_DATE_ALERT = "dueDateAlert";
     public static final String ASSESSMENT_TERM_ID = "termID";
     public static final String ASSESSMENT_COURSE_ID = "courseID";
 
@@ -47,11 +50,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
    /* public static final String[] ALL_COLUMNS_TERM    = { TERM_ID, TERM_TITLE , TERM_START_DATE , TERM_END_DATE };*/
-    public static final String[] ALL_COLUMNS_COURSE   = { DbHelper.TABLE_COURSE + "."+ COURSE_ID, COURSE_TITLE , COURSE_START_DATE ,
-           COURSE_END_DATE ,COURSE_STATUS ,COURSE_NOTES };
+    public static final String[] ALL_COLUMNS_COURSE   = { DbHelper.TABLE_COURSE + "."+ COURSE_ID, COURSE_TITLE , COURSE_START_DATE,
+           COURSE_START_ALERT , COURSE_END_DATE , COURSE_END_ALERT ,COURSE_STATUS ,COURSE_NOTES };
     public static final String[] All_COLUMNS_MENTOR = {  DbHelper.TABLE_MENTOR + "."+ MENTOR_ID, MENTOR_NAME , MENTOR_PHONE , MENTOR_EMAIL };
     //SQL to create term table
-    public static final String[] All_COLUMNS_ASSESSMENT = { ASSESSMENT_ID, ASSESSMENT_TITLE , ASSESSMENT_TYPE , ASSESSMENT_DUE_DATE };
+    public static final String[] All_COLUMNS_ASSESSMENT = { ASSESSMENT_ID, ASSESSMENT_TITLE , ASSESSMENT_TYPE ,
+            ASSESSMENT_DUE_DATE , ASSESSMENT_DUE_DATE_ALERT };
 
     private static final String TERM_TABLE_CREATE =
             "CREATE TABLE " + TABLE_TERM  + " (" +
@@ -66,7 +70,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COURSE_TITLE + " TEXT, " +
                     COURSE_START_DATE + " TEXT, " +
+                    COURSE_START_ALERT + " TEXT, "+
                     COURSE_END_DATE + " TEXT, " +
+                    COURSE_END_ALERT + " TEXT, "+
                     COURSE_STATUS + " TEXT, " +
                     COURSE_NOTES + " TEXT" + ")";
 
@@ -78,6 +84,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     ASSESSMENT_TITLE + " TEXT, " +
                     ASSESSMENT_TYPE + " TEXT, " +
                     ASSESSMENT_DUE_DATE + " TEXT," +
+                    ASSESSMENT_DUE_DATE_ALERT + " TEXT," +
                     ASSESSMENT_TERM_ID + " INTEGER, " +
                     ASSESSMENT_COURSE_ID + " INTEGER, " +
                     "FOREIGN KEY (" + ASSESSMENT_TERM_ID + ") REFERENCES " + TABLE_TERM + "(" + TERM_ID + "), " +

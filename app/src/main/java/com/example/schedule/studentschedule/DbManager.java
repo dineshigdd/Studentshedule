@@ -53,7 +53,9 @@ public class DbManager {
                 Course courseObj = (Course) dataObj;
                 values.put(DbHelper.COURSE_TITLE, courseObj.getItem());
                 values.put(DbHelper.COURSE_START_DATE, courseObj.getStartDate());
+                values.put(DbHelper.COURSE_START_ALERT, courseObj.getStartDateAlert());
                 values.put(DbHelper.COURSE_END_DATE, courseObj.getEndDate());
+                values.put(DbHelper.COURSE_END_ALERT, courseObj.getEndDateAlert());
                 values.put(DbHelper.COURSE_STATUS, courseObj.getStatus());
                 values.put(DbHelper.COURSE_NOTES, courseObj.getNotes());
 
@@ -66,6 +68,7 @@ public class DbManager {
                 values.put(DbHelper.ASSESSMENT_TITLE, assessmentObj.getTitle());
                 values.put(DbHelper.ASSESSMENT_TYPE, assessmentObj.getType());
                 values.put(DbHelper.ASSESSMENT_DUE_DATE, assessmentObj.getDueDate());
+                values.put(DbHelper.ASSESSMENT_DUE_DATE_ALERT,assessmentObj.getDueDateAlert());
                 values.put(DbHelper.ASSESSMENT_TERM_ID, assessmentObj.getTermID());
                 values.put(DbHelper.ASSESSMENT_COURSE_ID, assessmentObj.getCourseID());
                 // id = mDatabase.insert(tableName, null, values);
@@ -188,7 +191,7 @@ public class DbManager {
         ArrayList<Course> list = new ArrayList();
 
 
-        Cursor cursor = query(true, DbHelper.TABLE_COURSE, DbHelper.ALL_COLUMNS_COURSE, null, null, null,
+        Cursor cursor = query(false, DbHelper.TABLE_COURSE, DbHelper.ALL_COLUMNS_COURSE, null, null, null,
                 null, null, null);
 
         boolean isCourse =  cursor.moveToFirst();
@@ -199,7 +202,9 @@ public class DbManager {
                     course.setItemId(cursor.getInt(cursor.getColumnIndex(DbHelper.COURSE_ID)));
                     course.setItem(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_TITLE)));
                     course.setStartDate(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_START_DATE)));
+                    course.setStartDateAlert(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_START_ALERT)));
                     course.setEndDate(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_END_DATE)));
+                    course.setEndDateAlert(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_END_ALERT)));
                     list.add(course);
                 } while (cursor.moveToNext());
             }
@@ -247,6 +252,7 @@ public class DbManager {
                     assessment.setTitle(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_TITLE)));
                     assessment.setType(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_TYPE)));
                     assessment.setDueDate(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_DUE_DATE)));
+                    assessment.setDueDateAlert(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_DUE_DATE_ALERT)));
                     list.add(assessment);
                 } while (cursor.moveToNext());
             }

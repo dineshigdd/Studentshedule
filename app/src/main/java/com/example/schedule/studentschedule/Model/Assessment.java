@@ -7,6 +7,7 @@ public class Assessment implements Serializable {
     private String title;
     private String type;
     private String dueDate;
+    private String dueDateAlert;
     private int termID;
     private int courseID;
 
@@ -36,8 +37,6 @@ public class Assessment implements Serializable {
     public void setCourseID(int courseID) {
         this.courseID = courseID;
     }
-
-
 
     public int getAssessmentId() {
         return assessmentId;
@@ -71,5 +70,11 @@ public class Assessment implements Serializable {
         this.dueDate = dueDate;
     }
 
+    public String getDueDateAlert() {
+        return dueDateAlert;
+    }
 
+    public void setDueDateAlert(String dueDateAlert) {
+        this.dueDateAlert = dueDateAlert;
+    }
 }

@@ -1,60 +1,42 @@
 package com.example.schedule.studentschedule.View;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.DropBoxManager;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
-import com.example.schedule.studentschedule.MainActivity;
-import com.example.schedule.studentschedule.Model.Assessment;
 import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.CourseListAdapter;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentschedule.Model.Mentor;
-import com.example.schedule.studentschedule.MyReceiver;
 import com.example.schedule.studentshedule.R;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
-import static java.sql.Types.NULL;
 
 public class CourseActivity extends AppCompatActivity {
 
@@ -101,6 +83,9 @@ public class CourseActivity extends AppCompatActivity {
     private int assessmentId;
     private CourseListAdapter dataAdapter;
     private Calendar calendar;
+    private RelativeLayout DateLayout;
+    private CheckBox checkBox;
+    private CheckBox endCheckBox;
 
     @SuppressLint("ResourceType")
     @Override
@@ -325,13 +310,32 @@ public class CourseActivity extends AppCompatActivity {
         mainLayout.addView(CourseLayout);
 
         //StartDate and EndDate UI Elements----------------------------------------
-        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        tv = new TextView(this); // to hold the date from Datepicker dialog
 
+
+
+        tv = new TextView(this); // to hold the date from Datepicker dialog
+        tv.setId(554);
         TextView startDateTvLabel = addTextView(getString(R.string.start_date));
         startDateTv= addTextView("");
         startDateTv.setHint(getString(R.string.select_date));
+        startDateTv.setId(602);
         setDate(startDateTvLabel, startDateTv, 202);
+
+        RelativeLayout checkBoxLayout = new RelativeLayout(this);
+        checkBox = new CheckBox(this);
+        checkBox.setText("Alert Me");
+        checkBox.setId(603);
+
+        RelativeLayout.LayoutParams checkboxDimension = new RelativeLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        checkboxDimension.addRule(RelativeLayout.END_OF,startDateTv.getId());
+        checkBox.setLayoutParams(checkboxDimension);
+
+        DateLayout.addView(checkBox);
+
+        mainLayout.addView(checkBoxLayout);
         startDateTv.setOnClickListener(new View.OnClickListener() {
 
 
@@ -360,8 +364,24 @@ public class CourseActivity extends AppCompatActivity {
         
         TextView endDateTvLabel = addTextView(getString(R.string.end_date));
         endDateTv = addTextView("");
+        endDateTv.setId(605);
         endDateTv.setHint(getString(R.string.end_date));
         setDate(endDateTvLabel, endDateTv, 203);
+
+        endCheckBox = new CheckBox(this);
+        endCheckBox.setText("Alert Me");
+        endCheckBox.setId(604);
+
+        RelativeLayout.LayoutParams endCheckboxDimension = new RelativeLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        endCheckboxDimension.addRule(RelativeLayout.END_OF,endDateTv.getId());
+        endCheckBox.setLayoutParams(endCheckboxDimension);
+
+        DateLayout.addView(endCheckBox);
+
+
         endDateTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -527,6 +547,7 @@ public class CourseActivity extends AppCompatActivity {
         if( ListCourseActivity.isCourseEditing )
             { //if editing
             startDateTv.setText(editCourse.getStartDate());
+            checkBox.setChecked(Boolean.parseBoolean(editCourse.getStartDateAlert()));
             endDateTv.setText(editCourse.getEndDate());
             edTextNotes.setText(editCourse.getNotes());
             String status = editCourse.getStatus();
@@ -669,7 +690,26 @@ public class CourseActivity extends AppCompatActivity {
                             spStatus.getSelectedItem().toString(),
                             edTextNotes.getText().toString()
                     );
-                    values = dbManager.setData(course, "course");
+
+
+
+                if(checkBox.isChecked()){
+                    course.setStartDateAlert("true");
+
+                }else{
+                    course.setStartDateAlert("false");
+
+                }
+
+                if(endCheckBox.isChecked()){
+                    course.setEndDateAlert("true");
+
+                }else{
+                    course.setEndDateAlert("false");
+
+                }
+
+                    values = dbManager.setData(course, DbHelper.TABLE_COURSE);
                     dbManager.insertData(DbHelper.TABLE_COURSE, values);
                     values.clear();
 
@@ -725,6 +765,7 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
     private Mentor getMentorData(){
@@ -791,8 +832,9 @@ public class CourseActivity extends AppCompatActivity {
 
     }
 
-    private void setDate(TextView tvLabel,TextView tv, int id) {
-        RelativeLayout DateLayout = new RelativeLayout(this);
+    @SuppressLint("ResourceType")
+    private void setDate(TextView tvLabel, TextView tv, int id) {
+        DateLayout = new RelativeLayout(this);
         tvLabel.setId(id);
         DateLayout.addView(tvLabel);
 
@@ -805,6 +847,7 @@ public class CourseActivity extends AppCompatActivity {
 
         tv.setLayoutParams(DateLayoutDimensions);
         DateLayout.addView(tv);
+        DateLayout.setId(600);
         mainLayout.addView(DateLayout);
 
 

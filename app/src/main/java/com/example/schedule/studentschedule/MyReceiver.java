@@ -32,36 +32,76 @@ public class MyReceiver extends BroadcastReceiver {
         // an Intent broadcast.
        // Toast.makeText(context, "Notification", Toast.LENGTH_LONG).show();
 
-        String date = intent.getSerializableExtra("DATE").toString();
-        String startcourse = intent.getSerializableExtra("START-COURSE").toString();
-        String endcourse = intent.getSerializableExtra("END-COURSE").toString();
-
-        Toast.makeText(context, startcourse, Toast.LENGTH_LONG).show();
         createNotificationChannel(context, channel_id);
 
-        Notification startNotification = new NotificationCompat.Builder(context, channel_id)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentText(startcourse + " course/courses start Date is on " + date )
-                .setContentTitle("Test of Notification with an id of :" + Integer.toString(notificationID))
-                .build();
+        if( MainActivity.isStartAlert ) {
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationID, startNotification);
+            String startDate = intent.getSerializableExtra("START-DATE").toString();
+            String startcourse = intent.getSerializableExtra("START-COURSE").toString();
+            Toast.makeText(context, startcourse, Toast.LENGTH_LONG).show();
+
+            Notification startNotification = new NotificationCompat.Builder(context, channel_id)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentText(startcourse + " course/courses start Date is on " + startDate )
+                    .setContentTitle("Start Day Of Courses")
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText( "The following courses starts on "+ startDate + "\n"+ startcourse ))
+                    .build();
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(notificationID, startNotification);
+            MainActivity.isStartAlert = false;
+
+        }
+        notificationID++;
+
+        if( MainActivity.isEndAlert ) {
+
+            String endDate = intent.getSerializableExtra("END-DATE").toString();
+            String endCourse = intent.getSerializableExtra("END-COURSE").toString();
+            Log.d("endDate",endDate);
+         //   String endcourse = intent.getSerializableExtra("END-COURSE").toString();
+
+            Notification endNotification = new NotificationCompat.Builder(context, channel_id)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentText(endCourse+ " course/courses End Date is on " + endDate )
+                    .setContentTitle("End Day Of Courses")
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText( ( "The following courses ends on "+ endDate + "\n"+ endCourse )))
+                    .build();
+
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(notificationID, endNotification);
+            MainActivity.isEndAlert = false;
+        }
+
+
 
         notificationID++;
 
-        Notification endNotification = new NotificationCompat.Builder(context, channel_id)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentText(endcourse + " course/courses End Date is on " + date )
-                .setContentTitle("Test of Notification with an id of :" + Integer.toString(notificationID))
-                .setGroup(COURSE_GROUP)
-                .build();
+        if( MainActivity.isDueDateAlert ) {
+
+            String dueDate = intent.getSerializableExtra("DUE-DATE").toString();
+            String assessment = intent.getSerializableExtra("ASSESSMENT").toString();
+
+            //   String endcourse = intent.getSerializableExtra("END-COURSE").toString();
+
+            Notification endNotification = new NotificationCompat.Builder(context, channel_id)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentText(assessment+ " Due Date is on " + dueDate )
+                    .setContentTitle("Assessment Due Date")
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText( ( "The following Assessment ends on "+ dueDate + "\n"+ assessment )))
+                    .build();
 
 
-         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-         notificationManager.notify(notificationID, endNotification);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(notificationID, endNotification);
+            MainActivity.isEndAlert = false;
+        }
 
-
+        notificationID++;
 //        throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -79,6 +119,7 @@ public class MyReceiver extends BroadcastReceiver {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
 
 
 

@@ -75,7 +75,10 @@
         <receiver
             android:name="com.example.schedule.studentschedule.MyReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true">
+            <intent-filter><action android:name="me.proft.alarms.ACTION_ALARM" /></intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

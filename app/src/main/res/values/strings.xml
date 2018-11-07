@@ -24,5 +24,6 @@
     <string name="title_activity_list_assessment">ListAssessmentActivity</string>
     <string name="channel_name" />
     <string name="channel_description" />
+    <string name="alert">Alert Me</string>
 
 </resources>

@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -40,7 +41,7 @@ import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentschedule.Model.Mentor;
 import com.example.schedule.studentschedule.MyReceiver;
-import com.example.schedule.studentschedule.startNotification;
+
 import com.example.schedule.studentshedule.R;
 
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ public class AssessmentActivity extends AppCompatActivity{
     private static int termID;
     private static int courseID;
     private int spCoursePosition;
+    private CheckBox checkBox;
 
 
     @SuppressLint("ResourceType")
@@ -208,8 +210,25 @@ public class AssessmentActivity extends AppCompatActivity{
         tvLabel.setId(310);
         tv = addTextView("");
         tv.setHint("Select Due Date");
+        tv.setId(311);
         setDate(tvLabel,tv,310);
+
+
+        checkBox = new CheckBox(this);
+        checkBox.setText("Alert Me");
+        checkBox.setId(603);
+
+        RelativeLayout.LayoutParams checkboxDimension = new RelativeLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        checkboxDimension.addRule(RelativeLayout.END_OF,tv.getId());
+        checkBox.setLayoutParams(checkboxDimension);
+
+        DateLayout.addView(checkBox);
         DateLayout.addView(tvLabel);
+
+
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -429,6 +448,13 @@ public class AssessmentActivity extends AppCompatActivity{
                             termId,
                             courseId
                     );
+
+                    if(checkBox.isChecked()){
+                        assessment.setDueDateAlert("true");
+
+                    }else{
+                        assessment.setDueDateAlert("false");
+                    }
 
 
                     ContentValues values;
