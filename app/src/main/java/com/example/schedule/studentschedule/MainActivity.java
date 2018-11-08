@@ -36,8 +36,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     public static boolean isDueDateAlert;
     private static Intent intent;
     private PendingIntent sender;
-
-
+    String startDay = "";
+    String endDay = "";
+    String startCourseList = "";
+    String endCourseList = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         isEndAlert = false;
         isDueDateAlert = false;
 
-
-
+        intent = new Intent(getApplicationContext(), MyReceiver.class);
+        showNotification();
+        showAssessmentNotification();
+        startNotification();
 
 
 
@@ -115,50 +119,55 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         DbManager dbManager = new DbManager(this);
         dbManager.open();
 
-        ArrayList<Assessment> list = dbManager.getAllAssesment();
-        String assessmentList = "";
+        if( dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) > 0 ) {
+            ArrayList<Assessment> list = dbManager.getAllAssesment();
+            String assessmentList = "";
 
-        //--------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------
 
-        long difference;
-        String dueDate="";
+            long difference;
+            String dueDate = "";
 
-        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        Date currentDate = new Date();
-        String strCurrentDate = df.format(currentDate);
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            Date currentDate = new Date();
+            String strCurrentDate = df.format(currentDate);
 
-        try {
-            currentDate = df.parse(strCurrentDate);
-            Date dbDate;
+            try {
+                currentDate = df.parse(strCurrentDate);
+                Date dbDate;
 
-            for (int i = 0; i < list.size(); i++) {
-                Log.d("list item:", list.get(i).toString());
-                dbDate = df.parse(list.get(i).getDueDate());
-                difference = dbDate.getTime() - currentDate.getTime();
+                for (int i = 0; i < list.size(); i++) {
+                    Log.d("list item:", list.get(i).toString());
+                    dbDate = df.parse(list.get(i).getDueDate());
+                    difference = dbDate.getTime() - currentDate.getTime();
 
-                Log.d("difference", Long.toString(difference));
+                    Log.d("difference", Long.toString(difference));
 
-                if (list.get(i).getDueDateAlert().equalsIgnoreCase("true") && difference == 0) {
+                    if (list.get(i).getDueDateAlert().equalsIgnoreCase("true") && difference == 0) {
 
-                    assessmentList = assessmentList + "\n" + list.get(i).getTitle();
-                    Log.d("list item:",assessmentList);
-                    dueDate = list.get(i).getDueDate();
+                        assessmentList = assessmentList + "\n" + list.get(i).getTitle();
+                        Log.d("list item:", assessmentList);
+                        dueDate = list.get(i).getDueDate();
 
-                    isDueDateAlert = true;
+                        isDueDateAlert = true;
+                    }
+
                 }
 
-            }
+                if (isDueDateAlert) {
 
-            if( isDueDateAlert ) {
+                    intent.putExtra("DUE-DATE", dueDate);
+                    intent.putExtra("ASSESSMENT", assessmentList);
 
+
+                }
+            } catch (Exception e) {
                 intent.putExtra("DUE-DATE", dueDate);
                 intent.putExtra("ASSESSMENT", assessmentList);
-
+                e.printStackTrace();
+//                   isDueDateAlert = false;
 
             }
-            }catch(Exception e){
-                   isDueDateAlert = false;
-
         }
     }
 
@@ -171,8 +180,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         dbManager.open();
 
         ArrayList<Course> list = dbManager.getAllCourse();
-        String startCourseList = "";
-        String endCourseList = "";
+
         //--------------------------------------------------------------------------------------
 
         long startdatedifference = 0;
@@ -186,9 +194,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             currentDate = df.parse(strCurrentDate);
             Date dbstartDate;
             Date dbendDate;
+//            String startDay = "";
+//            String endDay = "";
 
-            String startDay = "";
-            String endDay = "";
             for (int i = 0; i < list.size(); i++) {
 
                 dbstartDate = df.parse(list.get(i).getStartDate());
@@ -218,40 +226,34 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             }
 
 
-            if (isStartAlert || isEndAlert) {
 
-                intent.putExtra("START-DATE", startDay);
-                intent.putExtra("START-COURSE", startCourseList);
-                intent.putExtra("END-DATE", endDay);
-                intent.putExtra("END-COURSE", endCourseList);
-
-
-//                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//                alarmManager.set(AlarmManager.RTC_WAKEUP, 0, sender);
-            }
 
 
         } catch (Exception e) {
-            isStartAlert = false;
-            isEndAlert = false;
+//            isStartAlert = false;
+//            isEndAlert = false;
+            intent.putExtra("START-DATE", startDay);
+            intent.putExtra("START-COURSE", startCourseList);
+            intent.putExtra("END-DATE", endDay);
+            intent.putExtra("END-COURSE", endCourseList);
 
         }
 
     }
 
-    @Override
-    protected void onDestroy() {
-        intent = new Intent(this, MyReceiver.class);
-        showNotification();
-        showAssessmentNotification();
-        startNotification();
-        Log.d("I am","destroy");
-        super.onDestroy();
-    }
-
+//    @Override
+//    protected void onDestroy() {
+////
+////        showNotification();
+////        showAssessmentNotification();
+//        startNotification();
+//        Log.d("I am","destroy");
+//        super.onDestroy();
+//    }
+//
     @Override
     protected void onStop() {
-        intent = new Intent(this, MyReceiver.class);
+        //intent = new Intent(this, MyReceiver.class);
         showNotification();
         showAssessmentNotification();
         startNotification();
@@ -262,33 +264,46 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     @Override
     protected void onPause() {
         Log.d("I am","pause");
-        intent = new Intent(this, MyReceiver.class);
-        showNotification();
-        showAssessmentNotification();
+
+
         startNotification();
         super.onPause();
 
     }
 
-//    @Override
-//    protected void onResume() {
-//        Log.d("I am","resume");
-//        showNotification();
-//        showAssessmentNotification();
-//        startNotification();
-//        super.onResume();
-//
-//    }
+    @Override
+    protected void onResume() {
+        Log.d("I am", "resume");
+        showNotification();
+        showAssessmentNotification();
+        startNotification();
+        super.onResume();
+
+    }
 
     private void startNotification() {
+//
+        if (isStartAlert || isEndAlert) {
+
+            intent.putExtra("START-DATE", startDay);
+            intent.putExtra("START-COURSE", startCourseList);
+            intent.putExtra("END-DATE", endDay);
+            intent.putExtra("END-COURSE", endCourseList);
+
+
+//                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//                alarmManager.set(AlarmManager.RTC_WAKEUP, 0, sender);
+        }
 
         int delay = 0;
         if (isStartAlert || isEndAlert || isStartAlert) {
-            delay = 10000;
+            Log.d("start Notification", Boolean.toString(isStartAlert));
+            delay = 5000;
         }
-        sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis() + delay, sender);
-    }
+
+            sender = PendingIntent.getBroadcast(getApplicationContext(), MyReceiver.notificationID, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis() + delay, sender);
+        }
+
 }

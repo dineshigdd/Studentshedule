@@ -1,6 +1,5 @@
 package com.example.schedule.studentschedule;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,15 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.schedule.studentshedule.R;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class MyReceiver extends BroadcastReceiver {
 
@@ -39,6 +33,9 @@ public class MyReceiver extends BroadcastReceiver {
             String startDate = intent.getSerializableExtra("START-DATE").toString();
             String startcourse = intent.getSerializableExtra("START-COURSE").toString();
             Toast.makeText(context, startcourse, Toast.LENGTH_LONG).show();
+
+           // PendingIntent sender = PendingIntent.getActivity(context,notificationID,intent,0);
+
 
             Notification startNotification = new NotificationCompat.Builder(context, channel_id)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
