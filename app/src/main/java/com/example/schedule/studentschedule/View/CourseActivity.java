@@ -3,7 +3,9 @@ package com.example.schedule.studentschedule.View;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,11 +28,14 @@ import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
+import com.example.schedule.studentschedule.MainActivity;
 import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.CourseListAdapter;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentschedule.Model.Mentor;
+import com.example.schedule.studentschedule.MyReceiver;
+import com.example.schedule.studentschedule.NotificationShedulaer;
 import com.example.schedule.studentshedule.R;
 
 import java.util.ArrayList;
@@ -83,7 +88,8 @@ public class CourseActivity extends AppCompatActivity {
     private CourseListAdapter dataAdapter;
     private Calendar calendar;
     private RelativeLayout DateLayout;
-    private CheckBox checkBox;
+    private static CheckBox checkBox;
+
     private CheckBox endCheckBox;
     private  Intent intent;
     @SuppressLint("ResourceType")
@@ -348,7 +354,7 @@ public class CourseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH) + 1;
+                month = calendar.get(Calendar.MONTH);
                 date = calendar.get(Calendar.DAY_OF_MONTH);
 
                 // TODO Auto-generated method stub
@@ -356,7 +362,7 @@ public class CourseActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                startDateTv.setText(month + "/" + dayOfMonth + "/" + year);
+                                startDateTv.setText(month + 1 + "/" + dayOfMonth + "/" + year);
                             }
                         }, year, month, date);
 
@@ -400,7 +406,7 @@ public class CourseActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                endDateTv.setText(month + "/" + dayOfMonth + "/" + year);
+                                endDateTv.setText(month + 1 + "/" + dayOfMonth + "/" + year);
                             }
                         }, year, month, date);
 
@@ -556,7 +562,7 @@ public class CourseActivity extends AppCompatActivity {
         if( ! ListCourseActivity.isCourseEditing) {
             btnAddAssessment.setText(getString(R.string.add_assessment));
         }else{
-            btnAddAssessment.setText(getString(R.string.view_assessment));
+            btnAddAssessment.setText("Add assessment");
         }
 
 
@@ -743,6 +749,8 @@ public class CourseActivity extends AppCompatActivity {
                 if(checkBox.isChecked()){
                     course.setStartDateAlert("true");
 
+
+
                 }else{
                     course.setStartDateAlert("false");
 
@@ -809,8 +817,15 @@ public class CourseActivity extends AppCompatActivity {
 //                else{
 //                    Toast.makeText(CourseActivity.this,"record is already there",Toast.LENGTH_SHORT);
 //               }
+                NotificationShedulaer.isStartAlert = false;
+                NotificationShedulaer.showNotification(CourseActivity.this, MyReceiver.class);
+               // NotificationShedulaer.setReminder(CourseActivity.this,MyReceiver.class);
+
+
             }
         });
+
+
     }
 
 
