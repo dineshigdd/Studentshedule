@@ -19,10 +19,9 @@ import java.util.Date;
 
 public class MyReceiver extends BroadcastReceiver {
 
-   ;
+
     String channel_id = "myChannel";
-    String COURSE_GROUP = "COURSE-DATES";
-    public static int notificationID;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -34,10 +33,12 @@ public class MyReceiver extends BroadcastReceiver {
        // NotificationShedulaer.startNotification(context,MainActivity.class);
         //if( NotificationShedulaer.isStartAlert )
         {
-            Date date = (Date) intent.getSerializableExtra("START-DAY");
-            NotificationShedulaer.showTESTNotification(context, MainActivity.class, date);
+            String date = intent.getSerializableExtra("START-DAY").toString();
+            String course = intent.getSerializableExtra("COURSE").toString();
+            NotificationShedulaer.showTESTNotification(context, MainActivity.class, date , course);
+         //   NotificationShedulaer.cancelAlarms(  NotificationShedulaer.notificationID );
         }
-        NotificationShedulaer.notificationID++;
+
 //       if( MainActivity.isStartAlert )
        {
         //    Log.d("Status in reciver inside IF", "receivinng ..");

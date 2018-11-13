@@ -43,6 +43,7 @@ public class NotificationShedulaer {
     private static  SimpleDateFormat df;
     private static ArrayList<PendingIntent> pIntent;
     private static ArrayList<Long> pMills;
+    private static ArrayList<AlarmManager> alarmmList;
     private static String startCourse;
 
     public static void showNotification(Context context, Class<?> cls) {
@@ -66,6 +67,9 @@ public class NotificationShedulaer {
         df = new SimpleDateFormat("MM/dd/yyyy");
         Date currentDate = new Date();
         String strCurrentDate = df.format(currentDate);
+        startCourseList = new ArrayList<>();
+        alarmmList = new ArrayList<>();
+        pIntent = new ArrayList<>();
 //
         try {
             currentDate = df.parse(strCurrentDate);
@@ -74,77 +78,62 @@ public class NotificationShedulaer {
 //            String startDay = "";
 //            String endDay = "";
 
-//
+
+            Log.d("list size", Long.toString(list.size()));
             for (int i = 0; i < list.size(); i++) {
                 Log.d("List start date " , i + ":" + list.get(i).getStartDate());
+                Log.d("List start date " , i + ":" + list.get(i).getItem());
                 dbstartDate = df.parse(list.get(i).getStartDate());
-                Log.d("dbstartDate.getTime() ", Long.toString(dbstartDate.getTime()));
-                Log.d("current.getTime() ", Long.toString(currentDate.getTime()));
+
                 startdatedifference = dbstartDate.getTime() - currentDate.getTime();
-//
-                Log.d("Day to mills ",Long.toString(TimeUnit.DAYS.toMillis(1)));
-                Log.d("startdatedifference", Long.toString(startdatedifference));
-//                Log.d("Db Date", Long.toString(dbstartDate.getTime() ));
-//
-                if (list.get(i).getStartDateAlert().equalsIgnoreCase("true") && startdatedifference == 0) {
+
+
+                if ( list.get(i).getStartDateAlert().equalsIgnoreCase("true") ) {
 
                     Toast.makeText(context, "start", Toast.LENGTH_LONG).show();
                     Log.d("startdatedifference inside in", Long.toString(startdatedifference));
                     startCourseList.add(list.get(i));
                     dbstartDate = df.parse(list.get(i).getStartDate());
-                    pMills.add(dbstartDate.getTime());
-                    startCourse = startCourse + "\n" + list.get(i).getItem();
+            //        pMills.add(dbstartDate.getTime());
+                  //  startCourse = startCourse + "\n" + list.get(i).getItem();
                     mills = dbstartDate.getTime() - TimeUnit.DAYS.toMillis(1);
-                    dbstartDate = df.parse(list.get(i).getStartDate());
+                  //  dbstartDate = df.parse(list.get(i).getStartDate());
 
 
-                    //  isStartAlert = true;
                 }
-                else{
-                    // isStartAlert =  false;
-                }
-
-                dbManager.close();
-
-//                dbendDate = df.parse(list.get(i).getEndDate());
-//                mills = dbendDate.getTime();
-//                enddatedifference =mills - currentDate.getTime();
-//
-//                if (list.get(i).getEndDateAlert().equalsIgnoreCase("true") && enddatedifference == 0) {
-//                    Toast.makeText(context, "End ", Toast.LENGTH_LONG).show();
-//
-//                    endCourseList = endCourseList + "\n" + list.get(i).getItem();
-//                    endDay = list.get(i).getEndDate();
-//                    isEndAlert = true;
-//                }
-            }
-//
-//
-            Log.d("isAlert", Boolean.toString(isStartAlert));
-
-
-            {
-
-                ComponentName receiver = new ComponentName(context, cls);
-                PackageManager pm = context.getPackageManager();
-
-                pm.setComponentEnabledSetting(receiver,
-                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                        PackageManager.DONT_KILL_APP);
-
-
-                        Intent intent1 = new Intent(context, cls);
-                        intent1.putExtra("START-DAY", dbstartDate);
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,notificationID, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-                        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-                        Log.d("mills", Long.toString(mills));
-                        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, mills, AlarmManager.INTERVAL_DAY, pendingIntent);
 
 
             }
+
+                for( int i = 0; i < startCourseList.size() ; i++ ) {
+
+                    mills = getMills(startCourseList.get(i).getStartDate());
+                    Log.d("mills", Long.toString(mills));
+
+                    ComponentName receiver = new ComponentName(context, cls);
+                    PackageManager pm = context.getPackageManager();
+
+                    pm.setComponentEnabledSetting(receiver,
+                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                            PackageManager.DONT_KILL_APP);
+
+                    Intent intent1 = new Intent(context, cls);
+                    intent1.putExtra("START-DAY", startCourseList.get(i).getStartDate());
+                    intent1.putExtra("COURSE", startCourseList.get(i).getItem());
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationID++, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                    pIntent.add(pendingIntent);
+                    AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+                    alarmmList.add(am);
+                    alarmmList.get(i).setInexactRepeating(AlarmManager.RTC_WAKEUP, mills, AlarmManager.INTERVAL_DAY, pIntent.get(i));
+
+                }
+
+
+
 //
 //
         } catch (Exception e) {
+            e.printStackTrace();
 //            isStartAlert = false;
 //            isEndAlert = false;
 //            intent.putExtra("START-DATE", startDay);
@@ -171,7 +160,17 @@ public class NotificationShedulaer {
 
 
     }
+        private static long getMills(String date){
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            Date parseDate = null;
+            try {
+                parseDate = df.parse(date);
 
+            }catch (Exception e){
+
+            }
+            return parseDate.getTime();
+        }
 
 //    public static void startNotification(Context context,Class<?> cls) {
 //
@@ -209,7 +208,7 @@ public class NotificationShedulaer {
 //    }
 
 
-    public static void showTESTNotification(Context context, Class<?> cls, Date date) {
+    public static void showTESTNotification(Context context, Class<?> cls, String date, String course) {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
 //        Intent notificationIntent = new Intent(context, cls);
@@ -225,12 +224,12 @@ public class NotificationShedulaer {
 
         Notification notification = new NotificationCompat.Builder(context,channel_id)
                 .setContentTitle("Start Date")
-                .setContentText("The starting date of "+ startCourseList + " is " + df.format(date))
+                .setContentText("The starting date of "+ course + " is " + date)
                 .setAutoCancel(true)
                 .setSound(alarmSound)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText( "The following courses starts on "+ df.format(date) + "\n"+  startCourseList ))
+                        .bigText( "The following courses starts on "+ date + "\n"+  course ))
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

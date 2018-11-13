@@ -191,7 +191,7 @@ public class DbManager {
         ArrayList<Course> list = new ArrayList();
 
 
-        Cursor cursor = query(false, DbHelper.TABLE_COURSE, DbHelper.ALL_COLUMNS_COURSE, null, null, null,
+        Cursor cursor = query(true, DbHelper.TABLE_COURSE, DbHelper.ALL_COLUMNS_COURSE, null, null, null,
                 null, null, null);
 
         boolean isCourse =  cursor.moveToFirst();
