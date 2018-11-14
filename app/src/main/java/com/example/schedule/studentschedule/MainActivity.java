@@ -1,24 +1,15 @@
 package com.example.schedule.studentschedule;
 
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.example.schedule.studentschedule.Model.Assessment;
-import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.View.AssessmentActivity;
 import com.example.schedule.studentschedule.View.CourseActivity;
 import com.example.schedule.studentschedule.View.ListCourseActivity;
@@ -26,9 +17,6 @@ import com.example.schedule.studentschedule.View.TermActivity;
 import com.example.schedule.studentshedule.R;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements Serializable {
@@ -50,10 +38,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NotificationShedulaer.isStartAlert = false;
-        NotificationShedulaer.showNotification(MainActivity.this, MyReceiver.class);
 
-            //--------------------------------------------------------------------------------------
+        NotificationScheduler.showNotification(MainActivity.this, MyReceiver.class);
+
+
+        //--------------------------------------------------------------------------------------
 
 
         Button btnTerm = findViewById(R.id.term);
@@ -97,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     @Override
     protected void onStart() {
         super.onStart();
-        NotificationShedulaer.isStartAlert = false;
-        NotificationShedulaer.showNotification(MainActivity.this, MyReceiver.class);
+        NotificationScheduler.isStartAlert = false;
+        NotificationScheduler.showNotification(MainActivity.this, MyReceiver.class);
     }
 
     @Override

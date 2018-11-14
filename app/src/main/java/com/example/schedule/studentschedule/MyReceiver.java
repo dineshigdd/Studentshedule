@@ -1,26 +1,20 @@
 package com.example.schedule.studentschedule;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.schedule.studentschedule.View.CourseActivity;
 import com.example.schedule.studentshedule.R;
-
-import java.util.Date;
 
 public class MyReceiver extends BroadcastReceiver {
 
 
     String channel_id = "myChannel";
+
 
 
     @Override
@@ -30,13 +24,27 @@ public class MyReceiver extends BroadcastReceiver {
        // Toast.makeText(context, "Notification", Toast.LENGTH_LONG).show();
         Log.d("Status in reciver  ", "receivinng ..");
       createNotificationChannel(context, channel_id);
-       // NotificationShedulaer.startNotification(context,MainActivity.class);
-        //if( NotificationShedulaer.isStartAlert )
+       // NotificationScheduler.startNotification(context,MainActivity.class);
+        //if( NotificationScheduler.isStartAlert )
         {
-            String date = intent.getSerializableExtra("START-DAY").toString();
-            String course = intent.getSerializableExtra("COURSE").toString();
-            NotificationShedulaer.showTESTNotification(context, MainActivity.class, date , course);
-         //   NotificationShedulaer.cancelAlarms(  NotificationShedulaer.notificationID );
+
+                    String date = intent.getSerializableExtra("START-DAY").toString();
+                    String course = intent.getSerializableExtra("COURSE").toString();
+                   // NotificationScheduler.notificationID++;
+                    NotificationScheduler.showTESTNotification(context, date, course , NotificationScheduler.notificationID);
+
+
+
+
+//                NotificationScheduler.isStartAlert = false;
+//
+//                if( NotificationScheduler.isEndAlert ){
+//                    String date = intent.getSerializableExtra("END-DAY").toString();
+//                    String course = intent.getSerializableExtra("COURSE").toString();
+//                    NotificationScheduler.showTESTNotification(context, date, course);
+//                }
+
+
         }
 
 //       if( MainActivity.isStartAlert )
