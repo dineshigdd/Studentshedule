@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,7 +34,8 @@ public class DueDateScheduler  {
     private static ArrayList<AlarmManager> alarmmList;
     public static String channel_id = "assessmentChannel";
 
-    public static void showAssessmentNotification(Context context, Class<?> cls) {
+
+    public static void showAssessmentNotification(final Context context, Class<?> cls) {
         DbManager dbManager = new DbManager(context);
         dbManager.open();
 
@@ -44,7 +46,6 @@ public class DueDateScheduler  {
 
         } else {
             list = dbManager.getAllAssesment();
-
 
             //--------------------------------------------------------------------------------------
 
@@ -71,32 +72,32 @@ public class DueDateScheduler  {
 
                 }
 
+                if( assessmentList.size() > 0 ) {
 
 
+                    for (int i = 0; i < assessmentList.size(); i++) {
+                        ComponentName receiver = new ComponentName(context, cls);
+                        PackageManager pm = context.getPackageManager();
+                        pm.setComponentEnabledSetting(receiver,
+                                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                                PackageManager.DONT_KILL_APP);
 
-
-                for (int i = 0; i < assessmentList.size(); i++) {
-                    ComponentName receiver = new ComponentName(context, cls);
-                    PackageManager pm = context.getPackageManager();
-                    pm.setComponentEnabledSetting(receiver,
-                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                            PackageManager.DONT_KILL_APP);
-
-                    mills = getMills(assessmentList.get(i).getDueDate());
-                    Log.d("Amills", Long.toString(mills));
+                        mills = getMills(assessmentList.get(i).getDueDate());
+                        Log.d("Amills", Long.toString(mills));
 //
 //
-                    notificationID = i;
-                    Intent intent = new Intent(context, cls);
-                    intent.putExtra("DUE-DAY", assessmentList.get(i).getDueDate());
-                    intent.putExtra("ASSESSMENT", assessmentList.get(i).getTitle());
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                            notificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    pIntent.add(pendingIntent);
-                    AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-                    alarmmList.add(am);
-                    alarmmList.get(i).setInexactRepeating(AlarmManager.RTC_WAKEUP,mills,AlarmManager.INTERVAL_DAY,pIntent.get(i));
+                        notificationID = i;
+                        Intent intent = new Intent(context, cls);
+                        intent.putExtra("DUE-DAY", assessmentList.get(i).getDueDate());
+                        intent.putExtra("ASSESSMENT", assessmentList.get(i).getTitle());
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                                notificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        pIntent.add(pendingIntent);
+                        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+                        alarmmList.add(am);
+                        alarmmList.get(i).setInexactRepeating(AlarmManager.RTC_WAKEUP, mills, AlarmManager.INTERVAL_DAY, pIntent.get(i));
 
+                    }
                 }
 
             } catch (Exception e) {

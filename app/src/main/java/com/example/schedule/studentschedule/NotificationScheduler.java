@@ -55,17 +55,6 @@ public class NotificationScheduler {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
-        final Runnable myRun = new Runnable() {
-            public void run() {
-
-                EndNotificationScheduler.showNotification(context,EndReceiver.class);
-
-            }
-        };
-
-        Handler myJ = new Handler();
-        myJ.postDelayed(myRun,200);
-
 
 
 
@@ -78,46 +67,57 @@ public class NotificationScheduler {
             Toast.makeText(context, "There are no courses",Toast.LENGTH_LONG).show();
         }else {
             list = dbManager.getAllCourse();
-        }
 
-        //--------------------------------------------------------------------------------------
+            final Runnable myRun = new Runnable() {
+                public void run() {
+
+                    EndNotificationScheduler.showNotification(context,EndReceiver.class);
+
+                }
+            };
+
+            Handler myHandler = new Handler();
+            myHandler.postDelayed(myRun,200);
+
+            //--------------------------------------------------------------------------------------
 
 
 //        long enddatedifference = 0;
 //        // long difference;
-        df = new SimpleDateFormat("MM/dd/yyyy");
-        Date currentDate = new Date();
-        String strCurrentDate = df.format(currentDate);
-        startCourseList = new ArrayList<>();
-        endCourseList = new ArrayList<>();
-        alarmmList = new ArrayList<>();
-        pIntent = new ArrayList<>();
+            df = new SimpleDateFormat("MM/dd/yyyy");
+            Date currentDate = new Date();
+            String strCurrentDate = df.format(currentDate);
+            startCourseList = new ArrayList<>();
+            endCourseList = new ArrayList<>();
+            alarmmList = new ArrayList<>();
+            pIntent = new ArrayList<>();
 //
-        try {
-            currentDate = df.parse(strCurrentDate);
-            Date dbstartDate = null;
-            Date dbendDate;
+            try {
+                currentDate = df.parse(strCurrentDate);
+                Date dbstartDate = null;
+                Date dbendDate;
 //            String startDay = "";
 //            String endDay = "";
 
 
-            Log.d("list size", Long.toString(list.size()));
-            for (int i = 0; i < list.size(); i++) {
-                Log.d("List start date " , i + ":" + list.get(i).getStartDate());
-                Log.d("List start date " , i + ":" + list.get(i).getItem());
-                //dbstartDate = df.parse(list.get(i).getStartDate());
+                Log.d("list size", Long.toString(list.size()));
+                for (int i = 0; i < list.size(); i++) {
+                    Log.d("List start date ", i + ":" + list.get(i).getStartDate());
+                    Log.d("List start date ", i + ":" + list.get(i).getItem());
+                    //dbstartDate = df.parse(list.get(i).getStartDate());
 
-              //  startdatedifference = dbstartDate.getTime() - currentDate.getTime();
+                    //  startdatedifference = dbstartDate.getTime() - currentDate.getTime();
 
 
-                if ( list.get(i).getStartDateAlert().equalsIgnoreCase("true") ) {
+                    if (list.get(i).getStartDateAlert().equalsIgnoreCase("true")) {
 
-                    startCourseList.add(list.get(i));
+                        startCourseList.add(list.get(i));
+                    }
+
+
                 }
 
-
-            }
-
+                if( startCourseList.size() > 0 ) {
 
                     for (int i = 0; i < startCourseList.size(); i++) {
                         ComponentName receiver = new ComponentName(context, cls);
@@ -142,11 +142,11 @@ public class NotificationScheduler {
                         alarmmList.get(i).set(AlarmManager.RTC_WAKEUP, mills, pIntent.get(i));
 
                     }
+                }
 
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
 //            isStartAlert = false;
 //            isEndAlert = false;
 //            intent.putExtra("START-DATE", startDay);
@@ -154,10 +154,10 @@ public class NotificationScheduler {
 //            intent.putExtra("END-DATE", endDay);
 //            intent.putExtra("END-COURSE", endCourseList);
 
-        }
+            }
 
-        //String sDate = "11/12/2018 ";
-        // String sDate = startDay;
+            //String sDate = "11/12/2018 ";
+            // String sDate = startDay;
 
 //        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -169,7 +169,7 @@ public class NotificationScheduler {
 //            Log.d("mills", Long.toString(mills));
 
 
-
+        }
 
 
     }

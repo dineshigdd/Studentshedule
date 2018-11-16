@@ -63,10 +63,6 @@ public class EndNotificationScheduler {
 
 
             //--------------------------------------------------------------------------------------
-
-
-//        long enddatedifference = 0;
-//        // long difference;
             df = new SimpleDateFormat("MM/dd/yyyy");
             Date currentDate = new Date();
             String strCurrentDate = df.format(currentDate);
@@ -74,13 +70,8 @@ public class EndNotificationScheduler {
             endCourseList = new ArrayList<>();
             alarmmList = new ArrayList<>();
             pIntent = new ArrayList<>();
-//
+
             try {
-                currentDate = df.parse(strCurrentDate);
-                Date dbstartDate = null;
-                Date dbendDate;
-//            String startDay = "";
-//            String endDay = "";
 
 
                 Log.d("list size", Long.toString(list.size()));
@@ -93,33 +84,35 @@ public class EndNotificationScheduler {
                         endCourseList.add(list.get(i));
                     }
                 }
-//
+
+                if( endCourseList.size() > 0 ) {
 
 
-                for (int i = 0; i < endCourseList.size(); i++) {
+                    for (int i = 0; i < endCourseList.size(); i++) {
 
-                    ComponentName receiver = new ComponentName(context, cls);
-                    PackageManager pm = context.getPackageManager();
-                    pm.setComponentEnabledSetting(receiver,
-                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                            PackageManager.DONT_KILL_APP);
+                        ComponentName receiver = new ComponentName(context, cls);
+                        PackageManager pm = context.getPackageManager();
+                        pm.setComponentEnabledSetting(receiver,
+                                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                                PackageManager.DONT_KILL_APP);
 
-                    mills = getMills(endCourseList.get(i).getEndDate());
-                    Log.d("emills", Long.toString(mills));
-
-
-                    notificationID = i;
-                    Intent intent1 = new Intent(context, cls);
-                    intent1.putExtra("END-DAY", endCourseList.get(i).getEndDate());
-                    intent1.putExtra("COURSE", endCourseList.get(i).getItem());
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                            notificationID, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-                    pIntent.add(pendingIntent);
-                    AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-                    alarmmList.add(am);
-                    alarmmList.get(i).set(AlarmManager.RTC_WAKEUP, mills, pIntent.get(i));
+                        mills = getMills(endCourseList.get(i).getEndDate());
+                        Log.d("emills", Long.toString(mills));
 
 
+                        notificationID = i;
+                        Intent intent1 = new Intent(context, cls);
+                        intent1.putExtra("END-DAY", endCourseList.get(i).getEndDate());
+                        intent1.putExtra("COURSE", endCourseList.get(i).getItem());
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                                notificationID, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                        pIntent.add(pendingIntent);
+                        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+                        alarmmList.add(am);
+                        alarmmList.get(i).set(AlarmManager.RTC_WAKEUP, mills, pIntent.get(i));
+
+
+                    }
                 }
 
 
@@ -163,55 +156,12 @@ public class EndNotificationScheduler {
             return parseDate.getTime();
         }
 
-//    public static void startNotification(Context context,Class<?> cls) {
-//
-////        if (isStartAlert || isEndAlert) {
-////
-////            intent.putExtra("START-DATE", startDay);
-////            intent.putExtra("START-COURSE", startCourseList);
-////            intent.putExtra("END-DATE", endDay);
-////            intent.putExtra("END-COURSE", endCourseList);
-////
-////
-////
-////        }
-////
-////        int delay = 0;
-////        if (isStartAlert || isEndAlert || isStartAlert) {
-////            Log.d("start Notification", Boolean.toString(isStartAlert));
-////            delay = 5000;
-////        }
-//
-//
-//        ComponentName receiver = new ComponentName(context, cls);
-//        PackageManager pm = context.getPackageManager();
-//
-//        pm.setComponentEnabledSetting(receiver,
-//                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-//                PackageManager.DONT_KILL_APP);
-//
-//
-//        Intent intent = new Intent(context, cls);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-//
-//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, mills, AlarmManager.INTERVAL_DAY, pendingIntent);
-//    }
 
 
     public static void showNotification(Context context, String date, String course, int notificationID) {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-//        Intent notificationIntent = new Intent(context, cls);
-//        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-//        stackBuilder.addParentStack(cls);
-//        stackBuilder.addNextIntent(notificationIntent);
-
-//        PendingIntent pendingIntent = stackBuilder.getPendingIntent(DAILY_REMINDER_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         Notification notification = new NotificationCompat.Builder(context,channel_id)
                 .setContentTitle("End Date" + Long.toString(notificationID))
