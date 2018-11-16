@@ -4,14 +4,12 @@ package com.example.schedule.studentschedule.View;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v13.view.DragStartHelper;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,15 +33,11 @@ import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
-import com.example.schedule.studentschedule.DueDateReceiver;
-import com.example.schedule.studentschedule.DueDateScheduler;
-import com.example.schedule.studentschedule.MainActivity;
+import com.example.schedule.studentschedule.Scheduler.DueDateReceiver;
+import com.example.schedule.studentschedule.Scheduler.DueDateScheduler;
 import com.example.schedule.studentschedule.Model.Assessment;
-import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.DataItem;
-import com.example.schedule.studentschedule.Model.Mentor;
-import com.example.schedule.studentschedule.MyReceiver;
 
 import com.example.schedule.studentshedule.R;
 
@@ -51,8 +45,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class AssessmentActivity extends AppCompatActivity{
     private LinearLayout mainLayout;
@@ -67,6 +59,7 @@ public class AssessmentActivity extends AppCompatActivity{
     private DbManager dbManager;
     private Assessment assessment;
     private String radValue;
+    private String checkBoxValue;
     private  RadioGroup radioGroup;
     private RadioButton typeRadioObjective;
     private RadioButton typeRadioPerformance;
@@ -422,6 +415,13 @@ public class AssessmentActivity extends AppCompatActivity{
 
         tv.setText(assessment.getDueDate());
 
+        if( assessment.getDueDateAlert().equalsIgnoreCase("true")) {
+           //    Log.d("Assessment getAlert",assessment.getDueDateAlert());
+            checkBox.setChecked(true);
+        }else{
+            checkBox.setChecked(false);
+        }
+
     }
 
     @SuppressLint("ResourceType")
@@ -436,10 +436,19 @@ public class AssessmentActivity extends AppCompatActivity{
                     radValue = "performance";
                 }
 
+                if (checkBox.isChecked()) {
+                    checkBoxValue = "true" ;
+                } else {
+                    checkBoxValue = "false";
+                }
+
+
+
                 //Edit assessment table
                 assessment.setTitle(edText.getText().toString());
                 assessment.setType(radValue);
                 assessment.setDueDate(tv.getText().toString());
+                assessment.setDueDateAlert(checkBoxValue);
                 assessment.setTermID(termID);
                 assessment.setCourseID(courseID);
 
@@ -473,6 +482,8 @@ public class AssessmentActivity extends AppCompatActivity{
                         radValue = "performance";
                     }
 
+
+
                     mentorId = getMentorId(termId, courseId);
                     Log.d("mENTOR id:" , String.valueOf(mentorId));
                     assessmentId = dbManager.getAssessmentId(termId,courseId);
@@ -499,9 +510,11 @@ public class AssessmentActivity extends AppCompatActivity{
                     );
 
                     if(checkBox.isChecked()){
+
                         assessment.setDueDateAlert("true");
 
                     }else{
+
                         assessment.setDueDateAlert("false");
                     }
 

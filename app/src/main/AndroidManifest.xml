@@ -75,7 +75,7 @@
         </activity>
 
         <receiver
-            android:name="com.example.schedule.studentschedule.MyReceiver"
+            android:name="com.example.schedule.studentschedule.Scheduler.MyReceiver"
             android:enabled="false"
             android:exported="true">
             <intent-filter>
@@ -83,7 +83,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.example.schedule.studentschedule.EndReceiver"
+            android:name="com.example.schedule.studentschedule.Scheduler.EndReceiver"
             android:enabled="false"
             android:exported="true">
             <intent-filter>
@@ -91,7 +91,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.example.schedule.studentschedule.DueDateReceiver"
+            android:name="com.example.schedule.studentschedule.Scheduler.DueDateReceiver"
             android:enabled="false"
             android:exported="true">
             <intent-filter>

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,8 +32,8 @@ import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.CourseListAdapter;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentschedule.Model.Mentor;
-import com.example.schedule.studentschedule.MyReceiver;
-import com.example.schedule.studentschedule.NotificationScheduler;
+import com.example.schedule.studentschedule.Scheduler.MyReceiver;
+import com.example.schedule.studentschedule.Scheduler.NotificationScheduler;
 import com.example.schedule.studentshedule.R;
 
 import java.util.ArrayList;
@@ -85,10 +86,12 @@ public class CourseActivity extends AppCompatActivity {
     private CourseListAdapter dataAdapter;
     private Calendar calendar;
     private RelativeLayout DateLayout;
-    private static CheckBox checkBox;
-
-    private CheckBox endCheckBox;
     private  Intent intent;
+    private static CheckBox startCheckBox;
+    private CheckBox endCheckBox;
+    private String startCheckBoxValue;
+    private String endCheckBoxValue;
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,8 +324,8 @@ public class CourseActivity extends AppCompatActivity {
 
 
 
-        tv = new TextView(this); // to hold the date from Datepicker dialog
-        tv.setId(554);
+//        tv = new TextView(this); // to hold the date from Datepicker dialog
+//        tv.setId(554);
         TextView startDateTvLabel = addTextView(getString(R.string.start_date));
         startDateTv= addTextView("");
         startDateTv.setHint(getString(R.string.select_date));
@@ -330,20 +333,21 @@ public class CourseActivity extends AppCompatActivity {
         setDate(startDateTvLabel, startDateTv, 202);
 
         RelativeLayout checkBoxLayout = new RelativeLayout(this);
-        checkBox = new CheckBox(this);
-        checkBox.setText("Alert Me");
-        checkBox.setId(603);
+        startCheckBox = new CheckBox(this);
+        startCheckBox.setText("Alert Me");
+        startCheckBox.setId(603);
 
         RelativeLayout.LayoutParams checkboxDimension = new RelativeLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
         checkboxDimension.addRule(RelativeLayout.END_OF,startDateTv.getId());
-        checkBox.setLayoutParams(checkboxDimension);
+        startCheckBox.setLayoutParams(checkboxDimension);
 
-        DateLayout.addView(checkBox);
+        DateLayout.addView(startCheckBox);
 
         mainLayout.addView(checkBoxLayout);
+
         startDateTv.setOnClickListener(new View.OnClickListener() {
 
 
@@ -559,7 +563,7 @@ public class CourseActivity extends AppCompatActivity {
         if( ! ListCourseActivity.isCourseEditing) {
             btnAddAssessment.setText(getString(R.string.add_assessment));
         }else{
-            btnAddAssessment.setText("Add assessment");
+            btnAddAssessment.setText(getString(R.string.view_assessment));
         }
 
 
@@ -597,9 +601,25 @@ public class CourseActivity extends AppCompatActivity {
         if( ListCourseActivity.isCourseEditing )
             { //if editing
             startDateTv.setText(editCourse.getStartDate());
-            checkBox.setChecked(Boolean.parseBoolean(editCourse.getStartDateAlert()));
             endDateTv.setText(editCourse.getEndDate());
+
+            if(editCourse.getStartDateAlert().equalsIgnoreCase("true")){
+                startCheckBox.setChecked(true);
+            }else{
+                startCheckBox.setChecked(false);
+            }
+
+
+
+             if(editCourse.getEndDateAlert().equalsIgnoreCase("true")){
+                 endCheckBox.setChecked(true);
+             }else{
+                 endCheckBox.setChecked(false);
+             }
+
+
             edTextNotes.setText(editCourse.getNotes());
+
             String status = editCourse.getStatus();
             switch ( status){
                 case "in progress":
@@ -665,11 +685,29 @@ public class CourseActivity extends AppCompatActivity {
                     courseTitle = spCourse.getSelectedItem().toString();
                 }
 
+                if( startCheckBox.isChecked()){
+                    startCheckBoxValue = "true";
+                }else{
+                    startCheckBoxValue = "false";
+                }
+
+                if( endCheckBox.isChecked()){
+                    endCheckBoxValue = "true";
+                }else{
+                    endCheckBoxValue = "false";
+                }
+
+
                 editCourse.setItem(courseTitle);
                 editCourse.setStartDate(startDateTv.getText().toString());
+                editCourse.setStartDateAlert(startCheckBoxValue);
                 editCourse.setEndDate(endDateTv.getText().toString());
+                editCourse.setEndDateAlert(endCheckBoxValue);
                 editCourse.setStatus(spStatus.getSelectedItem().toString());
                 editCourse.setNotes(edTextNotes.getText().toString());
+
+
+                Log.d("editCourse", editCourse.getStartDateAlert());
 
                 condition =  DbHelper.COURSE_ID + "=?";
                 values = dbManager.setData(editCourse,DbHelper.TABLE_COURSE);
@@ -703,7 +741,7 @@ public class CourseActivity extends AppCompatActivity {
                 values = dbManager.setData(editAssign,DbHelper.TABLE_ASSIGN);
                 dbManager.update(DbHelper.TABLE_ASSIGN,values,condition,editAssignId);
 
-                ListCourseActivity.isCourseEditing = false;
+               // ListCourseActivity.isCourseEditing = false;  should revise 11/16/2018
             }
         });
 
@@ -743,22 +781,17 @@ public class CourseActivity extends AppCompatActivity {
 
 
 
-                if(checkBox.isChecked()){
+                if(startCheckBox.isChecked()){
                     course.setStartDateAlert("true");
-
-
-
                 }else{
                     course.setStartDateAlert("false");
-
                 }
+
 
                 if(endCheckBox.isChecked()){
                     course.setEndDateAlert("true");
-
                 }else{
                     course.setEndDateAlert("false");
-
                 }
 
                     values = dbManager.setData(course, DbHelper.TABLE_COURSE);
@@ -816,7 +849,7 @@ public class CourseActivity extends AppCompatActivity {
 //               }
 
                 NotificationScheduler.showNotification(CourseActivity.this, MyReceiver.class);
-               // NotificationScheduler.setReminder(CourseActivity.this,MyReceiver.class);
+
 
 
             }

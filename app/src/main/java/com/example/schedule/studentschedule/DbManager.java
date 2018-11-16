@@ -346,6 +346,7 @@ public class DbManager {
                 assessment.setTitle(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_TITLE)));
                 assessment.setType(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_TYPE)));
                 assessment.setDueDate(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_DUE_DATE)));
+                assessment.setDueDateAlert(cursor.getString(cursor.getColumnIndex(DbHelper.ASSESSMENT_DUE_DATE_ALERT)));
 
             } while (cursor.moveToNext());
         }

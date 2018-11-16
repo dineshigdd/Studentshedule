@@ -1,6 +1,5 @@
-package com.example.schedule.studentschedule;
+package com.example.schedule.studentschedule.Scheduler;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,22 +11,18 @@ import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.util.TimeUtils;
-import android.widget.TableRow;
 import android.widget.Toast;
 
+import com.example.schedule.studentschedule.DbHelper;
+import com.example.schedule.studentschedule.DbManager;
 import com.example.schedule.studentschedule.Model.Course;
-import com.example.schedule.studentschedule.View.CourseActivity;
 import com.example.schedule.studentshedule.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.ALARM_SERVICE;
 
@@ -42,6 +37,7 @@ public class NotificationScheduler {
     public static boolean isEndAlert;
     public static long mills;
     public static String channel_id = "myChannel";
+    private final static int BASE_ID = 2000;
     static int notificationID;
     private  static long startdatedifference;
     private static  SimpleDateFormat df;
@@ -130,7 +126,7 @@ public class NotificationScheduler {
                         Log.d("smills", Long.toString(mills));
 
 
-                        notificationID = i;
+                        notificationID = BASE_ID + i;
                         Intent intent1 = new Intent(context, cls);
                         intent1.putExtra("START-DAY", startCourseList.get(i).getStartDate());
                         intent1.putExtra("COURSE", startCourseList.get(i).getItem());

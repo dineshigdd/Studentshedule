@@ -1,4 +1,4 @@
-package com.example.schedule.studentschedule;
+package com.example.schedule.studentschedule.Scheduler;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -15,6 +15,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.schedule.studentschedule.DbHelper;
+import com.example.schedule.studentschedule.DbManager;
 import com.example.schedule.studentschedule.Model.Assessment;
 import com.example.schedule.studentshedule.R;
 
@@ -26,6 +28,7 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class DueDateScheduler  {
 
+    private static final int BASE_ID = 3000;
     public static boolean isAssessmentAlert;
     private static long mills;
     private static ArrayList<Assessment> assessmentList;
@@ -86,7 +89,7 @@ public class DueDateScheduler  {
                         Log.d("Amills", Long.toString(mills));
 //
 //
-                        notificationID = i;
+                        notificationID = BASE_ID + i;
                         Intent intent = new Intent(context, cls);
                         intent.putExtra("DUE-DAY", assessmentList.get(i).getDueDate());
                         intent.putExtra("ASSESSMENT", assessmentList.get(i).getTitle());

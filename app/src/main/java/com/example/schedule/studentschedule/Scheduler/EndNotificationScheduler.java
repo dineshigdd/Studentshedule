@@ -1,4 +1,4 @@
-package com.example.schedule.studentschedule;
+package com.example.schedule.studentschedule.Scheduler;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -16,6 +16,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.schedule.studentschedule.DbHelper;
+import com.example.schedule.studentschedule.DbManager;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentshedule.R;
 
@@ -27,6 +29,7 @@ import static android.content.Context.ALARM_SERVICE;
 
 
 public class EndNotificationScheduler {
+    private static final int BASE_ID = 1000;
     public static ArrayList<Course> startCourseList;
     public static ArrayList<Course> endCourseList;
     public static String startDay;
@@ -36,7 +39,7 @@ public class EndNotificationScheduler {
     public static boolean isEndAlert;
     public static long mills;
     public static String channel_id = "myEnDChannel";
-    public static int notificationID = 1000;
+    public static int notificationID;
     private  static long startdatedifference;
     private static  SimpleDateFormat df;
     private static ArrayList<PendingIntent> pIntent;
@@ -100,7 +103,7 @@ public class EndNotificationScheduler {
                         Log.d("emills", Long.toString(mills));
 
 
-                        notificationID = i;
+                        notificationID = BASE_ID + i;
                         Intent intent1 = new Intent(context, cls);
                         intent1.putExtra("END-DAY", endCourseList.get(i).getEndDate());
                         intent1.putExtra("COURSE", endCourseList.get(i).getItem());

@@ -1,4 +1,4 @@
-package com.example.schedule.studentschedule;
+package com.example.schedule.studentschedule.Scheduler;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

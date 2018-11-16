@@ -63,7 +63,10 @@ public class ListCourseActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        isCourseEditing = false;
+    }
 
     private void editCourse(){
 
@@ -129,7 +132,9 @@ public class ListCourseActivity extends AppCompatActivity {
                         course.setItemId(cursor.getInt(cursor.getColumnIndex(DbHelper.COURSE_ID)));
                         course.setItem(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_TITLE)));
                         course.setStartDate(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_START_DATE)));
+                        course.setStartDateAlert(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_START_ALERT)));
                         course.setEndDate(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_END_DATE)));
+                        course.setEndDateAlert(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_END_ALERT)));
                         course.setStatus(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_STATUS)));
                         course.setNotes(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_NOTES)));
 

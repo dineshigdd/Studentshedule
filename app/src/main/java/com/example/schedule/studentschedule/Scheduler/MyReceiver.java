@@ -1,4 +1,4 @@
-package com.example.schedule.studentschedule;
+package com.example.schedule.studentschedule.Scheduler;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

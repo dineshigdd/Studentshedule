@@ -1,17 +1,18 @@
 package com.example.schedule.studentschedule;
 
 
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.schedule.studentschedule.Scheduler.DueDateReceiver;
+import com.example.schedule.studentschedule.Scheduler.DueDateScheduler;
+import com.example.schedule.studentschedule.Scheduler.MyReceiver;
+import com.example.schedule.studentschedule.Scheduler.NotificationScheduler;
 import com.example.schedule.studentschedule.View.AssessmentActivity;
 import com.example.schedule.studentschedule.View.CourseActivity;
 import com.example.schedule.studentschedule.View.ListCourseActivity;
