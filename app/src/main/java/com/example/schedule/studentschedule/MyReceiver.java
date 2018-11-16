@@ -28,10 +28,10 @@ public class MyReceiver extends BroadcastReceiver {
         //if( NotificationScheduler.isStartAlert )
         {
 
-                    String date = intent.getSerializableExtra("START-DAY").toString();
-                    String course = intent.getSerializableExtra("COURSE").toString();
-                   // NotificationScheduler.notificationID++;
-                    NotificationScheduler.showTESTNotification(context, date, course , NotificationScheduler.notificationID);
+                        String date = intent.getSerializableExtra("START-DAY").toString();
+                        String course = intent.getSerializableExtra("COURSE").toString();
+                        NotificationScheduler.showNotification(context, date, course, NotificationScheduler.notificationID);
+
 
 
 

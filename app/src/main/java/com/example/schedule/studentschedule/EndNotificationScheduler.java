@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -42,98 +43,88 @@ public class EndNotificationScheduler {
     private static ArrayList<Long> pMills;
     private static ArrayList<AlarmManager> alarmmList;
     private static String startCourse;
-    public static void showNotification(Context context, Class<?> cls) {
+    public static void showNotification(final Context context, Class<?> cls) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+
+
 
         DbManager dbManager = new DbManager(context);
         dbManager.open();
 
-        ArrayList<Course> list = null;
+        ArrayList<Course> list;
 
-        if( dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0 ) {
+        if (!(dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0)) {
+            Toast.makeText(context, "There are no courses", Toast.LENGTH_LONG).show();
+
+        } else {
+
             list = dbManager.getAllCourse();
-        }else {
-            Toast.makeText(context, "There are no courses",Toast.LENGTH_LONG).show();
 
-        }
 
-        //--------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------
 
 
 //        long enddatedifference = 0;
 //        // long difference;
-        df = new SimpleDateFormat("MM/dd/yyyy");
-        Date currentDate = new Date();
-        String strCurrentDate = df.format(currentDate);
-        startCourseList = new ArrayList<>();
-        endCourseList = new ArrayList<>();
-        alarmmList = new ArrayList<>();
-        pIntent = new ArrayList<>();
+            df = new SimpleDateFormat("MM/dd/yyyy");
+            Date currentDate = new Date();
+            String strCurrentDate = df.format(currentDate);
+            startCourseList = new ArrayList<>();
+            endCourseList = new ArrayList<>();
+            alarmmList = new ArrayList<>();
+            pIntent = new ArrayList<>();
 //
-        try {
-            currentDate = df.parse(strCurrentDate);
-            Date dbstartDate = null;
-            Date dbendDate;
+            try {
+                currentDate = df.parse(strCurrentDate);
+                Date dbstartDate = null;
+                Date dbendDate;
 //            String startDay = "";
 //            String endDay = "";
 
 
-            Log.d("list size", Long.toString(list.size()));
-            for (int i = 0; i < list.size(); i++) {
-                Log.d("List End date " , i + ":" + list.get(i).getEndDate());
-                Log.d("List End date " , i + ":" + list.get(i).getItem());
-               // dbstartDate = df.parse(list.get(i).getStartDate());
+                Log.d("list size", Long.toString(list.size()));
+                for (int i = 0; i < list.size(); i++) {
+                    Log.d("List End date ", i + ":" + list.get(i).getEndDate());
+                    Log.d("List End date ", i + ":" + list.get(i).getItem());
 
-               // startdatedifference = dbstartDate.getTime() - currentDate.getTime();
+                    if (list.get(i).getEndDateAlert().equalsIgnoreCase("true")) {
 
-
-                if ( list.get(i).getEndDateAlert().equalsIgnoreCase("true") ) {
-
-                    endCourseList.add(list.get(i));
-//                    dbstartDate = df.parse(list.get(i).getStartDate());
-//                    mills = dbstartDate.getTime() - TimeUnit.DAYS.toMillis(1);
-
-
+                        endCourseList.add(list.get(i));
+                    }
                 }
-
-
-
-
-            }
 //
+
+
+                for (int i = 0; i < endCourseList.size(); i++) {
+
                     ComponentName receiver = new ComponentName(context, cls);
                     PackageManager pm = context.getPackageManager();
-
                     pm.setComponentEnabledSetting(receiver,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
+                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                            PackageManager.DONT_KILL_APP);
 
-                    for (int i = 0; i < endCourseList.size(); i++) {
-
-                        mills = getMills(endCourseList.get(i).getEndDate());
-                        Log.d("emills", Long.toString(mills));
+                    mills = getMills(endCourseList.get(i).getEndDate());
+                    Log.d("emills", Long.toString(mills));
 
 
-                        notificationID = i;
-                        Intent intent1 = new Intent(context, cls);
-                        intent1.putExtra("END-DAY", endCourseList.get(i).getEndDate());
-                        intent1.putExtra("COURSE", endCourseList.get(i).getItem());
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                                notificationID, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-                        pIntent.add(pendingIntent);
-                        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-                        alarmmList.add(am);
-                        alarmmList.get(i).set(AlarmManager.RTC_WAKEUP, mills, pIntent.get(i));
+                    notificationID = i;
+                    Intent intent1 = new Intent(context, cls);
+                    intent1.putExtra("END-DAY", endCourseList.get(i).getEndDate());
+                    intent1.putExtra("COURSE", endCourseList.get(i).getItem());
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                            notificationID, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                    pIntent.add(pendingIntent);
+                    AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+                    alarmmList.add(am);
+                    alarmmList.get(i).set(AlarmManager.RTC_WAKEUP, mills, pIntent.get(i));
 
 
                 }
 
 
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
 //            isStartAlert = false;
 //            isEndAlert = false;
 //            intent.putExtra("START-DATE", startDay);
@@ -141,10 +132,10 @@ public class EndNotificationScheduler {
 //            intent.putExtra("END-DATE", endDay);
 //            intent.putExtra("END-COURSE", endCourseList);
 
-        }
+            }
 
-        //String sDate = "11/12/2018 ";
-        // String sDate = startDay;
+            //String sDate = "11/12/2018 ";
+            // String sDate = startDay;
 
 //        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -156,10 +147,10 @@ public class EndNotificationScheduler {
 //            Log.d("mills", Long.toString(mills));
 
 
-
-
-
+        }
     }
+
+
         private static long getMills(String date){
             SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
             Date parseDate = null;
@@ -208,7 +199,7 @@ public class EndNotificationScheduler {
 //    }
 
 
-    public static void showTESTNotification(Context context, String date, String course, int notificationID) {
+    public static void showNotification(Context context, String date, String course, int notificationID) {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
 //        Intent notificationIntent = new Intent(context, cls);

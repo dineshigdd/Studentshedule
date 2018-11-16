@@ -35,6 +35,9 @@ import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
+import com.example.schedule.studentschedule.DueDateReceiver;
+import com.example.schedule.studentschedule.DueDateScheduler;
+import com.example.schedule.studentschedule.MainActivity;
 import com.example.schedule.studentschedule.Model.Assessment;
 import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
@@ -257,15 +260,15 @@ public class AssessmentActivity extends AppCompatActivity{
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH) + 1;
+                month = calendar.get(Calendar.MONTH);
                 date = calendar.get(Calendar.DAY_OF_MONTH);
 
                 // TODO Auto-generated method stub
                 datePickerDialog = new DatePickerDialog(AssessmentActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
+                            new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                tv.setText(month + "/" + dayOfMonth + "/" + year);
+                                tv.setText(month + 1 + "/" + dayOfMonth + "/" + year);
                             }
                         }, year, month, date);
 
@@ -538,7 +541,7 @@ public class AssessmentActivity extends AppCompatActivity{
 //                        dbManager.insertData(DbHelper.TABLE_ASSIGN,values);
 //                    }
 
-
+                     DueDateScheduler.showAssessmentNotification( AssessmentActivity.this, DueDateReceiver.class);
                 } else {
                     Toast.makeText(AssessmentActivity.this, "You have reached the max amount", Toast.LENGTH_SHORT).show();
 
@@ -547,8 +550,10 @@ public class AssessmentActivity extends AppCompatActivity{
                 //getting the number of assessment for a course in a particular term
 
 
+
                     assessmentCounter = dbManager.getQueryCount(termId, courseId, table);
                     Log.d("counter assessmentCounter :", String.valueOf(assessmentCounter));
+
 
             }
 

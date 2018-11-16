@@ -1,6 +1,8 @@
 package com.example.schedule.studentschedule;
 
 
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,25 +23,29 @@ import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
-//    public static boolean isStartAlert;
-//    public static boolean isEndAlert;
-//    public static boolean isDueDateAlert;
-//    private static Intent intent;
-//    private PendingIntent sender;
-//    public static long date;
-
-//    String startDay = "";
-//    String endDay = "";
-//    String startCourseList = "";
-//    String endCourseList = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NotificationScheduler.showNotification(MainActivity.this,MyReceiver.class);
 
-        NotificationScheduler.showNotification(MainActivity.this, MyReceiver.class);
+
+        Thread dueDataThread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    sleep(200);
+                    DueDateScheduler.showAssessmentNotification(MainActivity.this, DueDateReceiver.class);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        dueDataThread.start();
+
 
 
         //--------------------------------------------------------------------------------------
@@ -77,17 +83,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             }
         });
 
-
-
-
-
     }
+
+
 
     @Override
     protected void onStart() {
         super.onStart();
-        NotificationScheduler.isStartAlert = false;
-        NotificationScheduler.showNotification(MainActivity.this, MyReceiver.class);
+//        NotificationScheduler.isStartAlert = false;
+//        NotificationScheduler.showNotification(MainActivity.this, MyReceiver.class);
     }
 
     @Override

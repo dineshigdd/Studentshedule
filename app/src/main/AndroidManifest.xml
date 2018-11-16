@@ -93,7 +93,11 @@
         <receiver
             android:name="com.example.schedule.studentschedule.DueDateReceiver"
             android:enabled="false"
-            android:exported="false"></receiver>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

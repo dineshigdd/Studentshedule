@@ -14,8 +14,7 @@ public class EndReceiver extends BroadcastReceiver {
         Log.d("Receving", "recieving endRecieve");
         String date = intent.getSerializableExtra("END-DAY").toString();
         String course = intent.getSerializableExtra("COURSE").toString();
-       // EndNotificationScheduler.notificationID++;
-        EndNotificationScheduler.showTESTNotification(context, date, course, EndNotificationScheduler.notificationID );
+        EndNotificationScheduler.showNotification(context, date, course, EndNotificationScheduler.notificationID );
 
         // throw new UnsupportedOperationException("Not yet implemented");
     }
