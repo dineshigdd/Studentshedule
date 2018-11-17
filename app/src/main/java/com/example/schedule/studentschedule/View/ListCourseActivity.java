@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,9 +28,11 @@ public class ListCourseActivity extends AppCompatActivity {
     private DbManager dbManager;
     private ListView listCourse;
     private static String termId;
-    public static boolean isCourseEditing = false;
+    public static boolean isCourseEditing;
     private static int listPositon;
     private boolean isDeleted;
+    static final int REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +40,23 @@ public class ListCourseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        CourseActivity.BACK_BUTTON_PRESSED = false;
         list = new ArrayList<>();
         //Mentorlist = new ArrayList<>();
         //my code.............................
-         setCourse();
+        Button btnAddCourse = findViewById(R.id.btnAddCourse);
+        btnAddCourse.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),CourseActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+        setCourse();
+
+
 
 
 
@@ -57,8 +73,10 @@ public class ListCourseActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
-       editCourse();
+       super.onStart();
+
+           editCourse();
+
 
 
     }
@@ -74,14 +92,16 @@ public class ListCourseActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 isCourseEditing = true;
+
                 Intent intent = new Intent(ListCourseActivity.this, CourseActivity.class );
                 intent.putExtra("serializeCourseData",list.get(position));
                // Toast.makeText(ListCourseActivity.this, termId,Toast.LENGTH_LONG).show();
                 intent.putExtra("termID",termId);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE );
 
             }
         });
+
     }
 
 //    private String[] combineArray( String[] ArrayOne, String[] ArrayTwo ){
@@ -93,29 +113,34 @@ public class ListCourseActivity extends AppCompatActivity {
 //        return combineArray;
 //    }
 
-    private void setCourse() {
+        public void setCourse() {
 
         dbManager = new DbManager(this);
         dbManager.open();
 
+        if( CourseActivity.BACK_BUTTON_PRESSED ) {
+            termId = getIntent().getSerializableExtra("EDITCOURSE-TERMID").toString();
+        }
+
         if( !isCourseEditing) {
             termId = getIntent().getSerializableExtra("serializeData").toString();
         }
-        listCourse = findViewById(R.id.listCourse);
 
-        try {
-             //list = dbManager.getAllCourse();
-          //  long numItems = dbManager.getRowCount(DbHelper.TABLE_COURSE);
-            //if (numItems != 0) {
+            listCourse = findViewById(R.id.listCourse);
+
+            try {
+                //list = dbManager.getAllCourse();
+                //  long numItems = dbManager.getRowCount(DbHelper.TABLE_COURSE);
+                //if (numItems != 0) {
                 String table = DbHelper.TABLE_ASSIGN + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_TERM;
-                String [] id = { String.valueOf(termId)};
-                String [] projection =   DbHelper.ALL_COLUMNS_COURSE ;
+                String[] id = {String.valueOf(termId)};
+                String[] projection = DbHelper.ALL_COLUMNS_COURSE;
                 String selection =
-                        DbHelper.TABLE_COURSE + "." + DbHelper.COURSE_ID + "=" + DbHelper.TABLE_ASSIGN + "." +  DbHelper.ASSIGN_COURSE_ID +
+                        DbHelper.TABLE_COURSE + "." + DbHelper.COURSE_ID + "=" + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_COURSE_ID +
                                 " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=" + DbHelper.TABLE_TERM + "." + DbHelper.TERM_ID +
-                                " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=?" ;
+                                " AND " + DbHelper.TABLE_ASSIGN + "." + DbHelper.ASSIGN_TERM_ID + "=?";
 
-               Cursor cursor = dbManager.query(true,
+                Cursor cursor = dbManager.query(true,
                         table,
                         projection,
                         selection,
@@ -126,7 +151,7 @@ public class ListCourseActivity extends AppCompatActivity {
                         null);
 
                 cursor.moveToFirst();
-                if ( !cursor.isAfterLast()) {
+                if (!cursor.isAfterLast()) {
                     do {
                         Course course = new Course();
                         course.setItemId(cursor.getInt(cursor.getColumnIndex(DbHelper.COURSE_ID)));
@@ -139,24 +164,24 @@ public class ListCourseActivity extends AppCompatActivity {
                         course.setNotes(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_NOTES)));
 
                         list.add(course);
-                    //    mentorList.add(mentor);
+                        //    mentorList.add(mentor);
 
                     } while (cursor.moveToNext());
                 }
                 cursor.close();
-                Toast.makeText(this,"List course:" + list.get(0).getItem(),Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "List course:" + list.get(0).getItem(), Toast.LENGTH_LONG).show();
                 dataAdapter = new CourseListAdapter(this, R.layout.list_course, list);
                 listCourse.setAdapter(dataAdapter);
 
-       //     TextView tv = findViewById(R.id.mentorTv);
+                //     TextView tv = findViewById(R.id.mentorTv);
 //            ListView lv = findViewById(R.id.listMentor);
 //
 //            ArrayAdapter<Mentor> spinnerArrayAdapter = new ArrayAdapter<>(
 //                    this, android.R.layout.simple_spinner_dropdown_item, Mentorlist);
 //            lv.setAdapter(spinnerArrayAdapter);
 
-        } catch (Exception e) {
-            //  noTerm = true;
+            } catch (Exception e) {
+                //  noTerm = true;
 //            finish();
 //            Intent intent = new Intent(getApplicationContext(),TermActivity.class);
 //            startActivity(intent);
@@ -171,6 +196,7 @@ public class ListCourseActivity extends AppCompatActivity {
 //                        }
 //                    });
 //            alertDialog.show();
+
 
 
         }

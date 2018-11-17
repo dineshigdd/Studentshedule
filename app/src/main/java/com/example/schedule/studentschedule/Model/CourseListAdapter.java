@@ -38,10 +38,6 @@ public class CourseListAdapter extends ArrayAdapter <Course>{
         courseTitle.setText(course.getItem() + " course "+ "\n" +
                             " from " + course.getStartDate() + " to " + course.getEndDate());
 
-
-        Button btnAddAssessment = convertView.findViewById(R.id.btnAddAssessment);
-        btnAddAssessment.setText("Add Assessment");
-
         return convertView;
     }
 

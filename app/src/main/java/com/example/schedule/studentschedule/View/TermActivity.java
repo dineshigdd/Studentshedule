@@ -26,10 +26,9 @@ public class TermActivity extends AppCompatActivity {
     DbManager dbManager;
     private ArrayList<DataItem> list;
     private ArrayList<Button> btn;
-    private int listPosition;
+    private static int listPosition;
     private ListView listTerm;
     private int termId;
-    Button deleteBtn;
     public static boolean isTermEditing = false;
     private TermListAdapter dataAdapter;
     private Button btnDelete;
@@ -45,7 +44,7 @@ public class TermActivity extends AppCompatActivity {
       //        deleteBtn.setVisibility(View.INVISIBLE);
 
 
-
+        listPosition = -1;
         setTerms();
 //        btn = new ArrayList<>(list.size());
 //        for(int i = 0 ; i < list.size(); i ++ ) {
@@ -110,11 +109,13 @@ public class TermActivity extends AppCompatActivity {
 
     }
 
-    public  void buttonClickHandler(View view) {
-        //Button btn = findViewById(R.id.btnAddTerm);
-//        btn.setText(Integer.toString(listPosition));
-        Toast.makeText(this,Integer.toString(listPosition),Toast.LENGTH_LONG).show();
-        if(listPosition > 0 ) {
+    public  void brnDeleteClickHandler(View view) {
+
+        if(listPosition < 0 ) {
+            Toast.makeText(getApplicationContext(),
+                    "Please, first Click on the record to select it", Toast.LENGTH_LONG).show();
+        }else{
+
             try {
                 removeTerm();
             } catch (Exception e) {
@@ -122,29 +123,35 @@ public class TermActivity extends AppCompatActivity {
                                 "You must first remove all courses to delete the term",
                         Toast.LENGTH_LONG).show();
             }
-        }else{
-            Toast.makeText(getApplicationContext(),
-                    "Please, first Click on the record to select it", Toast.LENGTH_LONG).show();
         }
 
     }
 
     public void BtnEditClickHandler(View view) {
-       isTermEditing = true;
-       DataItem dataItem = new DataItem(dataAdapter.getItem(listPosition).getItem(),
+        if( listPosition < 0) {
+            Toast.makeText(getApplicationContext(),
+                    "Please, first Click on the record to select it", Toast.LENGTH_LONG).show();
+        }else {
+            isTermEditing = true;
+            DataItem dataItem = new DataItem(dataAdapter.getItem(listPosition).getItem(),
                     dataAdapter.getItem(listPosition).getStartDate(),
                     dataAdapter.getItem(listPosition).getEndDate());
-       dataItem.setItemId(termId);
-       Intent intent = new Intent(this, DetailedTermActivity.class );
-       intent.putExtra("serializeData",dataItem);
-       startActivity(intent);
+            dataItem.setItemId(termId);
+            Intent intent = new Intent(this, DetailedTermActivity.class);
+            intent.putExtra("serializeData", dataItem);
+            startActivity(intent);
+        }
     }
 
     public void btnDisplayCourseHandler(View view) {
-
-        Intent intent = new Intent(this, ListCourseActivity.class );
-        intent.putExtra("serializeData",termId);
-        startActivity(intent);
+        if( listPosition < 0){
+            Toast.makeText(getApplicationContext(),
+                    "Please, first Click on the record to select it", Toast.LENGTH_LONG).show();
+        }else {
+            Intent intent = new Intent(this, ListCourseActivity.class);
+            intent.putExtra("serializeData", termId);
+            startActivity(intent);
+        }
 
     }
 
@@ -157,7 +164,7 @@ public class TermActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 termId = list.get(position).getItemId();
                 listPosition = position;
-                Toast.makeText(TermActivity.this, Integer.toString(list.get(position).getItemId()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(TermActivity.this, Integer.toString(listPosition ), Toast.LENGTH_SHORT).show();
              //   btn.add(position, (Button)listTerm.findViewById(R.id.btnDeleteTerm));
 
               //  btn.get(position).setVisibility(View.VISIBLE);

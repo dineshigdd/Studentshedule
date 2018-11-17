@@ -69,7 +69,7 @@
         android:layout_marginLeft="200dp"
 
         android:focusable="false"
-        android:onClick="buttonClickHandler"/>
+        android:onClick="brnDeleteClickHandler"/>
     <!--android:layout_marginTop="-50dp"-->
     <!--android:visibility="gone"-->
 

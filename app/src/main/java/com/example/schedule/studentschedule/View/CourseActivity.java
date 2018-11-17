@@ -36,6 +36,8 @@ import com.example.schedule.studentschedule.Scheduler.MyReceiver;
 import com.example.schedule.studentschedule.Scheduler.NotificationScheduler;
 import com.example.schedule.studentshedule.R;
 
+import org.w3c.dom.ls.LSException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -91,6 +93,7 @@ public class CourseActivity extends AppCompatActivity {
     private CheckBox endCheckBox;
     private String startCheckBoxValue;
     private String endCheckBoxValue;
+    public static boolean BACK_BUTTON_PRESSED = false;
 
     @SuppressLint("ResourceType")
     @Override
@@ -976,9 +979,9 @@ public class CourseActivity extends AppCompatActivity {
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                        if( !ListCourseActivity.isCourseEditing ){
+                    //    if( !ListCourseActivity.isCourseEditing ){
                             customCourseEditText .setHint("Enter the custom name");
-                       }
+                    //   }
                         customCourseEditText .setTextSize(12);
                         edCustomCourseDimension.addRule(RelativeLayout.BELOW, spCourse.getId());
                         edCustomCourseLayout.setLayoutParams(edCustomCourseDimension);
@@ -1089,8 +1092,20 @@ public class CourseActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        ListCourseActivity.isCourseEditing = true;
+        BACK_BUTTON_PRESSED = true;
+        //  finishActivity(ListCourseActivity.REQUEST_CODE);
+        Intent intent = new Intent(getApplicationContext(),ListCourseActivity.class);
+        intent.putExtra("EDITCOURSE-TERMID", editCourseTermId );
+        startActivity(intent);
 
 
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

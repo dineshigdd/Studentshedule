@@ -13,13 +13,7 @@
         android:textStyle="italic" />
 
 
-    <Button
-        android:id="@+id/btnAddAssessment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:focusable="false"
-        android:onClick="btnAddAssesmentHandler"/>
+
 
 
 
