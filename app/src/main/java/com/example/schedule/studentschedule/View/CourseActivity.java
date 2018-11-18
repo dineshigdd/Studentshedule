@@ -19,8 +19,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -107,6 +109,8 @@ public class CourseActivity extends AppCompatActivity {
         mapId = new HashMap<>();
         isCustomCourseName = false;
 
+
+
         // This will create the LinearLayout
         mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.VERTICAL);
@@ -122,6 +126,12 @@ public class CourseActivity extends AppCompatActivity {
         //Select term ---------------------------------------
 
         // int[] to = {android.R.id.text1};
+        ScrollView scroll = new ScrollView(this);
+        scroll.setBackgroundColor(android.R.color.transparent);
+        scroll.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT,
+        LinearLayout.LayoutParams.MATCH_PARENT));
+        scroll.addView(mainLayout);
+
 
 
         RelativeLayout termLayout = new RelativeLayout(this);
@@ -649,7 +659,7 @@ public class CourseActivity extends AppCompatActivity {
             updateButtonHandler();
         }
 
-        setContentView(mainLayout);
+        setContentView(scroll);
 
 
     }

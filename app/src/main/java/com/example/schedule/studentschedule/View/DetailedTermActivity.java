@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,8 @@ public class DetailedTermActivity extends AppCompatActivity {
 
 
         // This will create the LinearLayout
+
+
         mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.VERTICAL);
 
@@ -244,7 +247,13 @@ public class DetailedTermActivity extends AppCompatActivity {
         mainLayout.addView(btnLayout);
      //   submitbtnActionHandler();
 
-        setContentView(mainLayout);
+        ScrollView scroll = new ScrollView(this);
+        scroll.setBackgroundColor(android.R.color.transparent);
+        scroll.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+        scroll.addView(mainLayout);
+
+        setContentView(scroll);
 
 
 

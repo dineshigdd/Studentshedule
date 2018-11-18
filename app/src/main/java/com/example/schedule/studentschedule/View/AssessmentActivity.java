@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -99,6 +100,12 @@ public class AssessmentActivity extends AppCompatActivity{
 
 
         //notification = new startNotification();
+        ScrollView scroll = new ScrollView(this);
+        scroll.setBackgroundColor(android.R.color.transparent);
+        scroll.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+        scroll.addView(mainLayout);
+
 
 
         table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT ;
@@ -325,7 +332,7 @@ public class AssessmentActivity extends AppCompatActivity{
         mainLayout.addView(btnDisplayLayout);
 
 
-        setContentView(mainLayout);
+        setContentView(scroll);
 
         if( !isEditing) {
             submitbtnActionHandler();
