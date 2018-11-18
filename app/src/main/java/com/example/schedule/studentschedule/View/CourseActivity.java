@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
+import com.example.schedule.studentschedule.MainActivity;
 import com.example.schedule.studentschedule.Model.Assign;
 import com.example.schedule.studentschedule.Model.Course;
 import com.example.schedule.studentschedule.Model.CourseListAdapter;
@@ -1125,7 +1126,36 @@ public class CourseActivity extends AppCompatActivity {
            AlertDialog diaBox = deleateConfirmation();
            diaBox.show();
        }
-          return super.onOptionsItemSelected(item);
+
+
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.menu_home:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_term:
+                intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_course:
+                intent = new Intent(getApplicationContext(), CourseActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_assessment:
+                intent = new Intent(getApplicationContext(), AssessmentActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+
+
+
+        return super.onOptionsItemSelected(item);
+
     }
 
 

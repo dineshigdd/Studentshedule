@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
+import com.example.schedule.studentschedule.MainActivity;
 import com.example.schedule.studentschedule.Scheduler.DueDateReceiver;
 import com.example.schedule.studentschedule.Scheduler.DueDateScheduler;
 import com.example.schedule.studentschedule.Model.Assessment;
@@ -89,6 +90,7 @@ public class AssessmentActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.VERTICAL);
@@ -812,6 +814,42 @@ public class AssessmentActivity extends AppCompatActivity{
             AlertDialog diaBox = deleateConfirmation();
             diaBox.show();
         }
+
+
+
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.menu_home:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_term:
+                intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_course:
+                intent = new Intent(getApplicationContext(), CourseActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_assessment:
+                intent = new Intent(getApplicationContext(), AssessmentActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+
+
         return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
     }
 }

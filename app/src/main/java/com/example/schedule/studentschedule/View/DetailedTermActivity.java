@@ -3,6 +3,7 @@ package com.example.schedule.studentschedule.View;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
+import com.example.schedule.studentschedule.MainActivity;
 import com.example.schedule.studentschedule.Model.DataItem;
 import com.example.schedule.studentshedule.R;
 
@@ -60,7 +62,7 @@ public class DetailedTermActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // This will create the LinearLayout
@@ -329,19 +331,6 @@ public class DetailedTermActivity extends AppCompatActivity {
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
     protected TextView addTextView(String label) {
         TextView tv = new TextView(this);
         RelativeLayout.LayoutParams tvLayoutDimensions = new RelativeLayout.LayoutParams(
@@ -453,6 +442,44 @@ public class DetailedTermActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.menu_home:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_term:
+                intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_course:
+                intent = new Intent(getApplicationContext(), CourseActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.menu_assessment:
+                intent = new Intent(getApplicationContext(), AssessmentActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+
+
+
+        return super.onOptionsItemSelected(item);
+    }
 }
 
 

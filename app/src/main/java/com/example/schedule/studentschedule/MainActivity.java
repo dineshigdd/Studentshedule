@@ -15,6 +15,7 @@ import com.example.schedule.studentschedule.Scheduler.MyReceiver;
 import com.example.schedule.studentschedule.Scheduler.NotificationScheduler;
 import com.example.schedule.studentschedule.View.AssessmentActivity;
 import com.example.schedule.studentschedule.View.CourseActivity;
+import com.example.schedule.studentschedule.View.DetailedTermActivity;
 import com.example.schedule.studentschedule.View.ListCourseActivity;
 import com.example.schedule.studentschedule.View.TermActivity;
 import com.example.schedule.studentshedule.R;
@@ -30,23 +31,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         setContentView(R.layout.activity_main);
 
 
-        NotificationScheduler.showNotification(MainActivity.this,MyReceiver.class);
-
-
-        Thread dueDataThread = new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    sleep(200);
-                    DueDateScheduler.showAssessmentNotification(MainActivity.this, DueDateReceiver.class);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        dueDataThread.start();
+//        NotificationScheduler.showNotification(MainActivity.this,MyReceiver.class);
+//
+//
+//        Thread dueDataThread = new Thread(){
+//            @Override
+//            public void run() {
+//                super.run();
+//                try {
+//                    sleep(200);
+//                    DueDateScheduler.showAssessmentNotification(MainActivity.this, DueDateReceiver.class);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//
+//        dueDataThread.start();
 
 
 
@@ -104,7 +105,30 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
+        switch( item.getItemId() ) {
+            case R.id.menu_home:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
 
+                break;
+
+            case R.id.menu_term:
+                intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
+
+                break;
+
+            case R.id.menu_course:
+                intent = new Intent(getApplicationContext(), CourseActivity.class);
+
+                break;
+
+            case R.id.menu_assessment:
+                intent = new Intent(getApplicationContext(), AssessmentActivity.class);
+
+                break;
+        }
+
+        startActivity(intent);
 
         return super.onOptionsItemSelected(item);
     }
