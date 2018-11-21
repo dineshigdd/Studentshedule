@@ -792,7 +792,7 @@ public class CourseActivity extends AppCompatActivity {
                 values = dbManager.setData(editAssign,DbHelper.TABLE_ASSIGN);
                 dbManager.update(DbHelper.TABLE_ASSIGN,values,condition,editAssignId);
 
-               // ListCourseActivity.isCourseEditing = false;  should revise 11/16/2018
+             //   ListCourseActivity.isCourseEditing = false;
                Toast.makeText(getApplicationContext(), " Your Course details has been updated",Toast.LENGTH_SHORT).show();
             }
         });
@@ -899,7 +899,7 @@ public class CourseActivity extends AppCompatActivity {
 //                else{
 //                    Toast.makeText(CourseActivity.this,"record is already there",Toast.LENGTH_SHORT);
 //               }
-                ListCourseActivity.isCourseEditing = false;
+               // ListCourseActivity.isCourseEditing = false;
                 isNewCourse = true;
                 NotificationScheduler.showNotification(CourseActivity.this, MyReceiver.class);
 
@@ -1085,7 +1085,7 @@ public class CourseActivity extends AppCompatActivity {
 //        dbManager.delete(DbHelper.TABLE_ASSESSMENT, selection,assessmentId);
 
         isNewCourse = false;
-        Intent intent = new Intent(getApplicationContext(),ListCourseActivity.class);
+        Intent intent = new Intent(getApplicationContext(),TermActivity.class);
         startActivity(intent);
         finish();
 
@@ -1185,6 +1185,9 @@ public class CourseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+//              finish();
+              Intent intent = new Intent(getApplicationContext(), TermActivity.class);
+              startActivity(intent);
 
 //           if( !isNewCourse ){
 //                ListCourseActivity.isCourseEditing = false;
@@ -1192,10 +1195,10 @@ public class CourseActivity extends AppCompatActivity {
 //                Log.d("Edit Course Term ID in Back",editCourseTermId );
 //                intent.putExtra("EDITCOURSE-TERMID", editCourseTermId);
 //           }
-//
-            BACK_BUTTON_PRESSED = true;
-            intent.putExtra("EDITCOURSE-TERMID", editCourseTermId);
-//
+////
+//            BACK_BUTTON_PRESSED = true;
+//            intent.putExtra("EDITCOURSE-TERMID", editCourseTermId);
+////
 //            Log.d(" isCourseEditing ", Boolean.toString(ListCourseActivity.isCourseEditing));
 //            Log.d(" BACK_BUTTON_PRESSED  ", Boolean.toString(BACK_BUTTON_PRESSED));
 //            //  finishActivity(ListCourseActivity.REQUEST_CODE);
@@ -1230,24 +1233,29 @@ public class CourseActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_home:
+                finish();
                 ListCourseActivity.isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_term:
+                finish();
                 ListCourseActivity.isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_course:
+                finish();
+                ListCourseActivity.isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), CourseActivity.class);
                 startActivity(intent);
 
                 break;
 
             case R.id.menu_assessment:
+                finish();
                 ListCourseActivity.isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 startActivity(intent);

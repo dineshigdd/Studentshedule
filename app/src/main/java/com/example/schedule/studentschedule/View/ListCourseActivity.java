@@ -117,9 +117,10 @@ public class    ListCourseActivity extends AppCompatActivity {
         dbManager = new DbManager(this);
         dbManager.open();
 
-        if( CourseActivity.BACK_BUTTON_PRESSED ) {
-            termId = getIntent().getSerializableExtra("EDITCOURSE-TERMID").toString();
-        }else if( !isCourseEditing) {
+//        if( CourseActivity.BACK_BUTTON_PRESSED ) {
+//            termId = getIntent().getSerializableExtra("EDITCOURSE-TERMID").toString();
+//        }else
+            if( !isCourseEditing) {
             termId = getIntent().getSerializableExtra("serializeData").toString();
         }
 
