@@ -22,6 +22,7 @@
         </activity>
         <activity
             android:name="com.example.schedule.studentschedule.View.DetailedTermActivity"
+            android:label="Add/Edit terms"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,6 +34,7 @@
 
         <activity
             android:name="com.example.schedule.studentschedule.View.CourseActivity"
+            android:label="Manage Course"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -45,6 +47,7 @@
 
         <activity
             android:name="com.example.schedule.studentschedule.View.AssessmentActivity"
+            android:label="Manage assessment"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -68,6 +71,7 @@
 
         <activity
             android:name="com.example.schedule.studentschedule.View.ListCourseActivity"
+            android:label="List Of Courses"
             android:configChanges="orientation|screenSize">
             android:label="@string/title_activity_list_course"
             android:parentActivityName="com.example.schedule.studentschedule.View.TermActivity"
@@ -79,6 +83,7 @@
 
         <activity
             android:name="com.example.schedule.studentschedule.View.ListAssessmentActivity"
+            android:label="List Of Assessments"
             android:configChanges="orientation|screenSize">
             android:label="@string/title_activity_list_assessment"
             android:parentActivityName="com.example.schedule.studentschedule.View.AssessmentActivity"

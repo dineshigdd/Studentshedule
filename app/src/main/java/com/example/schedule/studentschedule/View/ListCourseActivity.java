@@ -78,8 +78,8 @@ public class    ListCourseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        isCourseEditing = false;
+      //  super.onBackPressed();
+       // isCourseEditing = false;
     }
 
     private void editCourse(){
