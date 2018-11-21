@@ -40,8 +40,8 @@ public class ListAssessmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_assessment);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbManager = new DbManager(this);
@@ -73,6 +73,10 @@ public class ListAssessmentActivity extends AppCompatActivity {
 
 
         list = dbManager.getAssessmentOfCourse(termId,courseId,table);
+        if( list.size() == 0 ){
+            Toast.makeText( getApplicationContext(), " There are no assessments ", Toast.LENGTH_LONG).show();
+            finish();
+        }
 
             assessmentList = new ArrayList<>();
 
@@ -90,14 +94,6 @@ public class ListAssessmentActivity extends AppCompatActivity {
 
 
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
     }
 

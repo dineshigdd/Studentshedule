@@ -44,8 +44,8 @@ public class DueDateScheduler  {
 
         ArrayList<Assessment> list= null;
 
-        if (!(dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) > 0)) {
-            Toast.makeText(context, "There are no courses", Toast.LENGTH_LONG).show();
+        if ((dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) < 0)) {
+            Toast.makeText(context, "There are no Assessments", Toast.LENGTH_LONG).show();
 
         } else {
             list = dbManager.getAllAssesment();

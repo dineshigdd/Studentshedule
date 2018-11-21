@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,7 +60,6 @@ public class CourseActivity extends AppCompatActivity {
     private TextView tv;
     protected TextView startDateTv;
     protected TextView endDateTv;
-    private TextView mentorText;
     private EditText mentorEditText;
     private  TextView phone;
     private TextView email;
@@ -97,6 +98,8 @@ public class CourseActivity extends AppCompatActivity {
     private String startCheckBoxValue;
     private String endCheckBoxValue;
     public static boolean BACK_BUTTON_PRESSED = false;
+    private static boolean isNewCourse = false;
+    public static int MAINMENU_REQUEST_CODE = 100;
 
     @SuppressLint("ResourceType")
     @Override
@@ -108,7 +111,8 @@ public class CourseActivity extends AppCompatActivity {
         tv = new TextView(this);
         mapId = new HashMap<>();
         isCustomCourseName = false;
-
+        Bundle extras = getIntent().getExtras();
+        Log.d("Where I am","I am in on Creating....");
 
 
         // This will create the LinearLayout
@@ -117,6 +121,9 @@ public class CourseActivity extends AppCompatActivity {
         CourseLayout = new RelativeLayout(this);
         edCustomCourseLayout = new RelativeLayout(this);
         customCourseEditText = new EditText(this);
+
+
+
 
         if( !ListCourseActivity.isCourseEditing) {
             intent = new Intent(CourseActivity.this, AssessmentActivity.class);
@@ -177,11 +184,17 @@ public class CourseActivity extends AppCompatActivity {
             }
 
             populateSppiner(term, spTerm);
+            spTerm.setEnabled( true );
+
+
+
 
             if( ListCourseActivity.isCourseEditing )
             {
 
-                editCourseTermId =  (getIntent().getSerializableExtra("termID").toString());
+                editCourseTermId =  extras.getString("termID");
+                        //getIntent().getSerializableExtra("termID").toString();
+                Log.d("EditCourseTermID test",editCourseTermId);
                 int spTermPosition = 0;
 
                 while( (spTermPosition < list.size()) && list.get(spTermPosition).getItemId() != Integer.parseInt(editCourseTermId) ) {
@@ -189,18 +202,25 @@ public class CourseActivity extends AppCompatActivity {
                 }
 
                spTerm.setSelection(spTermPosition + 1);//Add one to skip the first Item
-
-
-
-
-               // int spTermPosition = 0;
-//                for( int i = 0; i< term.size() &&  termTitle.equals(list.get(i)); i++ ){
-//
-//                            spTermPosition = i - 1;
-//                }
-
+               spTerm.setEnabled( false );
 
              }
+
+            if( ListCourseActivity.isAddCourseToSelectedTerm ) {
+                Log.d("i AM INSIDE ISAddcourseterm", Boolean.toString( ListCourseActivity.isAddCourseToSelectedTerm));
+
+                String termId = extras.getString("SELECTED-TERM");
+                // getIntent().getSerializableExtra("SELECTED-TERM").toString();
+                int spTermPosition = 0;
+
+                while(spTermPosition < list.size() && list.get(spTermPosition).getItemId() != Integer.parseInt(termId)){
+                    spTermPosition++;
+                }
+
+                spTerm.setSelection(spTermPosition + 1);//Add one to skip the first Item
+                spTerm.setEnabled(false);
+
+            }
 
 
         } catch (Exception e) {
@@ -413,7 +433,7 @@ public class CourseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH) + 1;
+                month = calendar.get(Calendar.MONTH);
                 date = calendar.get(Calendar.DAY_OF_MONTH);
 
                 // TODO Auto-generated method stub
@@ -479,11 +499,12 @@ public class CourseActivity extends AppCompatActivity {
         mentorEditText = setEditText(206,207);
         mentorEditText.setHint("Enter mentor name");
 
-
         mentorLayout.addView(mentorEditText);
         tvMentorDimensions.addRule(RelativeLayout.ALIGN_BASELINE, mentorEditText.getId());
 
         mainLayout.addView(mentorLayout);
+
+
 //        TextView tvMentorPhone = addTextView(getString(R.string.phone));
 //        tvMentorPhone.setId(208);
 //        mentoredTextDimension.addRule(RelativeLayout.RIGHT_OF, titleLabel.getId());
@@ -521,7 +542,7 @@ public class CourseActivity extends AppCompatActivity {
         emailLayout.addView(tvEmail);
 
         emailEditText = setEditText(209,210);
-        emailEditText.setHint("Enter E-mail          ");//keep this space
+        emailEditText.setHint("Enter E-mail\t");
 
 
         emailLayout.addView(emailEditText);
@@ -542,6 +563,7 @@ public class CourseActivity extends AppCompatActivity {
 
         edTextNotes = new EditText(this);
         edTextNotes.setId(209);
+
         RelativeLayout.LayoutParams edTextDimension = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -614,6 +636,8 @@ public class CourseActivity extends AppCompatActivity {
 
         if( ListCourseActivity.isCourseEditing )
             { //if editing
+            Log.d("isCourseEditing ......", Boolean.toString(ListCourseActivity.isCourseEditing));
+//            Log.d("edit term ID",editCourseTermId);
             startDateTv.setText(editCourse.getStartDate());
             endDateTv.setText(editCourse.getEndDate());
 
@@ -660,6 +684,19 @@ public class CourseActivity extends AppCompatActivity {
         }
 
         setContentView(scroll);
+
+
+        mentorEditText.setTag(mentorEditText.getKeyListener());
+        mentorEditText.setKeyListener(null);
+
+        phoneEditText.setTag(phoneEditText.getKeyListener());
+        phoneEditText.setKeyListener(null);
+
+        emailEditText.setTag(emailEditText.getKeyListener());
+        mentorEditText.setKeyListener(null);
+
+        edTextNotes.setTag(edTextNotes.getKeyListener());
+        edTextNotes.setKeyListener(null);
 
 
     }
@@ -756,6 +793,7 @@ public class CourseActivity extends AppCompatActivity {
                 dbManager.update(DbHelper.TABLE_ASSIGN,values,condition,editAssignId);
 
                // ListCourseActivity.isCourseEditing = false;  should revise 11/16/2018
+               Toast.makeText(getApplicationContext(), " Your Course details has been updated",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -861,7 +899,8 @@ public class CourseActivity extends AppCompatActivity {
 //                else{
 //                    Toast.makeText(CourseActivity.this,"record is already there",Toast.LENGTH_SHORT);
 //               }
-
+                ListCourseActivity.isCourseEditing = false;
+                isNewCourse = true;
                 NotificationScheduler.showNotification(CourseActivity.this, MyReceiver.class);
 
 
@@ -875,6 +914,7 @@ public class CourseActivity extends AppCompatActivity {
 
 
     private Mentor getMentorData(){
+
         dbManager.open();
         String table = DbHelper.TABLE_ASSIGN + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_TERM + "," + DbHelper.TABLE_MENTOR;
         String selection = DbHelper.TABLE_COURSE + "." + DbHelper.COURSE_ID + "=" +  DbHelper.ASSIGN_COURSE_ID +
@@ -882,6 +922,7 @@ public class CourseActivity extends AppCompatActivity {
                 " AND " +  DbHelper.TABLE_MENTOR + "." + DbHelper.MENTOR_ID + "=" +  DbHelper.ASSIGN_MENTOR_ID +
                 " AND "  + DbHelper.ASSIGN_TERM_ID + "=?" +
                 " AND " +  DbHelper.ASSIGN_COURSE_ID + "=?" ;
+
 
         String [] selectionArgs = { editCourseTermId , String.valueOf(editCourse.getItemId())};
         Cursor cursor = dbManager.query(true,table,DbHelper.All_COLUMNS_MENTOR,
@@ -1029,7 +1070,7 @@ public class CourseActivity extends AppCompatActivity {
                 editMentor.getMentorId(),
                 DbHelper.TABLE_MENTOR);
 
-       int assessmentId = dbManager.getAssessmentId(Integer.parseInt(editCourseTermId),editCourse.getItemId());
+        dbManager.getAssessmentId(Integer.parseInt(editCourseTermId),editCourse.getItemId());
 
 
         String selection  ;
@@ -1043,10 +1084,9 @@ public class CourseActivity extends AppCompatActivity {
 //        selection = DbHelper.ASSESSMENT_ID + "=?";
 //        dbManager.delete(DbHelper.TABLE_ASSESSMENT, selection,assessmentId);
 
-        //ListCourseActivity.isCourseEditing = false;
+        isNewCourse = false;
         Intent intent = new Intent(getApplicationContext(),ListCourseActivity.class);
         startActivity(intent);
-
         finish();
 
 
@@ -1066,7 +1106,6 @@ public class CourseActivity extends AppCompatActivity {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         removeCourse();
-
                         dialog.dismiss();
                     }
 
@@ -1101,22 +1140,72 @@ public class CourseActivity extends AppCompatActivity {
        });
 
 
+     mentorEditText.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+
+             mentorEditText.setKeyListener((KeyListener) mentorEditText.getTag());
+
+         }
+     });
+
+
+     phoneEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+              phoneEditText.setKeyListener((KeyListener) phoneEditText.getTag());
+
+            }
+        });
+
+
+     emailEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+              emailEditText.setKeyListener((KeyListener) emailEditText.getTag());
+
+            }
+        });
+
+
+     edTextNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               edTextNotes.setKeyListener((KeyListener) edTextNotes.getTag());
+            }
+        });
+
+
+
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
-        ListCourseActivity.isCourseEditing = true;
-        BACK_BUTTON_PRESSED = true;
-        //  finishActivity(ListCourseActivity.REQUEST_CODE);
-        Intent intent = new Intent(getApplicationContext(),ListCourseActivity.class);
-        intent.putExtra("EDITCOURSE-TERMID", editCourseTermId );
-        startActivity(intent);
 
 
+//           if( !isNewCourse ){
+//                ListCourseActivity.isCourseEditing = false;
+//
+//                Log.d("Edit Course Term ID in Back",editCourseTermId );
+//                intent.putExtra("EDITCOURSE-TERMID", editCourseTermId);
+//           }
+//
+            BACK_BUTTON_PRESSED = true;
+            intent.putExtra("EDITCOURSE-TERMID", editCourseTermId);
+//
+//            Log.d(" isCourseEditing ", Boolean.toString(ListCourseActivity.isCourseEditing));
+//            Log.d(" BACK_BUTTON_PRESSED  ", Boolean.toString(BACK_BUTTON_PRESSED));
+//            //  finishActivity(ListCourseActivity.REQUEST_CODE);
+//            Intent intent = new Intent(getApplicationContext(), ListCourseActivity.class);
 
+//            startActivity(intent);
+
+        //super.onBackPressed();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1141,11 +1230,13 @@ public class CourseActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_home:
+                ListCourseActivity.isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_term:
+                ListCourseActivity.isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
                 startActivity(intent);
                 break;
@@ -1153,9 +1244,11 @@ public class CourseActivity extends AppCompatActivity {
             case R.id.menu_course:
                 intent = new Intent(getApplicationContext(), CourseActivity.class);
                 startActivity(intent);
+
                 break;
 
             case R.id.menu_assessment:
+                ListCourseActivity.isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 startActivity(intent);
                 break;
@@ -1167,6 +1260,17 @@ public class CourseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
 
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Log.d("OnActivity reult", Boolean.toString(ListCourseActivity.isCourseEditing));
+//        if( requestCode ==  MAINMENU_REQUEST_CODE && resultCode == RESULT_OK ){
+//            ListCourseActivity.isCourseEditing = false;
+//        }
+//
+//
+//    }
 
 
 

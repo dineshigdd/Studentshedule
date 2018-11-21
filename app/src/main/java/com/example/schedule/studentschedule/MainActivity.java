@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.schedule.studentschedule.Scheduler.DueDateReceiver;
 import com.example.schedule.studentschedule.Scheduler.DueDateScheduler;
@@ -31,23 +32,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         setContentView(R.layout.activity_main);
 
 
-//        NotificationScheduler.showNotification(MainActivity.this,MyReceiver.class);
-//
-//
-//        Thread dueDataThread = new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                try {
-//                    sleep(200);
-//                    DueDateScheduler.showAssessmentNotification(MainActivity.this, DueDateReceiver.class);
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//
-//        dueDataThread.start();
+        NotificationScheduler.showNotification(MainActivity.this,MyReceiver.class);
+
+
+        Thread dueDataThread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    sleep(200);
+                    DueDateScheduler.showAssessmentNotification(MainActivity.this, DueDateReceiver.class);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        dueDataThread.start();
 
 
 
@@ -75,16 +76,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             }
         });
 
+        try {
+            Button btnAddAssessment = findViewById(R.id.btnAddAssessment);
+            btnAddAssessment.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    AssessmentActivity.isEditing = false;
+                    Intent intent = new Intent(getApplicationContext(), AssessmentActivity.class);
+                    startActivity(intent);
 
-        Button btnAddAssessment = findViewById(R.id.btnAddAssessment);
-        btnAddAssessment.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AssessmentActivity.isEditing = false;
-                Intent intent = new Intent(getApplicationContext(), AssessmentActivity.class);
-                startActivity(intent);
-
-            }
-        });
+                }
+            });
+        }catch ( Exception e){
+            Toast.makeText( getApplicationContext() , " There are no assessments", Toast.LENGTH_LONG).show();
+        }
 
     }
 

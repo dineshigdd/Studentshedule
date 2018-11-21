@@ -3,14 +3,17 @@ package com.example.schedule.studentschedule.View;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
@@ -22,7 +25,7 @@ import com.example.schedule.studentshedule.R;
 
 import java.util.ArrayList;
 
-public class ListCourseActivity extends AppCompatActivity {
+public class    ListCourseActivity extends AppCompatActivity {
 
 
     private ArrayList<Course> list;
@@ -35,6 +38,7 @@ public class ListCourseActivity extends AppCompatActivity {
     private static int listPositon;
     private boolean isDeleted;
     static final int REQUEST_CODE = 1;
+    public static boolean isAddCourseToSelectedTerm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,35 +49,9 @@ public class ListCourseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        CourseActivity.BACK_BUTTON_PRESSED = false;
+
         list = new ArrayList<>();
-        //Mentorlist = new ArrayList<>();
-        //my code.............................
-        Button btnAddCourse = findViewById(R.id.btnAddCourse);
-        btnAddCourse.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),CourseActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-
-        setCourse();
-
-
-
-
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
+            setCourse();
 
     }
 
@@ -81,15 +59,26 @@ public class ListCourseActivity extends AppCompatActivity {
     protected void onStart() {
        super.onStart();
 
-           editCourse();
+       editCourse();
 
+        Button btnAddCourse = findViewById(R.id.btnAddCourse);
+        btnAddCourse.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                isCourseEditing = false;
+                isAddCourseToSelectedTerm = true;
+                Intent intent = new Intent(getApplicationContext(),CourseActivity.class);
+                intent.putExtra("SELECTED-TERM", termId);
+                startActivity(intent);
+                finish();
 
+            }
+        });
 
     }
 
     @Override
     public void onBackPressed() {
-
+        super.onBackPressed();
         isCourseEditing = false;
     }
 
@@ -103,8 +92,9 @@ public class ListCourseActivity extends AppCompatActivity {
                 Intent intent = new Intent(ListCourseActivity.this, CourseActivity.class );
                 intent.putExtra("serializeCourseData",list.get(position));
                // Toast.makeText(ListCourseActivity.this, termId,Toast.LENGTH_LONG).show();
+                Log.d("term ID in edit course",termId);
                 intent.putExtra("termID",termId);
-                startActivityForResult(intent, REQUEST_CODE );
+                startActivity(intent);
 
             }
         });
@@ -121,19 +111,21 @@ public class ListCourseActivity extends AppCompatActivity {
 //    }
 
         public void setCourse() {
+        Log.d("is CourseEditing in setCourse", Boolean.toString(isCourseEditing));
+        Log.d("isBacK in CourseActitvty", Boolean.toString(CourseActivity.BACK_BUTTON_PRESSED));
 
         dbManager = new DbManager(this);
         dbManager.open();
 
         if( CourseActivity.BACK_BUTTON_PRESSED ) {
             termId = getIntent().getSerializableExtra("EDITCOURSE-TERMID").toString();
-        }
-
-        if( !isCourseEditing) {
+        }else if( !isCourseEditing) {
             termId = getIntent().getSerializableExtra("serializeData").toString();
         }
 
             listCourse = findViewById(R.id.listCourse);
+
+
 
             try {
                 //list = dbManager.getAllCourse();
@@ -174,12 +166,18 @@ public class ListCourseActivity extends AppCompatActivity {
                         //    mentorList.add(mentor);
 
                     } while (cursor.moveToNext());
+                }else{
+
+                    Toast.makeText(getApplicationContext(), " There are no courses in this term ", Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 cursor.close();
-                Toast.makeText(this, "List course:" + list.get(0).getItem(), Toast.LENGTH_LONG).show();
+
                 dataAdapter = new CourseListAdapter(this, R.layout.list_course, list);
                 listCourse.setAdapter(dataAdapter);
 
+
+                isCourseEditing = false;
                 //     TextView tv = findViewById(R.id.mentorTv);
 //            ListView lv = findViewById(R.id.listMentor);
 //
@@ -249,4 +247,7 @@ public class ListCourseActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

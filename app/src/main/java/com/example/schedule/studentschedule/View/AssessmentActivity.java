@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -113,28 +114,31 @@ public class AssessmentActivity extends AppCompatActivity{
         //Term spinner-------------------------------------
         spTerm = new Spinner(this);
         mainLayout.addView(spTerm);
-        termList = dbManager.getAllTerms();
-        ArrayList<String> term = new ArrayList<>();
-        courseTitle = new ArrayList<>();
-        mapId = new HashMap<>();
-        assessmentCounter = 0;
 
 
-        for (int i = 0; i < termList.size(); i++) {
-            term.add(termList.get(i).getItem()+
-                    " => " +
-                    termList.get(i).getStartDate() +
-                    " to " + termList.get(i).getEndDate());
-        }
+            termList = dbManager.getAllTerms();
+            ArrayList<String> term = new ArrayList<>();
+            courseTitle = new ArrayList<>();
+            mapId = new HashMap<>();
+            assessmentCounter = 0;
 
 
-        //Inserting keys and Values
+            for (int i = 0; i < termList.size(); i++) {
+                term.add(termList.get(i).getItem() +
+                        " => " +
+                        termList.get(i).getStartDate() +
+                        " to " + termList.get(i).getEndDate());
+            }
+
+
+            //Inserting keys and Values
 //        for (int i = 0; i < list.size(); i++) {
 //            mapId.put(term.get(i + 1), list.get(i).getItemId());
 //
 //        }
 
-        populateSppiner(term, spTerm);
+            populateSppiner(term, spTerm);
+
 
         //IF THE USER ACCESS THIS ACTIVITY FROM COURSE ACTIVITY
         int termIDfromCourse;
@@ -178,6 +182,8 @@ public class AssessmentActivity extends AppCompatActivity{
 
         edText = new EditText(this);
         edText.setId(307);
+        edText.setTag(edText.getKeyListener());
+        edText.setKeyListener( null );
         RelativeLayout.LayoutParams edTextDimension = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -593,7 +599,13 @@ public class AssessmentActivity extends AppCompatActivity{
             setupAssessment();
             shareCourseNote();
             //ArrayList<String> list = dbManager.getDate(DbHelper.COURSE_START_DATE);
+            edText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    edText.setKeyListener((KeyListener) edText.getTag());
+                }
+            });
 
 //    btnDisplay.setOnClickListener(new View.OnClickListener() {
 //        @Override

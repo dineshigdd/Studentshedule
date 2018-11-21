@@ -170,7 +170,7 @@ public class DetailedTermActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH) + 1;
+                month = calendar.get(Calendar.MONTH);
                 date = calendar.get(Calendar.DAY_OF_MONTH);
 
                 // TODO Auto-generated method stub
@@ -178,7 +178,7 @@ public class DetailedTermActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                startDateTv.setText(month + "/" + dayOfMonth + "/" + year);
+                                startDateTv.setText(month + 1 + "/" + dayOfMonth + "/" + year);
                             }
                         }, year, month, date);
 
@@ -197,7 +197,7 @@ public class DetailedTermActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH) + 1;
+                month = calendar.get(Calendar.MONTH);
                 date = calendar.get(Calendar.DAY_OF_MONTH);
 
                 // TODO Auto-generated method stub
@@ -205,7 +205,7 @@ public class DetailedTermActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                endDateTv.setText(month + "/" + dayOfMonth + "/" + year);
+                                endDateTv.setText(month + 1 + "/" + dayOfMonth + "/" + year);
                             }
                         }, year, month, date);
 

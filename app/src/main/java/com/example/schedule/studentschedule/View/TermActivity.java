@@ -113,6 +113,8 @@ public class TermActivity extends AppCompatActivity {
 
     public  void brnDeleteClickHandler(View view) {
 
+        isTermEditing = false;
+
         if(listPosition < 0 ) {
             Toast.makeText(getApplicationContext(),
                     "Please, first Click on the record to select it", Toast.LENGTH_LONG).show();
@@ -130,6 +132,7 @@ public class TermActivity extends AppCompatActivity {
     }
 
     public void BtnEditClickHandler(View view) {
+
         if( listPosition < 0) {
             Toast.makeText(getApplicationContext(),
                     "Please, first Click on the record to select it", Toast.LENGTH_LONG).show();
