@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
 import android.view.Menu;
@@ -112,7 +113,11 @@ public class DetailedTermActivity extends AppCompatActivity {
 
 
         if( TermActivity.isTermEditing ) {
-            setEditTerm();
+            try {
+                setEditTerm();
+            }catch (Exception e){
+                TermActivity.isTermEditing = false;
+            }
         }
 
 
@@ -289,6 +294,7 @@ public class DetailedTermActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                TermActivity.isTermEditing = false;
                 if( isCustomTermName ) {
                     termTitle = edCustomTerm.getText().toString();
                 }else {
@@ -487,6 +493,14 @@ public class DetailedTermActivity extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        TermActivity.isTermEditing = false;
+
+        //super.onBackPressed();
     }
 }
 

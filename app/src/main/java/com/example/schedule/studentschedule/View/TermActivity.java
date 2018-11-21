@@ -236,6 +236,11 @@ public class TermActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        isTermEditing = false;
+        //super.onBackPressed();
+    }
 
 
 }

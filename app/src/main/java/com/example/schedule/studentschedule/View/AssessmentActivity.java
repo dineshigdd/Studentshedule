@@ -115,25 +115,31 @@ public class AssessmentActivity extends AppCompatActivity{
         spTerm = new Spinner(this);
         mainLayout.addView(spTerm);
 
+            if( dbManager.getRowCount(DbHelper.TABLE_TERM) > 0) {
+                termList = dbManager.getAllTerms();
+                ArrayList<String> term = new ArrayList<>();
+                courseTitle = new ArrayList<>();
+                mapId = new HashMap<>();
+                assessmentCounter = 0;
 
-            termList = dbManager.getAllTerms();
-            ArrayList<String> term = new ArrayList<>();
-            courseTitle = new ArrayList<>();
-            mapId = new HashMap<>();
-            assessmentCounter = 0;
+
+                for (int i = 0; i < termList.size(); i++) {
+                    term.add(termList.get(i).getItem() +
+                            " => " +
+                            termList.get(i).getStartDate() +
+                            " to " + termList.get(i).getEndDate());
+                }
 
 
-            for (int i = 0; i < termList.size(); i++) {
-                term.add(termList.get(i).getItem() +
-                        " => " +
-                        termList.get(i).getStartDate() +
-                        " to " + termList.get(i).getEndDate());
+                populateSppiner(term, spTerm);
+            }else {
+                Toast.makeText(getApplicationContext(), " You must first create terms " +
+                        "and course before adding assessments", Toast.LENGTH_SHORT).show();
+                finish();
+
             }
 
 
-
-
-            populateSppiner(term, spTerm);
 
 
         //IF THE USER ACCESS THIS ACTIVITY FROM COURSE ACTIVITY

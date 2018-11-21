@@ -112,7 +112,7 @@ public class CourseActivity extends AppCompatActivity {
         mapId = new HashMap<>();
         isCustomCourseName = false;
         Bundle extras = getIntent().getExtras();
-        Log.d("Where I am","I am in on Creating....");
+
 
 
         // This will create the LinearLayout
@@ -164,27 +164,33 @@ public class CourseActivity extends AppCompatActivity {
 
 
         try {
+             ArrayList<DataItem> list = new ArrayList<>();
+            if( dbManager.getRowCount(DbHelper.TABLE_TERM ) > 0 ) {
+                list = dbManager.getAllTerms();
+                ArrayList<String> term = new ArrayList<>();
+                mapId = new HashMap<>();
 
-            final ArrayList<DataItem> list = dbManager.getAllTerms();
-            ArrayList<String> term = new ArrayList<>();
-            mapId = new HashMap<>();
+                term.add("Select term");
+                for (int i = 0; i < list.size(); i++) {
+                    term.add(list.get(i).getItem() +
+                            " => " +
+                            list.get(i).getStartDate() +
+                            " to " + list.get(i).getEndDate());
+                }
 
-            term.add("Select term");
-            for (int i = 0; i < list.size(); i++) {
-                term.add(list.get(i).getItem()+
-                         " => " +
-                        list.get(i).getStartDate() +
-                        " to " + list.get(i).getEndDate());
+                //Inserting keys and Values
+                for (int i = 0; i < list.size(); i++) {
+                    mapId.put(term.get(i + 1), list.get(i).getItemId());
+
+                }
+
+                populateSppiner(term, spTerm);
+                spTerm.setEnabled(true);
+            }else{
+                Toast.makeText(this, "First you must create a term/terms to add a course", Toast.LENGTH_SHORT).show();
+                finish();
+
             }
-
-            //Inserting keys and Values
-            for (int i = 0; i < list.size(); i++) {
-                mapId.put(term.get(i + 1), list.get(i).getItemId());
-
-            }
-
-            populateSppiner(term, spTerm);
-            spTerm.setEnabled( true );
 
 
 
@@ -224,7 +230,7 @@ public class CourseActivity extends AppCompatActivity {
 
 
         } catch (Exception e) {
-            Toast.makeText(this, "First you must create a term/terms to add a course", Toast.LENGTH_SHORT);
+
         }
 
 
