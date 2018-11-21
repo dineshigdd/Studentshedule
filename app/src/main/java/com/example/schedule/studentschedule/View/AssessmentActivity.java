@@ -77,8 +77,8 @@ public class AssessmentActivity extends AppCompatActivity{
 
     private  int assessmentCounter;
     private Button btnDisplay;
-    private int assessmentId;
-    private int mentorId;
+//    private int assessmentId;
+//    private int mentorId;
     private String table;
     public static boolean isEditing;
     private static int  termID;
@@ -131,11 +131,7 @@ public class AssessmentActivity extends AppCompatActivity{
             }
 
 
-            //Inserting keys and Values
-//        for (int i = 0; i < list.size(); i++) {
-//            mapId.put(term.get(i + 1), list.get(i).getItemId());
-//
-//        }
+
 
             populateSppiner(term, spTerm);
 
@@ -144,7 +140,7 @@ public class AssessmentActivity extends AppCompatActivity{
         int termIDfromCourse;
         try {
             termIDfromCourse = (int) getIntent().getSerializableExtra("TERM-ID-FROM-COURSE");
-            Log.d("termIDfromCourse", String.valueOf(termIDfromCourse));
+
 
             int spTermPosition = 0;
             if (termIDfromCourse > 0) {
@@ -155,7 +151,7 @@ public class AssessmentActivity extends AppCompatActivity{
                 spTerm.setEnabled(false);
             }
         }catch (Exception e){
-            termIDfromCourse = 0;
+
         }
 
 
@@ -163,7 +159,7 @@ public class AssessmentActivity extends AppCompatActivity{
 
         spCourse = new Spinner(this);
         mainLayout.addView(spCourse);
-//
+
 
 
         // ------------------------------------------------
@@ -232,8 +228,6 @@ public class AssessmentActivity extends AppCompatActivity{
 
         assessmentTypeLayout.addView(radioGroup);
 
-      // assessmentTypeLayoutDimension.addRule(LinearLayout., typeLabel.getId());
-        //assessmentTypeLayoutDimension.addRule(RelativeLayout.END_OF, typeLabel.getId());
 
         mainLayout.addView(assessmentTypeLayout);
 
@@ -353,27 +347,6 @@ public class AssessmentActivity extends AppCompatActivity{
 
         displayBtnHandler();
 
-//        submit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
-//        if(assessmentCounter < 6 ) {
-//
-//        }else {
-//            Toast.makeText(AssessmentActivity.this,"You have reached the max amount",Toast.LENGTH_SHORT).show();
-////                    AlertDialog.Builder builder = new AlertDialog.Builder(AssessmentActivity.this);
-////                    builder.setMessage("The ")
-////                            .setPositiveButton(getString(android.R.string.yes),on)
-////                            .setNegativeButton(getString(android.R.string.no))
-////                            .show();
-//        }
-
-
-
-
     }
 
 
@@ -413,10 +386,7 @@ public class AssessmentActivity extends AppCompatActivity{
         while( spTermPosition < termList.size() && termList.get(spTermPosition).getItemId()!= termID ){
             spTermPosition = spTermPosition + 1;
         }
-//        Log.d("Asseesment ID:",String.valueOf(assessment.getAssessmentId()));
-//        Log.d("spPosition: " , String.valueOf(spTermPosition));
-//        Log.d("Term ID: " , String.valueOf(termID));
-//        Log.d("Course ID: " , String.valueOf(courseID));
+
         //setting data
         spTerm.setSelection( spTermPosition );
 
@@ -467,10 +437,6 @@ public class AssessmentActivity extends AppCompatActivity{
                 assessment.setTermID(termID);
                 assessment.setCourseID(courseID);
 
-                Log.d("Update ID:", String.valueOf(assessment.getAssessmentId()));
-                Log.d("Update AssTitle: ",assessment.getTitle());
-                Log.d("Update setType: ",assessment.getType());
-                Log.d("Update Due date: ",assessment.getDueDate());
 
                 ContentValues values;
                 values = dbManager.setData(assessment, DbHelper.TABLE_ASSESSMENT);
@@ -499,22 +465,9 @@ public class AssessmentActivity extends AppCompatActivity{
 
 
 
-                    mentorId = getMentorId(termId, courseId);
-                    Log.d("mENTOR id:" , String.valueOf(mentorId));
-                    assessmentId = dbManager.getAssessmentId(termId,courseId);
-                    Log.d("Assessment in Assessment Activtivity id:" , String.valueOf(assessmentId));
-                    //get the record for corresponding assessment in the assessment table
-//                    boolean isInsertOp = false;
-//                    Assessment assessmentRecord = dbManager.getAssessment(assessmentId);
-//
-//                    if (assessmentRecord.getTitle()== null ) {
-//                        isInsertOp = false; //do not do insert operation
-//                       Log.d("IsInsert top",  String.valueOf(isInsertOp ));
-//                    }else {
-//                        isInsertOp = true;  // do insert
-//                        Log.d("IsInsert top",  String.valueOf(isInsertOp ));
-//                    }
-//
+                    //mentorId = getMentorId(termId, courseId);
+
+                    //assessmentId = dbManager.getAssessmentId(termId,courseId);
 
                      assessment = new Assessment(
                             edText.getText().toString(),
@@ -537,37 +490,7 @@ public class AssessmentActivity extends AppCompatActivity{
                     ContentValues values;
                     values = dbManager.setData(assessment, DbHelper.TABLE_ASSESSMENT);
                     dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
-//                    if( isInsertOp == false ) {
-//                        String condition = DbHelper.ASSESSMENT_ID + "=?";
-//                        dbManager.update(DbHelper.TABLE_ASSESSMENT, values, condition, assessmentId);
-//                    }else if( isInsertOp ){
-//                        dbManager.insertData(DbHelper.TABLE_ASSESSMENT,values);
-//                        assessmentId = dbManager.getAllAssesment().get(dbManager.getAllAssesment().size() - 1).getAssessmentId();
-//                    }
 
-//                    values.clear();
-//
-////                    ArrayList<Assessment> assessmentList = dbManager.getAllAssesment();
-////                    int assessmentId = assessmentList.get(assessmentList.size() - 1).getAssessmentId();
-//
-//                    Assign assign = new Assign(
-//                            termId,
-//                            courseId,
-//                            mentorId
-//                    );
-
-
-//                    int assignId = dbManager.getAssignId(termId,courseId,mentorId, DbHelper.TABLE_MENTOR);
-//                    Log.d("ASSIGN id:" , String.valueOf(assignId));
-//                    assign.setAssessmentId(assessmentId);
-//                    values = dbManager.setData(assign, "assign");
-//                    Log.d("assessmentCounter BEFORE IF: ", String.valueOf(assessmentCounter));
-//                    if( isInsertOp == false ) {
-//                        String condition = DbHelper.ASSIGN_ID + "=?";
-//                        dbManager.update(DbHelper.TABLE_ASSIGN, values, condition, assignId);
-//                    }else if(isInsertOp){
-//                        dbManager.insertData(DbHelper.TABLE_ASSIGN,values);
-//                    }
 
                      DueDateScheduler.showAssessmentNotification( AssessmentActivity.this, DueDateReceiver.class);
                 } else {
@@ -580,7 +503,7 @@ public class AssessmentActivity extends AppCompatActivity{
 
 
                     assessmentCounter = dbManager.getQueryCount(termId, courseId, table);
-                    Log.d("counter assessmentCounter :", String.valueOf(assessmentCounter));
+
 
 
             }
@@ -607,14 +530,6 @@ public class AssessmentActivity extends AppCompatActivity{
                 }
             });
 
-//    btnDisplay.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            displayBtnHandler();
-//        }
-//    });
-
-
 
     }
 
@@ -625,7 +540,7 @@ public class AssessmentActivity extends AppCompatActivity{
 
                 termId = termList.get(position).getItemId();
                 Toast.makeText(AssessmentActivity.this,Integer.toString(termId),Toast.LENGTH_LONG).show();
-//                courseTitle = dbManager.getCoursesTitleOfTerm(termId);
+
                 course = dbManager.getCoursesOfTerm(termId);
                 courseTitle = new ArrayList<>();
                 for( int i = 0 ;i < course.size(); i++ ) {
@@ -644,7 +559,7 @@ public class AssessmentActivity extends AppCompatActivity{
                     while( spCoursePosition < courseTitle.size() && course.get(spCoursePosition).getItemId() != courseID ){
                         spCoursePosition++;
                     }
-                    Log.d("spCoursePosition: " , String.valueOf(spCoursePosition));
+
 
                     spCourse.setSelection(spCoursePosition);
 
@@ -774,7 +689,7 @@ public class AssessmentActivity extends AppCompatActivity{
 
         String selection  ;
 
-        Log.d("assessmentId :", String.valueOf(assessmentId));
+
         selection = DbHelper.ASSESSMENT_ID + "=?";
         dbManager.delete(DbHelper.TABLE_ASSESSMENT, selection,assessmentId);
 

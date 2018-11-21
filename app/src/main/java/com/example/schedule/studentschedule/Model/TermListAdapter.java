@@ -24,16 +24,6 @@ public class TermListAdapter extends ArrayAdapter <DataItem>{
         termList = objects;
     }
 
-//    private View.OnClickListener btnDeleteTermListner = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            View parentrow = (View) v.getParent();
-//            ListView listView = (ListView) parentrow.getParent();
-//            final int position = listView.getPositionForView(parentrow);
-//            //final int position = (Integer) v.getTag();
-//
-//        }
-//    };
 
 
     @Override
@@ -59,7 +49,7 @@ public class TermListAdapter extends ArrayAdapter <DataItem>{
         btnEdit.setText("Edit");
 
         this.position = position;
-        //btnDelete.setOnClickListener(btnDeleteTermListner);
+
 
 
         return convertView;

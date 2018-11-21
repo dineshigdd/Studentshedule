@@ -10,11 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
@@ -32,20 +29,16 @@ public class EndNotificationScheduler {
     private static final int BASE_ID = 1000;
     public static ArrayList<Course> startCourseList;
     public static ArrayList<Course> endCourseList;
-    public static String startDay;
-    public static boolean isStartAlert;
 
-    public static String endDay;
-    public static boolean isEndAlert;
+
     public static long mills;
     public static String channel_id = "myEnDChannel";
     public static int notificationID;
-    private  static long startdatedifference;
+
     private static  SimpleDateFormat df;
     private static ArrayList<PendingIntent> pIntent;
-    private static ArrayList<Long> pMills;
     private static ArrayList<AlarmManager> alarmmList;
-    private static String startCourse;
+
     public static void showNotification(final Context context, Class<?> cls) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
@@ -58,7 +51,7 @@ public class EndNotificationScheduler {
         ArrayList<Course> list;
 
         if (!(dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0)) {
-            Toast.makeText(context, "There are no courses", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "There are no courses", Toast.LENGTH_LONG).show();
 
         } else {
 
@@ -68,7 +61,7 @@ public class EndNotificationScheduler {
             //--------------------------------------------------------------------------------------
             df = new SimpleDateFormat("MM/dd/yyyy");
             Date currentDate = new Date();
-            String strCurrentDate = df.format(currentDate);
+
             startCourseList = new ArrayList<>();
             endCourseList = new ArrayList<>();
             alarmmList = new ArrayList<>();
@@ -79,8 +72,6 @@ public class EndNotificationScheduler {
 
                 Log.d("list size", Long.toString(list.size()));
                 for (int i = 0; i < list.size(); i++) {
-                    Log.d("List End date ", i + ":" + list.get(i).getEndDate());
-                    Log.d("List End date ", i + ":" + list.get(i).getItem());
 
                     if (list.get(i).getEndDateAlert().equalsIgnoreCase("true")) {
 
@@ -100,7 +91,7 @@ public class EndNotificationScheduler {
                                 PackageManager.DONT_KILL_APP);
 
                         mills = getMills(endCourseList.get(i).getEndDate());
-                        Log.d("emills", Long.toString(mills));
+
 
 
                         notificationID = BASE_ID + i;
@@ -121,26 +112,8 @@ public class EndNotificationScheduler {
 
             } catch (Exception e) {
                 e.printStackTrace();
-//            isStartAlert = false;
-//            isEndAlert = false;
-//            intent.putExtra("START-DATE", startDay);
-//            intent.putExtra("START-COURSE", startCourseList);
-//            intent.putExtra("END-DATE", endDay);
-//            intent.putExtra("END-COURSE", endCourseList);
-
             }
 
-            //String sDate = "11/12/2018 ";
-            // String sDate = startDay;
-
-//        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-
-
-//            Date date = df.parse(sDate);
-//            Log.d("date after parse", date.toString());
-//
-//            mills = date.getTime();
-//            Log.d("mills", Long.toString(mills));
 
 
         }

@@ -16,7 +16,7 @@ public class DueDateReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
-       // Toast.makeText(context, "Notification", Toast.LENGTH_LONG).show();
+
         Log.d("Status in reciver  ", "assessment receivinng ..");
 
 

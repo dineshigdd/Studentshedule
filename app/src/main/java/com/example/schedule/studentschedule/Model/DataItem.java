@@ -54,16 +54,4 @@ public class DataItem implements Serializable {
     }
 
 
-
-    @Override
-    public String toString() {
-        return "DataItem{" +
-                "itemId=" + itemId +
-                ", item='" + item + '\'' +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
-                '}';
-    }
-
-
 }

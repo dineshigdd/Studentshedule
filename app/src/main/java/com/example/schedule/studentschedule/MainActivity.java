@@ -87,19 +87,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 }
             });
         }catch ( Exception e){
-            Toast.makeText( getApplicationContext() , " There are no assessments", Toast.LENGTH_LONG).show();
+            //Toast.makeText( getApplicationContext() , " There are no assessments", Toast.LENGTH_LONG).show();
         }
 
     }
 
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        NotificationScheduler.isStartAlert = false;
-//        NotificationScheduler.showNotification(MainActivity.this, MyReceiver.class);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -12,8 +12,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
@@ -30,22 +28,16 @@ import static android.content.Context.ALARM_SERVICE;
 public class NotificationScheduler {
     public static ArrayList<Course> startCourseList;
     public static ArrayList<Course> endCourseList;
-    public static String startDay;
-    public static boolean isStartAlert;
-
-    public static String endDay;
-    public static boolean isEndAlert;
     public static long mills;
     public static String channel_id = "myChannel";
     private final static int BASE_ID = 2000;
     static int notificationID;
-    private  static long startdatedifference;
+
     private static  SimpleDateFormat df;
     private static ArrayList<PendingIntent> pIntent;
-    private static ArrayList<Long> pMills;
+
     private static ArrayList<AlarmManager> alarmmList;
     private static ArrayList<Course> list;
-    private static String startCourse;
     public static void showNotification(final Context context, Class<?> cls) {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -60,7 +52,7 @@ public class NotificationScheduler {
         list = new ArrayList<>();
 
         if( !( dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0 )) {
-            Toast.makeText(context, "There are no courses",Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "There are no courses",Toast.LENGTH_LONG).show();
         }else {
             list = dbManager.getAllCourse();
 
@@ -78,31 +70,18 @@ public class NotificationScheduler {
             //--------------------------------------------------------------------------------------
 
 
-//        long enddatedifference = 0;
-//        // long difference;
+
             df = new SimpleDateFormat("MM/dd/yyyy");
             Date currentDate = new Date();
-            String strCurrentDate = df.format(currentDate);
+
             startCourseList = new ArrayList<>();
             endCourseList = new ArrayList<>();
             alarmmList = new ArrayList<>();
             pIntent = new ArrayList<>();
-//
+
             try {
-                currentDate = df.parse(strCurrentDate);
-                Date dbstartDate = null;
-                Date dbendDate;
-//            String startDay = "";
-//            String endDay = "";
 
-
-                Log.d("list size", Long.toString(list.size()));
                 for (int i = 0; i < list.size(); i++) {
-                    Log.d("List start date ", i + ":" + list.get(i).getStartDate());
-                    Log.d("List start date ", i + ":" + list.get(i).getItem());
-                    //dbstartDate = df.parse(list.get(i).getStartDate());
-
-                    //  startdatedifference = dbstartDate.getTime() - currentDate.getTime();
 
 
                     if (list.get(i).getStartDateAlert().equalsIgnoreCase("true")) {
@@ -123,7 +102,7 @@ public class NotificationScheduler {
                                 PackageManager.DONT_KILL_APP);
 
                         mills = getMills(startCourseList.get(i).getStartDate());
-                        Log.d("smills", Long.toString(mills));
+
 
 
                         notificationID = BASE_ID + i;
@@ -143,27 +122,9 @@ public class NotificationScheduler {
 
             } catch (Exception e) {
                 e.printStackTrace();
-//            isStartAlert = false;
-//            isEndAlert = false;
-//            intent.putExtra("START-DATE", startDay);
-//            intent.putExtra("START-COURSE", startCourseList);
-//            intent.putExtra("END-DATE", endDay);
-//            intent.putExtra("END-COURSE", endCourseList);
+
 
             }
-
-            //String sDate = "11/12/2018 ";
-            // String sDate = startDay;
-
-//        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-
-
-//            Date date = df.parse(sDate);
-//            Log.d("date after parse", date.toString());
-//
-//            mills = date.getTime();
-//            Log.d("mills", Long.toString(mills));
-
 
         }
 

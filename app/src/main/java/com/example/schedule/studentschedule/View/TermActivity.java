@@ -43,18 +43,11 @@ public class TermActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-      //        deleteBtn.setVisibility(View.INVISIBLE);
 
 
         listPosition = -1;
         setTerms();
-//        btn = new ArrayList<>(list.size());
-//        for(int i = 0 ; i < list.size(); i ++ ) {
-//            Button button = new Button(this);
-//            btn.add(button);
-//            btn.add(i, (Button)listTerm.findViewById(R.id.btnDeleteTerm));
-//          //  btn.add(( listTerm.findViewById(R.id.btnDeleteTerm));
-//        }
+
         Button btnAddATerm = findViewById(R.id.btnAddTerm);
         btnAddATerm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -63,18 +56,6 @@ public class TermActivity extends AppCompatActivity {
 
             }
         });
-
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-
 
     }
 
@@ -91,10 +72,7 @@ public class TermActivity extends AppCompatActivity {
 
     public void removeTerm(){
         String selection = DbHelper.TERM_ID + "=?";
-                //+ "." + DbHelper.TERM_ID + "<>" +
-              //  DbHelper.TABLE_ASSIGN + "." + DbHelper.TERM_ID;
 
-        //String [] selectionArg = { Integer.toString(termId) };
 
         if( dbManager.getRowCount(DbHelper.TABLE_TERM) != 0) {
             try {
@@ -169,30 +147,15 @@ public class TermActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 termId = list.get(position).getItemId();
                 listPosition = position;
-                Toast.makeText(TermActivity.this, Integer.toString(listPosition ), Toast.LENGTH_SHORT).show();
-             //   btn.add(position, (Button)listTerm.findViewById(R.id.btnDeleteTerm));
 
-              //  btn.get(position).setVisibility(View.VISIBLE);
-
-//                for (int i = 0; i <= list.size(); i++) {
-//                    btn.add((btnDelete));
-//                }
 
                 listTerm.setBackgroundColor(5);
 
-//                DataItem dataItem = new DataItem(dataAdapter.getItem(listPosition).getItem(),
-//                        dataAdapter.getItem(listPosition).getStartDate(),
-//                        dataAdapter.getItem(listPosition).getEndDate());
-//
-//                Intent intent = new Intent(TermActivity.this, DetailedTermActivity.class );
-//                intent.putExtra("serializeData",dataItem);
-//
-//                startActivity(intent);
 
 
             }
         });
-        //btnDelete.setVisibility(View.GONE);
+
 
     }
 
@@ -203,7 +166,7 @@ public class TermActivity extends AppCompatActivity {
 
         dbManager = new DbManager(this);
         dbManager.open();
-//        Spinner spinner = findViewById(R.id.spTerm);
+
         listTerm = findViewById(R.id.listTerm);
 
         try {
@@ -221,21 +184,6 @@ public class TermActivity extends AppCompatActivity {
             }
 
         }catch(Exception e){
-          //  noTerm = true;
-//            finish();
-//            Intent intent = new Intent(getApplicationContext(),TermActivity.class);
-//            startActivity(intent);
-
-//            AlertDialog alertDialog = new AlertDialog.Builder(TermActivity.this).create();
-//            alertDialog.setTitle("Alert");
-//            alertDialog.setMessage("No terms");
-//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                    new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                        }
-//                    });
-//            alertDialog.show();
 
 
         }

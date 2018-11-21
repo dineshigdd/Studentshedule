@@ -10,10 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
 import com.example.schedule.studentschedule.DbManager;
@@ -42,10 +40,10 @@ public class DueDateScheduler  {
         DbManager dbManager = new DbManager(context);
         dbManager.open();
 
-        ArrayList<Assessment> list= null;
+        ArrayList<Assessment> list;
 
         if ((dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) < 0)) {
-            Toast.makeText(context, "There are no Assessments", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "There are no Assessments", Toast.LENGTH_LONG).show();
 
         } else {
             list = dbManager.getAllAssesment();
@@ -55,22 +53,19 @@ public class DueDateScheduler  {
             assessmentList = new ArrayList<>();
             pIntent = new ArrayList<>();
             alarmmList = new ArrayList<>();
-            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-            Date currentDate = new Date();
-            String strCurrentDate = df.format(currentDate);
+
+
 
             try {
-//                currentDate = df.parse(strCurrentDate);
-//                Date dbDate;
+
 
                 for (int i = 0; i < list.size(); i++) {
-                    Log.d("list item:", list.get(i).toString());
-                    Log.d("Due status:", list.get(i).getDueDateAlert());
+
 
                     if (list.get(i).getDueDateAlert().equalsIgnoreCase("true")) {
 
                         assessmentList.add(list.get(i));
-                        //isAssessmentAlert = true;
+
                     }
 
                 }

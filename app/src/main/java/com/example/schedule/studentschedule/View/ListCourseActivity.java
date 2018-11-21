@@ -3,9 +3,7 @@ package com.example.schedule.studentschedule.View;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.schedule.studentschedule.DbHelper;
@@ -29,7 +26,6 @@ public class    ListCourseActivity extends AppCompatActivity {
 
 
     private ArrayList<Course> list;
-    //private ArrayList<Mentor> mentorList;
     private CourseListAdapter dataAdapter;
     private DbManager dbManager;
     private ListView listCourse;
@@ -44,8 +40,7 @@ public class    ListCourseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_course);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -101,14 +96,7 @@ public class    ListCourseActivity extends AppCompatActivity {
 
     }
 
-//    private String[] combineArray( String[] ArrayOne, String[] ArrayTwo ){
-//        int length = ArrayOne.length + ArrayTwo.length;
-//        String [] combineArray = new String[length];
-//        System.arraycopy(ArrayOne, 0, combineArray, 0, ArrayOne.length);
-//        System.arraycopy(ArrayTwo, 0, combineArray, ArrayOne.length, ArrayTwo.length);
-//
-//        return combineArray;
-//    }
+
 
         public void setCourse() {
         Log.d("is CourseEditing in setCourse", Boolean.toString(isCourseEditing));
@@ -117,9 +105,7 @@ public class    ListCourseActivity extends AppCompatActivity {
         dbManager = new DbManager(this);
         dbManager.open();
 
-//        if( CourseActivity.BACK_BUTTON_PRESSED ) {
-//            termId = getIntent().getSerializableExtra("EDITCOURSE-TERMID").toString();
-//        }else
+
             if( !isCourseEditing) {
             termId = getIntent().getSerializableExtra("serializeData").toString();
         }
@@ -129,9 +115,7 @@ public class    ListCourseActivity extends AppCompatActivity {
 
 
             try {
-                //list = dbManager.getAllCourse();
-                //  long numItems = dbManager.getRowCount(DbHelper.TABLE_COURSE);
-                //if (numItems != 0) {
+
                 String table = DbHelper.TABLE_ASSIGN + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_TERM;
                 String[] id = {String.valueOf(termId)};
                 String[] projection = DbHelper.ALL_COLUMNS_COURSE;
@@ -164,7 +148,7 @@ public class    ListCourseActivity extends AppCompatActivity {
                         course.setNotes(cursor.getString(cursor.getColumnIndex(DbHelper.COURSE_NOTES)));
 
                         list.add(course);
-                        //    mentorList.add(mentor);
+
 
                     } while (cursor.moveToNext());
                 }else{
@@ -179,31 +163,9 @@ public class    ListCourseActivity extends AppCompatActivity {
 
 
                 isCourseEditing = false;
-                //     TextView tv = findViewById(R.id.mentorTv);
-//            ListView lv = findViewById(R.id.listMentor);
-//
-//            ArrayAdapter<Mentor> spinnerArrayAdapter = new ArrayAdapter<>(
-//                    this, android.R.layout.simple_spinner_dropdown_item, Mentorlist);
-//            lv.setAdapter(spinnerArrayAdapter);
+
 
             } catch (Exception e) {
-                //  noTerm = true;
-//            finish();
-//            Intent intent = new Intent(getApplicationContext(),TermActivity.class);
-//            startActivity(intent);
-
-//            AlertDialog alertDialog = new AlertDialog.Builder(TermActivity.this).create();
-//            alertDialog.setTitle("Alert");
-//            alertDialog.setMessage("No terms");
-//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                    new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                        }
-//                    });
-//            alertDialog.show();
-
-
 
         }
 

@@ -141,10 +141,7 @@ public class DetailedTermActivity extends AppCompatActivity {
                    termLayout.addView(edCustomTermLayout);
 
                }
-//               else if(!sp.getSelectedItem().equals("Other")){
-//                   edCustomTerm.setText("");
-//                   edCustomTerm.setVisibility(View.INVISIBLE);
-//               }
+
             }
 
             @Override
@@ -228,24 +225,18 @@ public class DetailedTermActivity extends AppCompatActivity {
         if( !TermActivity.isTermEditing ) {
 
             submit.setText("Add Term");
-
-//            mainLayout.addView(btnLayout);
             submitbtnActionHandler();
 
         }else{
-//            submit = new Button(this);
-//           btnLayoutDimensions.setMargins(175, 10, 100, 0);
-//           btnLayout.setLayoutParams(btnLayoutDimensions);
+
            submit.setText("Save");
-//           btnLayout.addView(btnUpdate);
-//           mainLayout.addView(btnLayout);
            updateTermRecordHandler();
 
        }
 
         btnLayout.addView(submit);
         mainLayout.addView(btnLayout);
-     //   submitbtnActionHandler();
+
 
         ScrollView scroll = new ScrollView(this);
         scroll.setBackgroundColor(android.R.color.transparent);
@@ -319,7 +310,7 @@ public class DetailedTermActivity extends AppCompatActivity {
 
                     ContentValues values =dbManager.setData(term,DbHelper.TABLE_TERM);
                     dbManager.insertData(DbHelper.TABLE_TERM,values);
-                   // TermActivity.setNoTerm(false);
+
                 }else{
                     Toast.makeText(DetailedTermActivity.
                             this,"This Record is already in Database",Toast.LENGTH_SHORT).show();
@@ -395,7 +386,7 @@ public class DetailedTermActivity extends AppCompatActivity {
                 break;
             default:
                 sp.setSelection(5);
-                //edCustomTerm.setText(term);
+
 
                 break;
         }

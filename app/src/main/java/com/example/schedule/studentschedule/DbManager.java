@@ -322,9 +322,6 @@ public class DbManager {
             if (!cursor.isAfterLast()) {
                 do {
                     assessmentId = cursor.getInt(cursor.getColumnIndex(DbHelper.ASSESSMENT_ID));
-//                    assign.setTermId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSIGN_TERM_ID)));
-//                    assign.setCourseId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSIGN_COURSE_ID)));
-//                    assign.setMentorId(cursor.getInt(cursor.getColumnIndex(DbHelper.ASSIGN_MENTOR_ID)));
 
                 } while (cursor.moveToNext());
             }
@@ -389,13 +386,7 @@ public class DbManager {
         return assignId;
     }
 
-//    public Cursor query(String selectQuery) {
-//        Cursor cursor = null;
-//        mDatabase = mDbHelper.getReadableDatabase();
-//
-//        cursor = mDatabase.rawQuery(selectQuery, null);
-//        return cursor;
-//    }
+
 
 
 
@@ -407,7 +398,7 @@ public class DbManager {
                 DbHelper.TABLE_COURSE + "." + "_id" + "=" + DbHelper.ASSESSMENT_COURSE_ID + " AND " +
                 DbHelper.ASSESSMENT_COURSE_ID + "=?" + " AND "+
                 DbHelper.ASSESSMENT_TERM_ID + "=?" ;
-//                        DbHelper.ASSESSMENT_TITLE + " IS NOT NULL";
+
 
         Cursor cursor = query(false,
                 tablename,new String []{  DbHelper.TABLE_ASSESSMENT + "." + DbHelper.ASSESSMENT_ID },

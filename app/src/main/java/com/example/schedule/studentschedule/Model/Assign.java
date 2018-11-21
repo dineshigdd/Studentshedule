@@ -32,22 +32,6 @@ public class Assign {
         this.courseId = courseId;
     }
 
-    public int getAssignId() {
-        return assignId;
-    }
-
-    public void setAssignId(int assignId) {
-        this.assignId = assignId;
-    }
-
-//    public int getAssessmentId() {
-//        return assessmentId;
-//    }
-//
-//    public void setAssessmentId(int assessmentId) {
-//        this.assessmentId = assessmentId;
-//    }
-
     public int getMentorId() {
         return mentorId;
     }

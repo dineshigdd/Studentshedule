@@ -1,11 +1,8 @@
 package com.example.schedule.studentschedule.View;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +21,6 @@ import java.util.ArrayList;
 
 
 
-
-
 public class ListAssessmentActivity extends AppCompatActivity {
 
       private DbManager dbManager;
@@ -40,8 +35,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_assessment);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbManager = new DbManager(this);
@@ -57,19 +51,10 @@ public class ListAssessmentActivity extends AppCompatActivity {
             termId = (int) getIntent().getSerializableExtra("TERM_ID");
             courseId = (int) getIntent().getSerializableExtra("COURSE_ID");
         }
-        //int mentorId = (int)getIntent().getSerializableExtra("MENTOR_ID");
-
-
-        Log.d("Term ID :", Integer.toString(termId));
-        Log.d("Course ID :", Integer.toString(courseId));
-    //    Log.d("mentor ID :", Integer.toString(mentorId));
-
-
 
         String table = DbHelper.TABLE_TERM + "," + DbHelper.TABLE_COURSE + "," + DbHelper.TABLE_ASSESSMENT ;
 
-//        int numberOfAssessments   = dbManager.getQueryCount(termId,courseId,table);
-//        Log.d("numberOfAssessments :", Integer.toString(numberOfAssessments));
+
 
 
         list = dbManager.getAssessmentOfCourse(termId,courseId,table);
@@ -108,7 +93,7 @@ public class ListAssessmentActivity extends AppCompatActivity {
                 intent.putExtra("assessment-Id", list.get(position).getAssessmentId());
                 intent.putExtra("term-id", termId);
                 intent.putExtra("course-id",courseId);
-//                intent.putExtra( "list-size",list.size());
+
                 AssessmentActivity.isEditing = true;
                 startActivity(intent);
             }
