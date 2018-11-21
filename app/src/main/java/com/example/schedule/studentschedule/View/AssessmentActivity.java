@@ -839,21 +839,29 @@ public class AssessmentActivity extends AppCompatActivity{
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_home:
+                finish();
+                isEditing = false;
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_term:
+                finish();
+                isEditing = false;
                 intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_course:
+                finish();
+                isEditing = false;
                 intent = new Intent(getApplicationContext(), CourseActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_assessment:
+                finish();
+                isEditing = false;
                 intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 startActivity(intent);
                 break;

@@ -224,21 +224,29 @@ public class    ListCourseActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_home:
+                finish();
+                isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_term:
+                finish();
+                isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_course:
+                finish();
+                isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), CourseActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_assessment:
+                finish();
+                isCourseEditing = false;
                 intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 startActivity(intent);
                 break;

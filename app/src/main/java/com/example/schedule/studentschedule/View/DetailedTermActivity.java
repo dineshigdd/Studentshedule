@@ -464,21 +464,29 @@ public class DetailedTermActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_home:
+                finish();
+                TermActivity.isTermEditing = false;
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_term:
+                finish();
+                TermActivity.isTermEditing = false;
                 intent = new Intent(getApplicationContext(), DetailedTermActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_course:
+                finish();
+                TermActivity.isTermEditing = false;
                 intent = new Intent(getApplicationContext(), CourseActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.menu_assessment:
+                finish();
+                TermActivity.isTermEditing = false;
                 intent = new Intent(getApplicationContext(), AssessmentActivity.class);
                 startActivity(intent);
                 break;
