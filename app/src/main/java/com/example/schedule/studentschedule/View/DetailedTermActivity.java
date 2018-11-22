@@ -115,7 +115,9 @@ public class DetailedTermActivity extends AppCompatActivity {
         if( TermActivity.isTermEditing ) {
             try {
                 setEditTerm();
+
             }catch (Exception e){
+
                 TermActivity.isTermEditing = false;
             }
         }
