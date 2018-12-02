@@ -115,7 +115,7 @@ public class AssessmentActivity extends AppCompatActivity{
         spTerm = new Spinner(this);
         mainLayout.addView(spTerm);
 
-            if( dbManager.getRowCount(DbHelper.TABLE_TERM) > 0) {
+            if( dbManager.getRowCount( DbHelper.TABLE_TERM ) > 0 && dbManager.getRowCount( DbHelper.TABLE_COURSE ) > 0) {
                 termList = dbManager.getAllTerms();
                 ArrayList<String> term = new ArrayList<>();
                 courseTitle = new ArrayList<>();
@@ -353,6 +353,8 @@ public class AssessmentActivity extends AppCompatActivity{
 
         displayBtnHandler();
 
+
+
     }
 
 
@@ -545,18 +547,21 @@ public class AssessmentActivity extends AppCompatActivity{
             public void onItemSelected(AdapterView<?> parent, View view, int position , long id) {
 
                 termId = termList.get(position).getItemId();
-                Toast.makeText(AssessmentActivity.this,Integer.toString(termId),Toast.LENGTH_LONG).show();
+              //  Toast.makeText(AssessmentActivity.this,Integer.toString(termId),Toast.LENGTH_LONG).show();
 
-                course = dbManager.getCoursesOfTerm(termId);
-                courseTitle = new ArrayList<>();
-                for( int i = 0 ;i < course.size(); i++ ) {
-                      courseTitle.add(
-                      course.get(i).getItem() + " => "
-                    + course.get(i).getStartDate() + " to "
-                    + course.get(i).getEndDate());
-                }
-                     populateSppiner( courseTitle, spCourse );
-
+                    course = dbManager.getCoursesOfTerm(termId);
+                    if( course.isEmpty()){
+                        finish();
+                    }else {
+                        courseTitle = new ArrayList<>();
+                        for (int i = 0; i < course.size(); i++) {
+                            courseTitle.add(
+                                    course.get(i).getItem() + " => "
+                                            + course.get(i).getStartDate() + " to "
+                                            + course.get(i).getEndDate());
+                        }
+                        populateSppiner(courseTitle, spCourse);
+                    }
 
 
 

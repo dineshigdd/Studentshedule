@@ -50,10 +50,7 @@ public class EndNotificationScheduler {
 
         ArrayList<Course> list;
 
-        if (!(dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0)) {
-            //Toast.makeText(context, "There are no courses", Toast.LENGTH_LONG).show();
-
-        } else {
+      if ( dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0 )  {
 
             list = dbManager.getAllCourse();
 

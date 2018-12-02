@@ -51,9 +51,7 @@ public class NotificationScheduler {
 
         list = new ArrayList<>();
 
-        if( !( dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0 )) {
-            //Toast.makeText(context, "There are no courses",Toast.LENGTH_LONG).show();
-        }else {
+        if( dbManager.getRowCount(DbHelper.TABLE_COURSE) > 0 ) {
             list = dbManager.getAllCourse();
 
             final Runnable myRun = new Runnable() {

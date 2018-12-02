@@ -42,10 +42,7 @@ public class DueDateScheduler  {
 
         ArrayList<Assessment> list;
 
-        if ((dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) < 0)) {
-            //Toast.makeText(context, "There are no Assessments", Toast.LENGTH_LONG).show();
-
-        } else {
+      if ( dbManager.getRowCount(DbHelper.TABLE_ASSESSMENT) > 0 ) {
             list = dbManager.getAllAssesment();
 
             //--------------------------------------------------------------------------------------
@@ -57,11 +54,7 @@ public class DueDateScheduler  {
 
 
             try {
-
-
-                for (int i = 0; i < list.size(); i++) {
-
-
+                    for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getDueDateAlert().equalsIgnoreCase("true")) {
 
                         assessmentList.add(list.get(i));
